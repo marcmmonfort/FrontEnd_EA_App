@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { UserAuthEntity } from "../../../../domain/user/user.entity";
+import { UserAuthEntity } from "../../../domain/user/user.entity";
 import { useNavigation } from "@react-navigation/native";
-import MainContainer from "../../components/containers/Main";
-import SubTitle from "../../components/texts/Subtitle";
-import StyledTextInputs from "../../components/inputs/StyledTextInputs";
+import MainContainer from "../components/containers/Main";
+import SubTitle from "../components/texts/Subtitle";
+import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import Swal from "sweetalert2";
-import { SessionService } from "../../../services/user/session.service";
-import ButtonGradientRegister from "../../components/buttons/ButtonGradientRegister";
-import NormalText from "../../components/texts/NormalText";
+import { SessionService } from "../../services/user/session.service";
+import ButtonGradientRegister from "../components/buttons/ButtonGradientRegister";
+import NormalText from "../components/texts/NormalText";
 import { TouchableOpacity } from "react-native";
-import Register from "../../components/texts/Register";
+import Register from "../components/texts/Register";
 
 export default function RegisterScreen() {
   const [user, setUser] = useState<UserAuthEntity>({

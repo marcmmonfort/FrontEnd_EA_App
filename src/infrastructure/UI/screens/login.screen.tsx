@@ -1,17 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import Svg, { Defs, Path, Pattern, Use,Image } from "react-native-svg";
-import MainContainer from "../../components/containers/Main";
-import Title from "../../components/texts/Title";
-import SubTitle from "../../components/texts/Subtitle";
-import StyledTextInputs from "../../components/inputs/StyledTextInputs";
-import ButtonGradient from "../../components/buttons/ButtonGradient";
-import { AuthEntity } from "../../../../domain/user/user.entity";
-import { SessionService } from "../../../services/user/session.service";
+import MainContainer from "../components/containers/Main";
+import Title from "../components/texts/Title";
+import SubTitle from "../components/texts/Subtitle";
+import StyledTextInputs from "../components/inputs/StyledTextInputs";
+import ButtonGradient from "../components/buttons/ButtonGradient";
+import { AuthEntity } from "../../../domain/user/user.entity";
+import { SessionService } from "../../services/user/session.service";
 import Swal from 'sweetalert2';
-import NormalText from "../../components/texts/NormalText";
+import NormalText from "../components/texts/NormalText";
 import { StatusBar, TouchableOpacity } from "react-native";
-import Register from "../../components/texts/Register";
+import Register from "../components/texts/Register";
 
 
 
