@@ -1,27 +1,29 @@
 import { SessionService } from "../../services/user/session.service";
-import { Link } from "react-router-dom";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 export default function ProfileScreen() {
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
 
   useFocusEffect(
     React.useCallback(() => {
       const getUser = async () => {
-        const userId = SessionService.getCurrentUser();
-
+        const userId = await SessionService.getCurrentUser();
+        console.log("BBBBBBBBBBBB:  "+userId);
         if (userId) {
-          CRUDService.getUser(await userId)
+          try {
+            await CRUDService.getUser(userId)
             .then((response) => {
-              console.log(response);
-              console.log(response.data);
-              setCurrentUser(response.data);
+              console.log("Punto 1:"+response);
+              console.log(response?.data.response);
+              setCurrentUser(response?.data.response);
             })
-            .catch((error) => {});
-        }
+          } catch (error) {
+            console.log("Encontre el id pero no va")
+          }
+}
       };
       getUser();
     }, [])
@@ -29,13 +31,13 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.titleSection}>Profile</Text>
+        <Text style={styles.text}>Profile</Text>
       </View>
       <View style={styles.profileContour}>
         {currentUser && (
           <View style={styles.profileContainer}>
             <View style={styles.profile}>
-              <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
+              <Text style={styles.profileUserName}>{currentUser.appUser} Hola</Text>
               <View style={styles.profileImage}>
                 <Image
                   source={{ uri: currentUser.photoUser }}
@@ -43,19 +45,29 @@ export default function ProfileScreen() {
                 />
               </View>
               <View style={styles.profileUserButtons}>
-                <Link to="/profile/edituser" style={styles.buttonProfile}>
-                  Edit Profile
-                </Link>
-                <Link to="/profile/settings" style={styles.buttonProfile}>
-                  Settings
-                </Link>
+                <TouchableOpacity
+                  onPress={() => {
+                    // Acción al presionar el botón de Editar perfil
+                  }}
+                  style={styles.buttonProfile}
+                >
+                  <Text style={styles.text}>Edit Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // Acción al presionar el botón de Configuración
+                  }}
+                  style={styles.buttonProfile}
+                >
+                  <Text style={styles.text}>Settings</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.profileStats}>
-                <Text style={styles.profileTitle}>Followers</Text>
+                <Text style={styles.text}>Followers</Text>
                 <Text style={styles.profileStatCount}>
                   {currentUser.followersUser?.length}
                 </Text>
-                <Text style={styles.profileTitle}>Following</Text>
+                <Text style={styles.text}>Following</Text>
                 <Text style={styles.profileStatCount}>
                   {currentUser.followedUser?.length}
                 </Text>
@@ -77,17 +89,18 @@ export default function ProfileScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
   },
   titleContainer: {},
   titleSection: {},

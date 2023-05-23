@@ -32,19 +32,30 @@ export class SessionService {
 
   static async getCurrentUser() {
     try {
-      const userId = await AsyncStorage.getItem("userId");
+      const userId = await AsyncStorage.getItem('uuid');
+      console.log("AAAAAAAAAAAAAAAAAA (raw value):", userId);
+  
       if (userId) {
+        console.log("AAAAAAAAAAAAAAAAAA (parsed value):", JSON.parse(userId));
         return JSON.parse(userId);
       }
-    } catch (error) {}
+      else(console.log("UserId not found"));
+    } catch (error) {
+      console.error("Error al obtener el usuario actual:", error);
+    }
   }
+  
 
   static setCurrentUser(userId: string, token: string) {
     try {
-      AsyncStorage.setItem("userId", userId);
+      console.log("Saving userId to AsyncStorage:", userId);
+      AsyncStorage.setItem("uuid", userId);
       AsyncStorage.setItem("token", token);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error saving userId to AsyncStorage:", error);
+    }
   }
+  
 
   static logOut() {
     try {

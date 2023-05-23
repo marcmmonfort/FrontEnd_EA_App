@@ -47,10 +47,10 @@ export default function LoginScreen() {
               if (response.status === 200) {
                 console.log(response.data);
                 SessionService.setCurrentUser(
-                  JSON.stringify(response.data.user._id),
+                  JSON.stringify(response.data.user.uuid),
                   JSON.stringify(response.data.token)
                 );
-                console.log("_id" + JSON.stringify(response.data.user._id));
+                console.log("_id" + JSON.stringify(response.data.user.uuid));
                 console.log("token" + JSON.stringify(response.data.token));
                 console.log("YA NO ESTOY CHINADO");
                 navigation.navigate('HomeScreen' as never);
