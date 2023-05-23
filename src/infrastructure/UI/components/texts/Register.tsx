@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     text: {
         //fontFamily: 'SF UI Display',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 35,
         color: '#66fcf1',
         marginTop: 8,
         marginBottom: 40,

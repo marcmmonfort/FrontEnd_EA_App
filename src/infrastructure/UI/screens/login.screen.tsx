@@ -15,18 +15,18 @@ import Register from "../components/texts/Register";
 
 
 
+
 export default function LoginScreen(){
     const navigation=useNavigation();
 
     const [inputEmail, setInputEmail] = useState('');
     const [inputPassword, setInputPassword] = useState('');
     return(
-        
         <MainContainer>
       <Title>Lplan</Title>
       <SubTitle>Let's Go!</SubTitle>
       <StyledTextInputs 
-        placeholder = 'Mail'
+        placeholder = "mail"
         value = {inputEmail}
         onChangeText = {setInputEmail}
         />         

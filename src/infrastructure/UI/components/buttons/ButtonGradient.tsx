@@ -5,13 +5,13 @@ import { ButtonGradientProps } from './Types';
 
 import * as Font from 'expo-font';
 
-async function loadFonts() {
+/*async function loadFonts() {
   await Font.loadAsync({
     'SF UI Display':require('../../../../../assets/fonts/SF-UI-Display-Semibold.ttf'),
   });
 }
 
-loadFonts();
+loadFonts();*/
 
 const ButtonGradient = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
   return (
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
   container: {
     width: 200,
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: 50,
   },
   button: {
-    marginTop: -44,
-    height: 28,
+    marginTop: -20,
+    height: 50,
     width: 120,
     borderRadius: 50,
     padding: 10,
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: 'SF UI Display',
+    //fontFamily: 'SF UI Display',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 16,
     color: 'black',
   },
 });

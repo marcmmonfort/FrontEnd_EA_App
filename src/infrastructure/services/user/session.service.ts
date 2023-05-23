@@ -4,11 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = "http://192.168.43.231:5432/";
 
+
 export class SessionService{
     static async login(auth: AuthEntity) {
         try {
           const response = await axios.post(API_URL + "user/login", auth);
           return response;
+          console.log(response);
         } catch (error) {
           console.error("Error during login:", error);
           throw error;
@@ -19,6 +21,7 @@ export class SessionService{
         console.log(user);
         try {
           const response = await axios.post(API_URL + "user/register", user);
+          console.log(response);
           return response;
         } catch (error) {
           console.error("Error during register:", error);
