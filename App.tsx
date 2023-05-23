@@ -12,6 +12,7 @@ import ScreenRegisterB from "./src/infrastructure/UI/screens/Register/register2.
 import ScreenRegisterC from "./src/infrastructure/UI/screens/Register/register3.screen";
 import ScreenRegisterD from "./src/infrastructure/UI/screens/Register/register4.screen";
 import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.screen";
+import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      
         <Stack.Screen
           name="LoginScreen"
           options={{ headerShown: false }}
@@ -66,6 +68,11 @@ export default function App() {
           options={{ headerShown: false }}
           component={RegisterScreen}
         />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
