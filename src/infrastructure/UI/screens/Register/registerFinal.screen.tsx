@@ -42,7 +42,7 @@ export default function ScreenRegisterFinal({
   const handleRegister = async () => {
     try {
       const user: UserAuthEntity = {
-        uuid: "",
+        uuid: "a" ?? "",
         appUser: appUser ?? "",
         nameUser: nameUser ?? "",
         surnameUser: surnameUser ?? "",
@@ -66,7 +66,7 @@ export default function ScreenRegisterFinal({
         privacyUser: privacyUser === "private" ? true : false,
         deletedUser: false,
       };
-      console.log(user);
+      console.log("ANDO POR AQUI: "+user);
 
       // Llamar al servicio de registro
       SessionService.register(user).then((response)=>{
