@@ -1,8 +1,10 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { SessionService } from "../../../services/user/session.service";
 import { UserAuthEntity } from "../../../../domain/user/user.entity";
+import Register from "../../components/texts/Register";
+import ButtonGradient from "../../components/buttons/ButtonGradient";
 
 interface RouteParams {
   appUser?: any;
@@ -42,26 +44,36 @@ export default function ScreenRegisterFinal({
   const handleRegister = async () => {
     try {
       const user: UserAuthEntity = {
-      uuid:'',
-      appUser: appUser ?? '',
-      nameUser: nameUser ?? '',
-      surnameUser: surnameUser ?? '',
-      mailUser: mailUser ?? '',
-      passwordUser: passwordUser ?? '',
-      photoUser: photoUser ?? '',
-      birthdateUser: new Date(birthdateUser ?? ''),
-      genderUser: genderUser === 'male' || genderUser==='female' ? genderUser:'male',
-      ocupationUser: ocupationUser ?? '',
-      descriptionUser: descriptionUser ?? '',
-      roleUser: roleUser === 'admin' || roleUser === 'common' || roleUser === 'verified' || roleUser === 'business' ? roleUser: 'common',
-      privacyUser: privacyUser === 'private' ? true : false,
-      deletedUser:false,
+        uuid: "",
+        appUser: appUser ?? "",
+        nameUser: nameUser ?? "",
+        surnameUser: surnameUser ?? "",
+        mailUser: mailUser ?? "",
+        passwordUser: passwordUser ?? "",
+        photoUser: photoUser ?? "",
+        birthdateUser: new Date(birthdateUser ?? ""),
+        genderUser:
+          genderUser === "male" || genderUser === "female"
+            ? genderUser
+            : "male",
+        ocupationUser: ocupationUser ?? "",
+        descriptionUser: descriptionUser ?? "",
+        roleUser:
+          roleUser === "admin" ||
+          roleUser === "common" ||
+          roleUser === "verified" ||
+          roleUser === "business"
+            ? roleUser
+            : "common",
+        privacyUser: privacyUser === "private" ? true : false,
+        deletedUser: false,
       };
-  
+      console.log(user);
+
       // Llamar al servicio de registro
       const response = await SessionService.register(user);
       console.log("Registration successful:", response.data);
-  
+
       // Redirigir a la pantalla de inicio de sesión u otra pantalla deseada
       navigation.navigate("LoginScreen");
     } catch (error) {
@@ -69,11 +81,9 @@ export default function ScreenRegisterFinal({
       // Manejar el error de registro aquí
     }
   };
-  
 
   return (
     <>
-    
       <Text>{appUser}</Text>
       <Text>{nameUser}</Text>
       <Text>{surnameUser}</Text>
@@ -87,7 +97,6 @@ export default function ScreenRegisterFinal({
       <Text>{roleUser}</Text>
       <Text>{privacyUser}</Text>
       <Button title="Register" onPress={handleRegister} />
-
     </>
   );
 }

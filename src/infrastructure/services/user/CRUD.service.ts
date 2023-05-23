@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.43.231:5432/";
+const API_URL = "http://147.83.7.158:5432/";
 
 export class CRUDService{
     static async getUser(userId: string) {

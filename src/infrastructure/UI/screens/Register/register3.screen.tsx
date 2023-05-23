@@ -1,8 +1,9 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
-import { Alert, Button, View, Image } from "react-native";
-import MainContainer from "../../components/containers/Main";
-import { MediaType, ImagePickerResponse, launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import React, { useState, useEffect } from 'react';
+import { Button, Image, View, Platform, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+
 
 interface RouteParams {
   appUser?: any;
@@ -11,103 +12,69 @@ interface RouteParams {
   mailUser?: string;
   passwordUser?: string;
 }
-
 export default function ScreenRegisterC() {
-  const route = useRoute();
-  const { appUser, nameUser, surnameUser, mailUser, passwordUser }: RouteParams = route.params || {};
-  const [photoUser, setPhotoUser] = useState('https://via.placeholder.com/200');
-
+  const route = useRoute()
+  const { appUser, nameUser, surnameUser,mailUser,passwordUser}: RouteParams = route.params || {};
+  const [photoUser, setPhotoUser] = useState('');
   const navigation = useNavigation();
 
-  const handleGoToScreenRegisterD = () => {
-    /*if (!photoUser) {
+  const handleGoToScreenRegisterD = async() => {
+    if (!photoUser) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
+      
       navigation.navigate("ScreenRegisterD", {
         appUser,
         nameUser,
         surnameUser,
         mailUser,
-        password,
+        passwordUser,
         photoUser,
       });
-    }*/
-    navigation.navigate("ScreenRegisterD", {
-      appUser,
-      nameUser,
-      surnameUser,
-      mailUser,
-      passwordUser,
-      photoUser,
+    }
+  };
+  
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+    console.log(photoUser)
+
+    if (!result.canceled) {
+      setPhotoUser(result.assets[0].uri);
+    }
+  };
+
+  const takeImage=async()=>{
+    let result =await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     })
-  };
+    console.log(result);
+    console.log(photoUser)
 
+    if (!result.canceled) {
+      setPhotoUser(result.assets[0].uri);
+    }
+  }
   const handleGoBack = () => {
-    navigation.goBack();
-  };
-
-  const selectImage = () => {
-    const options = {
-      title: 'Select an image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-      mediaType: 'photo' as MediaType,
-      includeBase64: true,
-    };
-
-    launchImageLibrary(options, (response: ImagePickerResponse) => {
-      if (response.errorCode) {
-        console.log(response.errorCode);
-      } else if (response.didCancel) {
-        console.log('User cancelled');
-      } else {
-        const path = response.assets?.[0].uri ?? '';
-        setPhotoUser(path);
-      }
-    });
-  };
-
-  const takePicture = () => {
-    const options = {
-      title: 'Take an image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-      mediaType: 'photo' as MediaType,
-      includeBase64: true,
-    };
-
-    launchCamera(options, (response: ImagePickerResponse) => {
-      if (response.errorCode) {
-        console.log(response.errorMessage);
-      } else if (response.didCancel) {
-        console.log('User cancelled');
-      } else {
-        const path = response.assets?.[0].uri ?? '';
-        setPhotoUser(path);
-      }
-    });
+    navigation.navigate("ScreenRegisterB");
   };
 
   return (
-    <MainContainer>
-      <View>
-        <Button title="Select Image" onPress={selectImage} />
-        <Button title="Take picture" onPress={takePicture} />
-        <Image
-          style={{
-            alignSelf: 'center',
-            height: 200,
-            width: 200,
-          }}
-          source={{ uri: photoUser }}
-        />
-      </View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <Button title="Take a picture" onPress={takeImage} />
+      {photoUser && <Image source={{ uri: photoUser }} style={{ width: 200, height: 200,borderRadius:200/2 }} />}
       <Button title="Next" onPress={handleGoToScreenRegisterD} />
       <Button title="Back" onPress={handleGoBack} />
-    </MainContainer>
+    </View>
+    
   );
 }
