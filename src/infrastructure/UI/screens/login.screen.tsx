@@ -53,7 +53,7 @@ export default function LoginScreen() {
                 console.log("_id" + JSON.stringify(response.data.user._id));
                 console.log("token" + JSON.stringify(response.data.token));
                 console.log("YA NO ESTOY CHINADO");
-                navigation.navigate('Profile' as never);
+                navigation.navigate('HomeScreen' as never);
               }
             })
             .catch((error) => {

@@ -20,7 +20,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      
+    
         <Stack.Screen
           name="LoginScreen"
           options={{ headerShown: false }}
@@ -58,8 +58,8 @@ export default function App() {
           component={ScreenRegisterFinal}
         />
 
-        <Stack.Screen
-          name="Home"
+<Stack.Screen
+          name="HomeScreen"
           options={{ title: "LPlan" }}
           component={HomeScreen}
         />

@@ -68,7 +68,6 @@ export default function ScreenRegisterFinal({
       };
       console.log("ANDO POR AQUI: "+user);
 
-      // Llamar al servicio de registro
       SessionService.register(user).then((response)=>{
         console.log(response);
         if(response.status===200){
@@ -79,11 +78,9 @@ export default function ScreenRegisterFinal({
       })
       //console.log("Registration successful:", response.data);
 
-      // Redirigir a la pantalla de inicio de sesión u otra pantalla deseada
-      //navigation.navigate("LoginScreen");
+      navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error during registration:", error);
-      // Manejar el error de registro aquí
     }
   };
 
