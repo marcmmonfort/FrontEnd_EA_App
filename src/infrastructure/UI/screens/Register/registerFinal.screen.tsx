@@ -3,8 +3,6 @@ import { View, Text, Button, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { SessionService } from "../../../services/user/session.service";
 import { UserAuthEntity } from "../../../../domain/user/user.entity";
-import Register from "../../components/texts/Register";
-import ButtonGradient from "../../components/buttons/ButtonGradient";
 
 interface RouteParams {
   appUser?: any;
@@ -71,11 +69,18 @@ export default function ScreenRegisterFinal({
       console.log(user);
 
       // Llamar al servicio de registro
-      const response = await SessionService.register(user);
-      console.log("Registration successful:", response.data);
+      SessionService.register(user).then((response)=>{
+        console.log(response);
+        if(response.status===200){
+          console.log(JSON.stringify(response.data));
+        };
+      }).catch((error)=>{
+        console.log("error: "+error);
+      })
+      //console.log("Registration successful:", response.data);
 
       // Redirigir a la pantalla de inicio de sesión u otra pantalla deseada
-      navigation.navigate("LoginScreen");
+      //navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error during registration:", error);
       // Manejar el error de registro aquí

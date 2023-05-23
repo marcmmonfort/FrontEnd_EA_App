@@ -7,7 +7,7 @@ const API_URL = "http://147.83.7.158:5432/";
 export class SessionService {
   static async login(auth: AuthEntity) {
     try {
-      const response = await axios.post(API_URL + "user/login", auth);
+      const response = await axios.post(API_URL + "user/loginfrontend", auth);
       console.log(response);
       return response;
     } catch (error) {
