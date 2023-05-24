@@ -13,6 +13,7 @@ import ScreenRegisterC from "./src/infrastructure/UI/screens/Register/register3.
 import ScreenRegisterD from "./src/infrastructure/UI/screens/Register/register4.screen";
 import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.screen";
 import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
+import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-    
+
+        <Stack.Screen
+          name="Splash"
+          options={{ headerShown: false }}
+          component={SplashScreen}
+        />    
         <Stack.Screen
           name="LoginScreen"
           options={{ headerShown: false }}
@@ -51,14 +57,12 @@ export default function App() {
           options={{ headerShown: false }}
           component={ScreenRegisterE}
         />
-
         <Stack.Screen
           name="ScreenRegisterFinal"
           options={{ headerShown: false }}
           component={ScreenRegisterFinal}
         />
-
-<Stack.Screen
+        <Stack.Screen
           name="HomeScreen"
           options={{ title: "LPlan" }}
           component={HomeScreen}
