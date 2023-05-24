@@ -35,7 +35,6 @@ export default function ScreenRegisterD() {
 
   const handleShowDatePicker = () => {
     setShowDatePicker(true);
-    console.log(photoUser);
   };
 
   const handleDateChange = (event: any, selectedDate: any) => {

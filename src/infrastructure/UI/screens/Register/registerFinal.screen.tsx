@@ -66,7 +66,6 @@ export default function ScreenRegisterFinal({
         privacyUser: privacyUser === "private" ? true : false,
         deletedUser: false,
       };
-      console.log("ANDO POR AQUI: "+user);
 
       SessionService.register(user).then((response)=>{
         console.log(response);

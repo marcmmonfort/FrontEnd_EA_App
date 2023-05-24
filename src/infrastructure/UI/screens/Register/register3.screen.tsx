@@ -45,25 +45,19 @@ export default function ScreenRegisterC() {
       base64: true
     });
 
-    console.log(result);
-    console.log(photoUser);
+
     
 
     if (!result.canceled) {
       setAux(result.assets[0].uri);
       setPhotoUser(result.assets[0].uri);
-      console.log("Primero: "+result.assets[0].uri)
       const base64Image = await convertImageToBase64(result.assets[0].uri);
-      console.log("Segundo: "+base64Image)
       setPhotoUser(base64Image);
-      console.log("PHOTO USER TRES:   "+base64Image)
-      console.log("PHOTO USER 4:   "+photoUser)
 
       let data = {
         "file": base64Image,
         "upload_preset": "photoUser",
       }
-      console.log("PHOTO USER CUATRO:   "+base64Image)
       fetch(CLOUDINARY_URL, {
         body: JSON.stringify(data),
         headers: {
@@ -72,8 +66,6 @@ export default function ScreenRegisterC() {
         method: 'POST',
       }).then(async r => {
         let data = await r.json()
-        console.log("DATAAAA: "+JSON.stringify(data))
-        console.log(data.url)
   
     //Here I'm using another hook to set State for the photo that we get back //from Cloudinary
   
@@ -95,24 +87,19 @@ export default function ScreenRegisterC() {
       aspect: [4, 3],
       quality: 1,
     })
-    console.log(result);
-    console.log(photoUser)
+
 
     if (!result.canceled) {
       setAux(result.assets[0].uri);
       setPhotoUser(result.assets[0].uri);
-      console.log("Primero: "+result.assets[0].uri)
       const base64Image = await convertImageToBase64(result.assets[0].uri);
-      console.log("Segundo: "+base64Image)
       setPhotoUser(base64Image);
-      console.log("PHOTO USER TRES:   "+base64Image)
-      console.log("PHOTO USER 4:   "+photoUser)
+
 
       let data = {
         "file": base64Image,
         "upload_preset": "photoUser",
       }
-      console.log("PHOTO USER CUATRO:   "+base64Image)
       fetch(CLOUDINARY_URL, {
         body: JSON.stringify(data),
         headers: {
@@ -121,8 +108,7 @@ export default function ScreenRegisterC() {
         method: 'POST',
       }).then(async r => {
         let data = await r.json()
-        console.log("DATAAAA: "+JSON.stringify(data))
-        console.log(data.url)
+
   
     //Here I'm using another hook to set State for the photo that we get back //from Cloudinary
   

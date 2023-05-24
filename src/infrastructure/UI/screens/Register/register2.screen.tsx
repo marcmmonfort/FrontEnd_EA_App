@@ -32,13 +32,13 @@ export default function ScreenRegisterB() {
             Alert.alert("Email", "Please enter a valid email address");
           }
         else {
-          navigation.navigate("ScreenRegisterC", {
+          navigation.navigate("ScreenRegisterC" as never, {
             appUser,
             nameUser,
             surnameUser,
             mailUser,
             passwordUser,
-          });
+          }as never);
         }
       };
     
