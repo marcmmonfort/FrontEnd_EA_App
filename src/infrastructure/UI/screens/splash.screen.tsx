@@ -30,8 +30,7 @@ export default function SplashScreen() {
     setTimeout(() => {
         const checkToken = async () => {
             try {
-              const token = await AsyncStorage.getItem('apptoken');
-              console.log("OBTIENE:", token)
+              const token = await AsyncStorage.getItem('token');
               if (token) {
                 navigation.navigate('HomeScreen' as never);
               } else {

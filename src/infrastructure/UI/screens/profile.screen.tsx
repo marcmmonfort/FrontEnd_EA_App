@@ -16,7 +16,7 @@ export default function ProfileScreen() {
   const logOutButtonFunction = async () => {
     try {
       const nothing = "";
-      AsyncStorage.setItem('apptoken', nothing);
+      AsyncStorage.setItem('token', nothing);
       navigation.navigate('LoginScreen' as never);
     } catch (error) {
       console.error("Error deleting the token: ", error);

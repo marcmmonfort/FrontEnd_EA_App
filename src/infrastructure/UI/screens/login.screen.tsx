@@ -56,10 +56,6 @@ export default function LoginScreen() {
                 console.log("token" + JSON.stringify(response.data.token));
                 console.log("Login Succesfull!");
 
-                // GUARDO EL TOKEN EN EL LOCAL STORAGE ...
-                const token = JSON.stringify(response.data.token);
-                AsyncStorage.setItem('apptoken', token);
-
                 navigation.navigate('HomeScreen' as never);
               }
             })
