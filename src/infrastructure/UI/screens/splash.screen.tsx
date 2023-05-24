@@ -1,29 +1,22 @@
 import React, { useEffect } from 'react';
 import { ImageBackground, Image, View, StyleSheet, Text } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SplashScreen() {
   const navigation = useNavigation();
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#000000",
     },
     image: {
       width: 100,
       height: 100,
       resizeMode: 'cover',
-    },
-    backgroundImage: {
-      flex: 1,
-      resizeMode: 'cover',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
     },
     text_normal: {
         color: 'white',
@@ -35,7 +28,20 @@ export default function SplashScreen() {
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('LoginScreen' as never);
+        const checkToken = async () => {
+            try {
+              const token = await AsyncStorage.getItem('apptoken');
+              console.log("OBTIENE:", token)
+              if (token) {
+                navigation.navigate('HomeScreen' as never);
+              } else {
+                navigation.navigate('LoginScreen' as never);
+              }
+            } catch (error) {
+              console.log('Error al obtener el token:', error);
+            }
+          };
+        checkToken();
     }, 3000);
   }, []);
 
@@ -43,12 +49,10 @@ export default function SplashScreen() {
 
   return (
     <View style={styles.container}>
-        <ImageBackground source={require('../../../../assets/background_5.jpg')} style={styles.backgroundImage}>
-            <View style={styles.container}>
-                <Text style={styles.text_normal}>Welcome to LPLAN!</Text>
-                <Image source={imageUrl} style={styles.image} />
-            </View>
-        </ImageBackground>
+        <View style={styles.container}>
+            <Text style={styles.text_normal}>Welcome to LPLAN!</Text>
+            <Image source={imageUrl} style={styles.image} />
+        </View>
     </View>
   );
 }

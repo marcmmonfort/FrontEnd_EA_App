@@ -64,7 +64,7 @@ export default function App() {
         />
         <Stack.Screen
           name="HomeScreen"
-          options={{ title: "LPlan" }}
+          options={{ title: "LPlan", headerShown: false }}
           component={HomeScreen}
         />
         <Stack.Screen
