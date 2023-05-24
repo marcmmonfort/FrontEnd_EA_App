@@ -1,7 +1,7 @@
 import { UserEntity } from "../user/user.entity";
-import { PublicationEntity } from "./publication.entity";
+import Publication from "./publication.entity";
 
-export class PublicationValue implements PublicationEntity {
+export class PublicationValue implements Publication {
     uuid: string;
     idUser: UserEntity;
     likesPublication?: [string] | undefined;
