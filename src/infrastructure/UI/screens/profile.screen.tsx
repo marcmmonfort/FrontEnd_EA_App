@@ -17,8 +17,8 @@ export default function ProfileScreen() {
             await CRUDService.getUser(userId)
             .then((response) => {
               console.log("Punto 1:"+response);
-              console.log(response?.data.response);
-              setCurrentUser(response?.data.response);
+              console.log(response?.data);
+              setCurrentUser(response?.data);
             })
           } catch (error) {
             console.log("Encontre el id pero no va")

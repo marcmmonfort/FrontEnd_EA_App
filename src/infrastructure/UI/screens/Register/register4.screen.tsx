@@ -65,7 +65,7 @@ export default function ScreenRegisterD() {
     if (!birthdateUser || !genderUser) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
-      navigation.navigate("ScreenRegisterE", {
+      navigation.navigate("ScreenRegisterE"as never, {
         appUser,
         nameUser,
         surnameUser,
@@ -75,7 +75,7 @@ export default function ScreenRegisterD() {
         birthdateUser,
         genderUser,
         ocupationUser,
-      });
+      }as never);
     }
   };
 
