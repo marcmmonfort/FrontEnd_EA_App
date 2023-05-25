@@ -3,6 +3,9 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,6 +15,12 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
+  const [photoUser, setPhotoUser] = useState("");
+  const [auxPhotoUser, setAux] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cam, setCam] = useState(false);
+let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
+  const navigation = useNavigation();
 
   const logOutButtonFunction = async () => {
     try {
@@ -27,17 +36,13 @@ export default function ProfileScreen() {
     React.useCallback(() => {
       const getUser = async () => {
         const userId = await SessionService.getCurrentUser();
-        console.log("BBBBBBBBBBBB:  "+userId);
         if (userId) {
           try {
-            await CRUDService.getUser(userId)
-            .then((response) => {
-              console.log("Punto 1:"+response);
-              console.log(response?.data);
+            await CRUDService.getUser(userId).then((response) => {
               setCurrentUser(response?.data);
-            })
+            });
           } catch (error) {
-            console.log("Encontre el id pero no va")
+            console.error("Error retrieving user:", error);
           }
         }
       };
@@ -55,21 +60,23 @@ export default function ProfileScreen() {
         {currentUser && (
           <View style={styles.profileContainer}>
             <View style={styles.profile}>
-              <Text style={styles.profileUserName}>{currentUser.appUser} Hola</Text>
+              <Text style={styles.profileUserName}>
+                {currentUser.appUser}
+              </Text>
               <View style={styles.profileImage}>
                 <Image
                   source={{ uri: currentUser.photoUser }}
-                  style={styles.profileImgCard}
+                  style={styles.image}
                 />
               </View>
               <View style={styles.profileUserButtons}>
                 <TouchableOpacity
                   onPress={() => {
-                    // Acción al presionar el botón de Editar perfil
+                    navigation.navigate("EditUser" as never);
                   }}
                   style={styles.buttonProfile}
                 >
-                  <Text style={styles.text}>Edit Profile</Text>
+                  <Text style={styles.buttonText}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -77,18 +84,24 @@ export default function ProfileScreen() {
                   }}
                   style={styles.buttonProfile}
                 >
-                  <Text style={styles.text}>Settings</Text>
+                  <Text style={styles.buttonText}>Settings</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.profileStats}>
                 <Text style={styles.text}>Followers</Text>
-                <Text style={styles.profileStatCount}>
-                  {currentUser.followersUser?.length}
-                </Text>
+                <TouchableOpacity
+                  style={styles.profileStatCount}
+                  onPress={() => {}}
+                >
+                  <Text>{currentUser.followersUser?.length}</Text>
+                </TouchableOpacity>
                 <Text style={styles.text}>Following</Text>
-                <Text style={styles.profileStatCount}>
-                  {currentUser.followedUser?.length}
-                </Text>
+                <TouchableOpacity
+                  style={styles.profileStatCount}
+                  onPress={() => {}}
+                >
+                  <Text>{currentUser.followedUser?.length}</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.profileBio}>
                 <Text style={styles.profileTitle}>Name</Text>
@@ -120,20 +133,73 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000",
   },
-  titleContainer: {},
-  titleSection: {},
-  profileContour: {},
-  profileContainer: {},
-  profile: {},
-  profileUserName: {},
-  profileImage: {},
-  profileImgCard: {},
-  profileUserButton: {},
-  profileUserButtons: {},
-  buttonProfile: {},
-  profileStats: {},
-  profileTitle: {},
+  titleContainer: {
+    marginBottom: 20,
+  },
+  profileContour: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profile: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileUserName: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#000",
+    marginTop: 12,
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 20,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 75,
+  },
+  profileUserButtons: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  buttonProfile: {
+    margin: 4,
+    padding: 6,
+    backgroundColor: "#000",
+    borderRadius: 20,
+    color: "#66fcf1",
+    fontSize: 14,
+    width: 100,
+    textAlign: "center",
+  },
+  buttonText: {
+    color: "#66fcf1",
+  },
+  profileStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  profileTitle: {
+    fontSize: 12,
+    marginBottom: -10,
+  },
   profileStatCount: {},
-  profileBio: {},
-  profileRealName: {},
+  profileBio: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileRealName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
 });

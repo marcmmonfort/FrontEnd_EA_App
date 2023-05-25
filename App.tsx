@@ -13,6 +13,7 @@ import ScreenRegisterC from "./src/infrastructure/UI/screens/Register/register3.
 import ScreenRegisterD from "./src/infrastructure/UI/screens/Register/register4.screen";
 import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.screen";
 import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
+import EditUserScreen from "./src/infrastructure/UI/screens/edit.user.screen";
 import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 
@@ -77,10 +78,6 @@ export default function App() {
           name="Profile"
           component={ProfileScreen}
         />
-        <Stack.Screen
-          name="ScreenPublicationUpB"
-          component={ScreenPublicationUpB}
-          />
         
       </Stack.Navigator>
     </NavigationContainer>

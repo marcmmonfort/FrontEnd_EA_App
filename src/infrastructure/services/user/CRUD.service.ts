@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AuthHeaderService } from "./authHeaders.service";
+import { UserAuthEntity } from "../../../domain/user/user.entity";
 
 const API_URL = "http://147.83.7.158:5432/";
 
