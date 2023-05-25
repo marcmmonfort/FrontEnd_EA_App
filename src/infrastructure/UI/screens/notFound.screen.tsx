@@ -1,12 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
 
 export default function NotFoundScreen() {
   const [animation] = useState(new Animated.ValueXY({ x: 0, y: 0 }));

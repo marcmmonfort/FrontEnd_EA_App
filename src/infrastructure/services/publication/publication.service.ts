@@ -13,8 +13,8 @@ export class PublicationService {
       const response = await axios.get(API_URL + "followingPost/" + numPage + "/" + uuid, { headers: token });
       //console.log("try response " + response)
       return response;
-    } catch (error) {
-      console.error('Error during load feed:', error);
+    } catch(error){
+      console.error('Error during post publication: '+error);
       throw error;
     }
   }

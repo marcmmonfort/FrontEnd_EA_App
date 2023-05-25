@@ -21,5 +21,4 @@ export class PublicationValue implements PublicationEntity {
         this.createdAt=createdAt;
         this.updatedAt=updatedAt;
     }
-    
 }
