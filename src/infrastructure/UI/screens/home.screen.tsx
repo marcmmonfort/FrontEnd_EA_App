@@ -1,77 +1,76 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons,AntDesign } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
-import FeedScreen from "./feed.screen";
-import DiscoveryScreen from "./discovery.screen";
-import CalendarEventsScreen from "./calendar.screen";
-import ProfileScreen from "./profile.screen";
-import PublicationUpScreenA from "./Publication/publicationUp.screen";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
+import FeedScreen from './feed.screen';
+import DiscoveryScreen from './discovery.screen';
+import CalendarEventsScreen from './calendar.screen';
+import ProfileScreen from './profile.screen';
+import PublicationUpScreenA from './Publication/publicationUp.screen';
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeScreen() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: '#000000' },
+        tabBarShowLabel: false,
+      }}
+    >
       <Tab.Screen
-        name="Crazy button"
+        name="Feed"
         component={FeedScreen}
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="gesture-tap-button"
-              size={30}
-              color="#66fcf1"
-            />
+            <MaterialCommunityIcons name="image" size={30} color='#66fcf1' />
           ),
+          headerStyle: { backgroundColor: '#000000' },
+          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }}
       />
       <Tab.Screen
-        name="Photo page"
+        name="Discovery"
         component={DiscoveryScreen}
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarBadge: 3,
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="photo-library" size={25} color="#66fcf1" />
+            <MaterialCommunityIcons name="magnify" size={25} color='#66fcf1' />
           ),
+          headerStyle: { backgroundColor: '#000000' },
+          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }}
       />
       <Tab.Screen
-        name="Publication page"
+        name="Post a Publication"
         component={PublicationUpScreenA}
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
-            <Fontisto name="nav-icon-list-a" size={18} color="#66fcf1" />
+            <Fontisto name="camera" size={18} color='#66fcf1' />
           ),
+          headerStyle: { backgroundColor: '#000000' },
+          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }}
       />
       <Tab.Screen
-        name="CalendarEventsScreen"
+        name="Calendar and Events"
         component={CalendarEventsScreen}
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
-            <Fontisto name="nav-icon-list-a" size={18} color="#66fcf1" />
+            <Fontisto name="calendar" size={18} color='#66fcf1' />
           ),
+          headerStyle: { backgroundColor: '#000000' },
+          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
+        name="Profile"
         component={ProfileScreen}
         options={{
-          headerShown: false,
-          tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
-            <Fontisto name="nav-icon-list-a" size={18} color="#66fcf1" />
+            <Fontisto name="home" size={18} color='#66fcf1' />
           ),
+          headerStyle: { backgroundColor: '#000000' },
+          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }}
       />
     </Tab.Navigator>

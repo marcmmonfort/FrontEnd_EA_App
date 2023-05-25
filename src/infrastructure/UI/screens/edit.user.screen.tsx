@@ -135,6 +135,13 @@ export default function EditUserScreen() {
     console.log(userData);
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: '#000000' },
+      headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+    });
+  }, [navigation]);
+
   return (
     <View>
       <TouchableOpacity onPress={() => {handleGalleryPress}}>

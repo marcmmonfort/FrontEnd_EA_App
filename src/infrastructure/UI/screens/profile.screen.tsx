@@ -48,7 +48,6 @@ let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   
   return (
     <View style={styles.container}>
-      <Button title="LogOut" onPress={logOutButtonFunction} />
       <View style={styles.titleContainer}>
         <Text style={styles.text}>Profile</Text>
       </View>
@@ -68,7 +67,7 @@ let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
               <View style={styles.profileUserButtons}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate("EditUserScreen" as never);
+                    navigation.navigate("Edit" as never);
                   }}
                   style={styles.buttonProfile}
                 >
@@ -110,6 +109,7 @@ let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
                 <Text>{currentUser.descriptionUser}</Text>
               </View>
             </View>
+            <Button title="LogOut" onPress={logOutButtonFunction} />
           </View>
         )}
       </View>

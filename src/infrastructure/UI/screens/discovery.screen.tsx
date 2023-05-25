@@ -66,8 +66,6 @@ export default function DiscoveryScreen() {
   
   return (
     <View>
-      <Text>Discovery</Text>
-
       <SearchBar onSearch={handleSearchWrapper} />
 
       <View style={styles.cardsUsers}>

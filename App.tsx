@@ -83,7 +83,7 @@ export default function App() {
           component={ScreenPublicationUpB}
           />
           <Stack.Screen
-            name="EditUserScreen"
+            name="Edit"
             component={EditUserScreen}
             />
         
