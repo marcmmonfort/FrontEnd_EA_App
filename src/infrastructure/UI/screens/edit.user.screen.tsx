@@ -102,6 +102,7 @@ export default function EditUserScreen() {
         .finally(() => setLoading(false));
     }
   };
+  
   const handleUpload = (url:any) => {
     if (!url) {
       Alert.alert("Hello", "You must complete all the fields");

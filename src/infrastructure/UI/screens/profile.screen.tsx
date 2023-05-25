@@ -8,21 +8,23 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
+  const [photoUser, setPhotoUser] = useState("");
+  const [auxPhotoUser, setAux] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cam, setCam] = useState(false);
+let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const navigation = useNavigation();
   useFocusEffect(
     React.useCallback(() => {
       const getUser = async () => {
         const userId = await SessionService.getCurrentUser();
-        //console.log("BBBBBBBBBBBB:  "+userId);
         if (userId) {
           try {
             await CRUDService.getUser(userId).then((response) => {
-              //console.log("Punto 1:"+response);
-              //console.log(response?.data);
               setCurrentUser(response?.data);
             });
           } catch (error) {
-            //console.log("Encontre el id pero no va")
+            console.error("Error retrieving user:", error);
           }
         }
       };
@@ -39,23 +41,22 @@ export default function ProfileScreen() {
           <View style={styles.profileContainer}>
             <View style={styles.profile}>
               <Text style={styles.profileUserName}>
-                {currentUser.appUser} Hola
+                {currentUser.appUser}
               </Text>
               <View style={styles.profileImage}>
                 <Image
                   source={{ uri: currentUser.photoUser }}
-                  style={{width:200,height:200,borderRadius:200/2}}
+                  style={styles.image}
                 />
               </View>
               <View style={styles.profileUserButtons}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("EditUser" as never);
-                    // Acción al presionar el botón de Editar perfil
                   }}
                   style={styles.buttonProfile}
                 >
-                  <Text style={styles.text}>Edit Profile</Text>
+                  <Text style={styles.buttonText}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -63,7 +64,7 @@ export default function ProfileScreen() {
                   }}
                   style={styles.buttonProfile}
                 >
-                  <Text style={styles.text}>Settings</Text>
+                  <Text style={styles.buttonText}>Settings</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.profileStats}>
@@ -112,15 +113,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000",
   },
-
-  profileImgCard:{},
   titleContainer: {
     marginBottom: 20,
-  },
-  titleSection: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#000",
   },
   profileContour: {
     alignItems: "center",
@@ -147,6 +141,11 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 20,
   },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 75,
+  },
   profileUserButtons: {
     flexDirection: "row",
     marginBottom: 20,
@@ -161,6 +160,9 @@ const styles = StyleSheet.create({
     width: 100,
     textAlign: "center",
   },
+  buttonText: {
+    color: "#66fcf1",
+  },
   profileStats: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -170,9 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: -10,
   },
-  profileStatCount: {
-
-  },
+  profileStatCount: {},
   profileBio: {
     alignItems: "center",
     justifyContent: "center",
