@@ -1,12 +1,13 @@
 import { SessionService } from "../../services/user/session.service";
-import { UserEntity } from "../../../domain/user/user.entity";
+
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SearchBar from '../components/searchbar/searchbar';
+import { UserEntity } from "../../../domain/user/user.entity";
+import SearchBar from "../components/searchbar/searchbar";
 
 export default function DiscoveryScreen() {
 
@@ -62,43 +63,21 @@ export default function DiscoveryScreen() {
   const handleSearchWrapper = (searchText: string) => {
     handleSearch(searchText, setUserList);
   };
-
+  
   return (
     <View>
-      <Text>Welcome to Home Screen</Text>
+      <Text>Discovery</Text>
 
       <SearchBar onSearch={handleSearchWrapper} />
-       
+
       <View style={styles.cardsUsers}>
         {userList && userList.length > 0 ? (
-          <FlatList
-            data={userList}
-            keyExtractor={(user) => user.uuid}
-            renderItem={({ item: user }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  if (currentUser?.uuid === user.uuid) {
-                    navigation.navigate('ProfileScreen' as never);
-                  } else {
-                    // IR A LA PÁGINA DONDE VER EL PERFIL DEL USUARIO
-                  }
-                }}
-                style={styles.userLink}
-              >
-                <View style={styles.user}>
-                  {user.photoUser ? (
-                    <Image source={{ uri: user.photoUser }} style={styles.userProfileImg} />
-                  ) : (
-                    <Image source={require('//ssl.gstatic.com/accounts/ui/avatar_2x.png')} style={styles.profileImgCard} />
-                  )}
-                  <View style={styles.userInfo}>
-                    <Text style={styles.userName}>{`${user.nameUser} ${user.surnameUser}`}</Text>
-                    <Text style={styles.userUsername}>@{user.appUser}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+          <FlatList data={userList} renderItem={({ item }) => ( 
+            <View>
+              <Text>{item.nameUser} {item.surnameUser}</Text> 
+              <Text>@{item.appUser}</Text> 
+            </View> 
+          )} keyExtractor={(item) => item.uuid.toString()} />
         ) : (
           <Text style={styles.usersNotFound}>User Not Found</Text>
         )}

@@ -8,8 +8,9 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchText, setSearchText] = useState('');
 
-  const handleSearch = () => {
-    onSearch(searchText);
+  const handleChangeText = (text: string) => {
+    setSearchText(text);
+    onSearch(text);
   };
 
   return (
@@ -18,9 +19,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         style={styles.input}
         placeholder="Search"
         value={searchText}
-        onChangeText={text => setSearchText(text)}
+        onChangeText={handleChangeText}
       />
-      <Button title="Search" onPress={handleSearch} />
     </View>
   );
 };
