@@ -1,6 +1,5 @@
 import axios from "axios";
 import { AuthHeaderService } from "./authHeaders.service";
-import { UserAuthEntity } from "../../../domain/user/user.entity";
 
 const API_URL = "http://147.83.7.158:5432/";
 
@@ -19,6 +18,22 @@ export class CRUDService{
           }
         }else(console.log("Token problemas"))
     } 
+    static async editUser(user: any) {
+      console.log(user.uuid);
+      const token = await AuthHeaderService.authHeader();
+      if (token) {
+        try {
+          console.log("Estamos en el editUser");
+          
+          const response = await axios.put(API_URL + "user/" + user.uuid, user, {headers: token});
+          console.log("Recibimos respuesta" + response);
+          return response;
+        } catch (error) {
+          console.error("Error editing user: ", error);
+          throw error;
+        }
+      }
+    }
 
     static async searchUsers(searchQuery: string) {
       const token=await AuthHeaderService.authHeader()
