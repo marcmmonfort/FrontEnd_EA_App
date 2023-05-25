@@ -23,11 +23,12 @@ export default function ProfileScreen() {
           } catch (error) {
             console.log("Encontre el id pero no va")
           }
-}
+        }
       };
       getUser();
     }, [])
   );
+  
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
