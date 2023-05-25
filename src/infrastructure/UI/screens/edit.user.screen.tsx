@@ -123,7 +123,9 @@ export default function EditUserScreen() {
 
   const handleSubmit = () => {
     try {
+      console.log("AAAAAAA")
       CRUDService.editUser(userData).then((response) => {
+        console.log("BBBBBB")
         console.log(response?.data);
         navigation.navigate('Profile' as never);
       });

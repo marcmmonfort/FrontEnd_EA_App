@@ -78,6 +78,14 @@ export default function App() {
           name="Profile"
           component={ProfileScreen}
         />
+        <Stack.Screen
+          name="ScreenPublicationUpB"
+          component={ScreenPublicationUpB}
+          />
+          <Stack.Screen
+            name="EditUserScreen"
+            component={EditUserScreen}
+            />
         
       </Stack.Navigator>
     </NavigationContainer>

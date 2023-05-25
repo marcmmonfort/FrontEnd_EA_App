@@ -3,16 +3,12 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity,Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
 
-  const navigation = useNavigation();
   
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
   const [photoUser, setPhotoUser] = useState("");
@@ -72,7 +68,7 @@ let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
               <View style={styles.profileUserButtons}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate("EditUser" as never);
+                    navigation.navigate("EditUserScreen" as never);
                   }}
                   style={styles.buttonProfile}
                 >
