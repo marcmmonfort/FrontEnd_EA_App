@@ -48,6 +48,7 @@ export class CRUDService{
 
 
     static async isFollowed(uuid:string, uuidFollowed: string) {
+      console.log(uuid, uuidFollowed);
       const token=await AuthHeaderService.authHeader()
       if(token){
         try {
@@ -62,6 +63,7 @@ export class CRUDService{
 
      //OK
     static async addFollowed(uuid: string, uuidFollowed: string) {
+      console.log(uuid, uuidFollowed);
       const token=await AuthHeaderService.authHeader()
       if(token){
         try {
@@ -76,6 +78,7 @@ export class CRUDService{
 
     //OK
     static async removeFollowed(uuid: string, uuidFollowed: string) {
+      console.log(uuid, uuidFollowed);
       const token=await AuthHeaderService.authHeader()
       if(token){
         try {

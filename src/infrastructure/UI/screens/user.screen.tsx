@@ -24,6 +24,7 @@ export default function UserScreen() {
           console.log("Iniciamos feed");
           const fetchData = async () => {
             const userId = await SessionService.getCurrentUser();
+            console.log(userId);
             setMyId(userId);
             if (userId) {
               try {
