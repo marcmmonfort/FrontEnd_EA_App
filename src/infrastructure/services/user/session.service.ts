@@ -22,7 +22,6 @@ export class SessionService {
       const response = await axios.post(API_URL + "user/register", user);
       console.log(response);
       console.log("Register Bien");
-
       return response;
     } catch (error) {
       console.error("Error during register:", error);

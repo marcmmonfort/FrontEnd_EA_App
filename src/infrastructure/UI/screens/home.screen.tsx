@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons,AntDesign } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import FeedScreen from "./feed.screen";
 import DiscoveryScreen from "./discovery.screen";
-import MessagesScreen from "./messages.screen";
 import CalendarEventsScreen from "./calendar.screen";
 import ProfileScreen from "./profile.screen";
+import PublicationUpScreenA from "./Publication/publicationUp.screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,8 +42,8 @@ export default function HomeScreen() {
         }}
       />
       <Tab.Screen
-        name="List page"
-        component={MessagesScreen}
+        name="Publication page"
+        component={PublicationUpScreenA}
         options={{
           headerShown: false,
           tabBarShowLabel: false,

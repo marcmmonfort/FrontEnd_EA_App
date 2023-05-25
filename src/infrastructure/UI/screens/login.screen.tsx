@@ -11,12 +11,14 @@ import { SessionService } from "../../services/user/session.service";
 import NormalText from "../components/texts/NormalText";
 import { StatusBar, TouchableOpacity } from "react-native";
 import Register from "../components/texts/Register";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
 
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
+
   return (
     <MainContainer>
       <Title>Lplan</Title>
@@ -52,7 +54,8 @@ export default function LoginScreen() {
                 );
                 console.log("_id" + JSON.stringify(response.data.user.uuid));
                 console.log("token" + JSON.stringify(response.data.token));
-                console.log("YA NO ESTOY CHINADO");
+                console.log("Login Succesfull!");
+
                 navigation.navigate('HomeScreen' as never);
               }
             })

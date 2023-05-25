@@ -51,7 +51,7 @@ export default function ScreenRegisterE() {
     if (!descriptionUser || !roleUser || privacyUser === undefined) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
-      navigation.navigate("ScreenRegisterFinal", {
+      navigation.navigate("ScreenRegisterFinal"as never, {
         appUser,
         nameUser,
         surnameUser,
@@ -64,7 +64,7 @@ export default function ScreenRegisterE() {
         descriptionUser,
         roleUser,
         privacyUser: privacyUser.toString(),
-      });
+      }as never);
     }
   };
 

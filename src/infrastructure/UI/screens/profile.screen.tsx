@@ -3,9 +3,25 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function ProfileScreen() {
+
+  const navigation = useNavigation();
+  
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
+
+  const logOutButtonFunction = async () => {
+    try {
+      const nothing = "";
+      AsyncStorage.setItem('token', nothing);
+      navigation.navigate('LoginScreen' as never);
+    } catch (error) {
+      console.error("Error deleting the token: ", error);
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -31,6 +47,7 @@ export default function ProfileScreen() {
   
   return (
     <View style={styles.container}>
+      <Button title="LogOut" onPress={logOutButtonFunction} />
       <View style={styles.titleContainer}>
         <Text style={styles.text}>Profile</Text>
       </View>
@@ -94,7 +111,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
     alignItems: "center",
     justifyContent: "center",
   },

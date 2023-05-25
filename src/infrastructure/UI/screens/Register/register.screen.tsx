@@ -15,16 +15,17 @@ export default function ScreenRegisterA() {
     if (!appUser || !nameUser || !surnameUser) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
-      navigation.navigate("ScreenRegisterB", {
+      navigation.navigate("ScreenRegisterB" as never, {
         appUser,
         nameUser,
         surnameUser,
-      });
+        
+      }as never);
     }
   };
 
   const handleGoBack = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Login" as never);
   };
 
   return (

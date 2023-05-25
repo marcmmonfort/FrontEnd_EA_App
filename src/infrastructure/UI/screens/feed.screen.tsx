@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from "react-native";
-import { PublicationEntity } from "../../../domain/publication/publication.entity";
+import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { SessionService } from "../../services/user/session.service";
 import { PublicationService } from "../../services/publication/publication.service";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -15,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
-  const [listPublications, setListPublications] = useState<PublicationEntity[]>([]);
+  const [listPublications, setListPublications] = useState<Publication[]>([]);
   const [numPagePublication, setNumPagePublication] = useState<number>(1);
   const [commentsVisibility, setCommentsVisibility] = useState<{[key: string]: boolean; }>({});
   const [pageComments, setPageComments] = useState<{ [key: string]: number }>({});
@@ -45,7 +45,7 @@ export default function FeedScreen() {
                 console.log("userId", userId);
   
                 const initialVisibility = response.data.reduce(
-                  (acc: { [key: string]: boolean }, publication: PublicationEntity) => {
+                  (acc: { [key: string]: boolean }, publication: Publication) => {
                     acc[publication.uuid] = false;
                     return acc;
                   },
@@ -54,7 +54,7 @@ export default function FeedScreen() {
                 setCommentsVisibility(initialVisibility);
   
                 const initialPage = response.data.reduce(
-                  (acc: { [key: string]: number }, publication: PublicationEntity) => {
+                  (acc: { [key: string]: number }, publication: Publication) => {
                     acc[publication.uuid] = 1;
                     return acc;
                   },
@@ -63,7 +63,7 @@ export default function FeedScreen() {
                 setPageComments(initialPage);
   
                 const initialCommentButton = response.data.reduce(
-                  (acc: { [key: string]: string }, publication: PublicationEntity) => {
+                  (acc: { [key: string]: string }, publication: Publication) => {
                     acc[publication.uuid] = "Show comments";
                     return acc;
                   },
@@ -72,7 +72,7 @@ export default function FeedScreen() {
                 setCommentButton(initialCommentButton);
   
                 const initialListComments = response.data.reduce(
-                  (acc: { [key: string]: Comment[] }, publication: PublicationEntity) => {
+                  (acc: { [key: string]: Comment[] }, publication: Publication) => {
                     acc[publication.uuid] = [];
                     return acc;
                   },
@@ -81,7 +81,7 @@ export default function FeedScreen() {
                 setListCommentsPublication(initialListComments);
 
                 const initialCommentText= response.data.reduce(
-                  (acc: { [key: string]: string }, publication: PublicationEntity) => {
+                  (acc: { [key: string]: string }, publication: Publication) => {
                     acc[publication.uuid] = "";
                     return acc;
                   },
@@ -351,7 +351,7 @@ export default function FeedScreen() {
                 
                 {publication.commentsPublication &&
                     publication.commentsPublication.length >
-                      (pageComments[publication.uuid] ?? 0) * 2 ? (
+                      (pageComments[publication?.uuid] ?? 0) * 2 ? (
                       <TouchableOpacity
                         style={styles.showMoreCommentsButton}
                         onPress={() => {
