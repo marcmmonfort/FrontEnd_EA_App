@@ -13,6 +13,7 @@ import ScreenRegisterC from "./src/infrastructure/UI/screens/Register/register3.
 import ScreenRegisterD from "./src/infrastructure/UI/screens/Register/register4.screen";
 import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.screen";
 import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
+import EditUserScreen from "./src/infrastructure/UI/screens/edit.user.screen";
 
 const Stack = createStackNavigator();
 
@@ -71,6 +72,10 @@ export default function App() {
         <Stack.Screen
           name="Profile"
           component={ProfileScreen}
+        />
+         <Stack.Screen
+          name="EditUser"
+          component={EditUserScreen}
         />
         
       </Stack.Navigator>
