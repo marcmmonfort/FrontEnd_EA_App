@@ -3,7 +3,6 @@ export class AuthHeaderService{
     static async authHeader(){
         try{
         const tokenData=await AsyncStorage.getItem('token');
-        console.log("Remix AAAAAAAAAAAAAAAAAA (raw value):", tokenData);
         if (tokenData) {
             const token = JSON.parse(tokenData);
             console.log("Estoy enseñando el token:"+token);

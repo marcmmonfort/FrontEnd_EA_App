@@ -1,13 +1,11 @@
 import { UserEntity } from "../user/user.entity";
 
 export interface PublicationEntity {
-    uuid:string;
-    idUser:UserEntity;
+    uuid?:string;
+    idUser:string;
     likesPublication?:[string];
     textPublication?:string;
-    photoPublication:[string];
+    photoPublication:string;
     commentsPublication?:[string];
-    createdAt:string;
-    updatedAt:string;
 }
 

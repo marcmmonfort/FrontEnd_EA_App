@@ -13,6 +13,7 @@ import ScreenRegisterC from "./src/infrastructure/UI/screens/Register/register3.
 import ScreenRegisterD from "./src/infrastructure/UI/screens/Register/register4.screen";
 import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.screen";
 import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
+import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +73,10 @@ export default function App() {
           name="Profile"
           component={ProfileScreen}
         />
+        <Stack.Screen
+          name="ScreenPublicationUpB"
+          component={ScreenPublicationUpB}
+          />
         
       </Stack.Navigator>
     </NavigationContainer>
