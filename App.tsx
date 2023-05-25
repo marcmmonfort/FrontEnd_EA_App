@@ -15,6 +15,7 @@ import ScreenRegisterE from "./src/infrastructure/UI/screens/Register/register5.
 import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
 import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
+import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 
 const Stack = createStackNavigator();
 
@@ -81,6 +82,11 @@ export default function App() {
           name="ScreenPublicationUpB"
           component={ScreenPublicationUpB}
           />
+        <Stack.Screen
+          name="UserScreen"
+          component={UserScreen}
+          />
+        
         
       </Stack.Navigator>
     </NavigationContainer>

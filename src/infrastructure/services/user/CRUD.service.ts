@@ -45,6 +45,48 @@ export class CRUDService{
         }
       }else(console.log("Problems with the Token"))
     }
+
+
+    static async isFollowed(uuid:string, uuidFollowed: string) {
+      const token=await AuthHeaderService.authHeader()
+      if(token){
+        try {
+          const response = await axios.get(API_URL + "user/isFollower/" + uuid + "/" + uuidFollowed, { headers: token });
+          return response;
+        } catch (error) {
+          console.error("Error when obtaining if follower:", error);
+          throw error;
+        }
+      }
+    }
+
+     //OK
+    static async addFollowed(uuid: string, uuidFollowed: string) {
+      const token=await AuthHeaderService.authHeader()
+      if(token){
+        try {
+          const response = await axios.post(API_URL + "user/followed", {uuid: uuid, uuidFollowed: uuidFollowed}, { headers: token });
+          return response;
+        } catch (error) {
+          console.error("Error adding followed:", error);
+          throw error;
+        }
+      }
+    }
+
+    //OK
+    static async removeFollowed(uuid: string, uuidFollowed: string) {
+      const token=await AuthHeaderService.authHeader()
+      if(token){
+        try {
+          const response = await axios.put(API_URL + "user/followed/this", { uuid: uuid, uuidFollowed: uuidFollowed }, { headers: token}, );
+          return response;
+        } catch (error) { 
+          console.error("Error removing followed:", error);
+          throw error;
+        }
+      }
+    }
 }
 
 /**

@@ -12,6 +12,7 @@ import { AuthHeaderService } from "../../services/user/authHeaders.service";
 import { CommentEntity } from "../../../domain/comment/comment.entity";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
