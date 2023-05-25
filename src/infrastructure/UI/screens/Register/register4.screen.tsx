@@ -6,6 +6,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
+import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
+import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
+import ButtonGradientBirthdate from "../../components/buttons/ButtonGradientBirthdate";
 
 interface RouteParams {
   appUser?: any;
@@ -61,20 +64,35 @@ export default function ScreenRegisterD() {
   const navigation = useNavigation();
 
   const handleGoToScreenRegisterE = () => {
-    if (!birthdateUser || !genderUser) {
-      Alert.alert("Hello", "You must complete all the fields");
+    if (!birthdateUser) {
+      Alert.alert("Hello", "You must select a birthdate");
     } else {
-      navigation.navigate("ScreenRegisterE"as never, {
-        appUser,
-        nameUser,
-        surnameUser,
-        mailUser,
-        passwordUser,
-        photoUser,
-        birthdateUser,
-        genderUser,
-        ocupationUser,
-      }as never);
+      const selectedGender = genderUser || "male"; // Si no se selecciona ningún valor, se asigna "male" por defecto
+      if (isDateValid(selectedDate)) {
+        console.log(appUser);
+        console.log(nameUser);
+        console.log(surnameUser);
+        console.log(mailUser);
+        console.log(passwordUser);
+        console.log(photoUser);
+        console.log(birthdateUser);
+        console.log(selectedGender);
+        console.log(ocupationUser);
+        
+        navigation.navigate("ScreenRegisterE" as never, {
+          appUser,
+          nameUser,
+          surnameUser,
+          mailUser,
+          passwordUser,
+          photoUser,
+          birthdateUser,
+          genderUser: selectedGender,
+          ocupationUser,
+        } as never);
+      } else {
+        Alert.alert("Invalid Date", "App +16");
+      }
     }
   };
 
@@ -82,28 +100,71 @@ export default function ScreenRegisterD() {
     navigation.goBack();
   };
 
+  const isDateValid = (date: Date) => {
+    const currentDate = new Date();
+    const sixteenYearsAgo = new Date(
+      currentDate.getFullYear() - 16,
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
+    return date <= sixteenYearsAgo;
+  };
+
   const styles = StyleSheet.create({
     text: {
       color: "white",
+      fontStyle:'italic',
+      marginBottom:20,
+      marginTop:20,
+      alignContent:"center",
     },
     picker: {
       color: "black",
-      backgroundColor: "yellow",
+      fontWeight:'bold',
+      backgroundColor: "#66fcf1",
       borderWidth: 1,
       borderColor: "white",
       borderRadius: 5,
       marginTop: 10,
       marginBottom: 10,
     },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+    buttonContainerB: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 20,
+    },
+    requiredText: {
+      color: "red",
+      marginTop: 10,
+      fontStyle: "italic",
+    },
+    textInput: {
+      width: 250,
+    },
+    date:{
+      justifyContent:"center"
+    },
+    requiredTextB: {
+      color: "red",
+      marginTop: 10,
+      marginBottom:-25,
+      fontStyle: "italic",
+    },
   });
 
   return (
     <MainContainer>
+      <Text style={styles.requiredTextB}>Please, fill all the fields</Text>
       <View>
-        <Button title="Select Birthdate" onPress={handleShowDatePicker} />
-        <Text style={styles.text}>
-          Selected Birthdate: {selectedDate.toDateString()}
-        </Text>
+        <View style={styles.buttonContainerB}>
+        <ButtonGradientBirthdate onPress={handleShowDatePicker} />
+        </View>
+        
         <Text style={styles.text}>
           Selected Birthdate: {formatDate(selectedDate)}
         </Text>
@@ -124,19 +185,20 @@ export default function ScreenRegisterD() {
           <Picker.Item label="Female" value="female" />
         </Picker>
         <StyledTextInputs
+          style={styles.textInput}
           placeholder="Ocupation"
           value={ocupationUser}
           onChangeText={(value: React.SetStateAction<string>) =>
             setocupationUser(value)
           }
         />
+        
       </View>
-      <Text style={styles.text}>{birthdateUser}</Text>
-      <Text style={styles.text}>{genderUser}</Text>
-      <Text style={styles.text}>{ocupationUser}</Text>
-
-      <Button title="Next" onPress={handleGoToScreenRegisterE} />
-      <Button title="Back" onPress={handleGoBack} />
+      <View style={styles.buttonContainer}>
+          <ButtonGradientNext  onPress={handleGoToScreenRegisterE} />
+          <ButtonGradientBack onPress={handleGoBack} />
+        </View>
     </MainContainer>
   );
 }
+

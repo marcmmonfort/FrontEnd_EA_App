@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Button, TextInput, TouchableOpacity, Alert } from "react-native";
+import { Button, TextInput, Text, Alert, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MainContainer from "../../components/containers/Main";
 import SubTitle from "../../components/texts/Subtitle";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
+import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
+import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
+import { StyleSheet } from "react-native";
 
 export default function ScreenRegisterA() {
   const [appUser, setAppUser] = useState("");
@@ -25,14 +28,16 @@ export default function ScreenRegisterA() {
   };
 
   const handleGoBack = () => {
-    navigation.navigate("Login" as never);
+    navigation.navigate("LoginScreen" as never);
   };
 
   return (
+    
     <MainContainer>
+      <Text style={styles.requiredText}>Fields with * are mandatory</Text>
       <SubTitle>Sign up to have a new account</SubTitle>
       <StyledTextInputs
-        placeholder="Nickname"
+        placeholder="*Nickname"
         value={appUser}
         onChangeText={(value: React.SetStateAction<string>) =>
           setAppUser(value)
@@ -40,21 +45,37 @@ export default function ScreenRegisterA() {
         //keyboardType="numeric"
       />
       <StyledTextInputs
-        placeholder="Name"
+        placeholder="*Name"
         value={nameUser}
         onChangeText={(value: React.SetStateAction<string>) =>
           setNameUser(value)
         }
       />
       <StyledTextInputs
-        placeholder="Surname"
+        placeholder="*Surname"
         value={surnameUser}
         onChangeText={(value: React.SetStateAction<string>) =>
           setSurnameUser(value)
         }
       />
-      <Button title="Next" onPress={handleGoToScreenRegisterB} />
-      <Button title="Back" onPress={handleGoBack} />
+      <View style={styles.buttonContainer}>
+        <ButtonGradientNext onPress={handleGoToScreenRegisterB} />
+        <ButtonGradientBack onPress={handleGoBack} />
+      </View>
+      
+
     </MainContainer>
   );
 }
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  requiredText: {
+    color: 'red',
+    marginTop: 10,
+    fontStyle:'italic'
+  },
+});

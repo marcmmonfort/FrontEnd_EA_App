@@ -1,10 +1,11 @@
+import React, { useState } from "react";
+import { Alert, View, Text, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useState } from "react";
-import { Alert, View, Text, Button } from "react-native";
-import MainContainer from "../../components/containers/Main";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet } from "react-native";
+import MainContainer from "../../components/containers/Main";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
+import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
+import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
 
 interface RouteParams {
   appUser?: any;
@@ -32,26 +33,31 @@ export default function ScreenRegisterE() {
     ocupationUser,
   }: RouteParams = route.params || {};
 
-  const [descriptionUser, setdescriptionUser] = useState("");
-  const [roleUser, setroleUser] = useState("");
-  const [privacyUser, setprivacyUser] = useState<boolean>(false);
+  const [descriptionUser, setDescriptionUser] = useState("");
+  const [roleUser, setRoleUser] = useState("common");
+  const [privacyUser, setPrivacyUser] = useState<boolean>(false);
 
   const navigation = useNavigation();
 
-  const convertPrivacyToBoolean = (privacy: string) => {
-    if (privacy == "Private") {
-      return true;
-    } else if (privacy == "Public") {
-      return false;
-    }
-    return false;
-  };
-
   const handleGoToScreenRegisterF = () => {
-    if (!descriptionUser || !roleUser || privacyUser === undefined) {
+    if (!descriptionUser) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
-      navigation.navigate("ScreenRegisterFinal"as never, {
+      const selectedRole=roleUser || "common";
+      const selectedPrivact=privacyUser || false;
+      console.log(appUser);
+      console.log(nameUser);
+      console.log(surnameUser);
+      console.log(mailUser);
+      console.log(passwordUser);
+      console.log(photoUser);
+      console.log(birthdateUser);
+      console.log(genderUser);
+      console.log(ocupationUser);
+      console.log(descriptionUser);
+      console.log(roleUser);
+      console.log(privacyUser);
+      navigation.navigate("ScreenRegisterFinal" as never, {
         appUser,
         nameUser,
         surnameUser,
@@ -62,8 +68,8 @@ export default function ScreenRegisterE() {
         genderUser,
         ocupationUser,
         descriptionUser,
-        roleUser,
-        privacyUser: privacyUser.toString(),
+        roleUser:selectedRole,
+        privacyUser:selectedPrivact,
       }as never);
     }
   };
@@ -75,16 +81,28 @@ export default function ScreenRegisterE() {
   const styles = StyleSheet.create({
     text: {
       color: "white",
+      fontStyle: "italic",
+      marginBottom: 20,
+      marginTop: 20,
+      alignContent: "center",
     },
     picker: {
       color: "black",
-      width: 250,
-      backgroundColor: "yellow",
+      fontWeight: "bold",
+      backgroundColor: "#66fcf1",
       borderWidth: 1,
       borderColor: "white",
       borderRadius: 5,
       marginTop: 10,
       marginBottom: 10,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+    textInput: {
+      width: 250,
     },
   });
 
@@ -92,26 +110,30 @@ export default function ScreenRegisterE() {
     <MainContainer>
       <View>
         <StyledTextInputs
+          style={styles.textInput}
           placeholder="Description"
           value={descriptionUser}
-          onChangeText={(value: React.SetStateAction<string>) =>
-            setdescriptionUser(value)
-          }
+          onChangeText={setDescriptionUser}
         />
         <Picker
           selectedValue={roleUser}
           style={styles.picker}
-          onValueChange={(itemValue) => setroleUser(itemValue)}
+          onValueChange={setRoleUser}
         >
           <Picker.Item label="Common" value="common" />
           <Picker.Item label="Business" value="Business" />
         </Picker>
         <Picker
-          selectedValue={privacyUser.toString()}
+          selectedValue={privacyUser ? "Private" : "Public"}
           style={styles.picker}
-          onValueChange={(itemValue) =>
-            setprivacyUser(convertPrivacyToBoolean(itemValue))
-          }
+          onValueChange={(itemValue) => {
+            if(itemValue==="Private"){
+              setPrivacyUser(true);
+            }
+            else{
+              setPrivacyUser(false)}
+            }
+            }
         >
           <Picker.Item label="Private" value="Private" />
           <Picker.Item label="Public" value="Public" />
@@ -120,9 +142,10 @@ export default function ScreenRegisterE() {
       <Text style={styles.text}>{descriptionUser}</Text>
       <Text style={styles.text}>{roleUser}</Text>
       <Text style={styles.text}>{privacyUser.toString()}</Text>
-
-      <Button title="Next" onPress={handleGoToScreenRegisterF} />
-      <Button title="Back" onPress={handleGoBack} />
+      <View style={styles.buttonContainer}>
+        <ButtonGradientNext onPress={handleGoToScreenRegisterF} />
+        <ButtonGradientBack onPress={handleGoBack} />
+      </View>
     </MainContainer>
   );
 }
