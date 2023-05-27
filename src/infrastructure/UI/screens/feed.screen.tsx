@@ -11,6 +11,8 @@ import { CommentService } from "../../services/comment/comment.service";
 import { AuthHeaderService } from "../../services/user/authHeaders.service";
 import { CommentEntity } from "../../../domain/comment/comment.entity";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import StyledTextInputs from "../components/inputs/StyledTextInputs";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function FeedScreen() {
   const navigation = useNavigation();
@@ -210,10 +212,10 @@ export default function FeedScreen() {
     }));
   };
 
-  const handleInputChange = (event:any, idPublication:string) => {
+  const handleInputChange = (event:string, idPublication:string) => {
     setCommentText((prevCommentText) => ({
       ...prevCommentText,
-      [idPublication]: prevCommentText[idPublication] = event.target.value,
+      [idPublication]: prevCommentText[idPublication] = event,
     }));
   };
 
@@ -288,7 +290,7 @@ export default function FeedScreen() {
               ))}
               <Text style={styles.postText}>{publication.textPublication}</Text>
             </View>
-            <View style={styles.postComments}>
+            <View style={styles.commentContainer}>
               <TouchableOpacity style={styles.showHide} onPress={() => {
                 getComments(publication.uuid.toString());
                 }}
@@ -303,14 +305,15 @@ export default function FeedScreen() {
                   handleToggleCommentForm(publication.uuid.toString());
                 }}
                 >
-                <FontAwesome name="commentIcon" size={24} color="black" />
+                <MaterialCommunityIcons name="comment" size={24} color="black" />
               </TouchableOpacity>
               {showCommentForm[publication.uuid] && (
                 <View>
-                  <TextInput
-                    style={styles.inputComment}
+                  <StyledTextInputs
+                    //style={styles.inputComment}
+                    placeholder="write a comment"
                     value={commentText[publication.uuid]}
-                    onChangeText={(event) => handleInputChange(event, publication.uuid.toString())}
+                    onChangeText={(event:string) => handleInputChange(event, publication.uuid.toString())}
                   />
                   <TouchableOpacity
                     style={styles.buttonSendComment}
@@ -457,6 +460,11 @@ const styles = StyleSheet.create({
   },
   postComments:{
     display:'flex',
+    flexDirection:'column',
+    height:'flex',
+    justifyContent:'flex-start',
+    marginTop:0,
+    marginBottom:10
   },
   showHide:{
     marginTop: 2,
@@ -526,7 +534,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 0,
     marginBottom: 0,
-    color: "#fff",
+    color: "#000",
   },
   showMoreCommentsButton:{
     marginTop: 2,
