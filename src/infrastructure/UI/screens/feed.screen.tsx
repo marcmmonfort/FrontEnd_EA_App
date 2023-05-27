@@ -13,6 +13,8 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Fontisto } from '@expo/vector-icons';
+
 
 export default function FeedScreen() {
   const navigation = useNavigation();
@@ -250,21 +252,15 @@ export default function FeedScreen() {
       [idPublication]: prevCommentText[idPublication] = "",
     }));
   };
-  
 
-
-
-
-  
   return (
     <ScrollView>
       <View>
-        <Text>Feed</Text>
         <View style={styles.feed}>
           {listPublications.map((publication) => (
           <View style={styles.post} key={publication.uuid}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ProfileScreen' as never)}
+              onPress={() => navigation.navigate('Profile' as never)}
               style={styles.userLink}
             >
               <View style={styles.postHeader}>
@@ -470,14 +466,12 @@ const styles = StyleSheet.create({
     marginTop: 2,
     marginBottom: 0,
     padding: 6,
-    backgroundColor: "66fcf2",
     borderWidth: 0,
     width: 200,
     textAlign: "center",
     alignSelf: "center",
   },
   inputComment:{
-    backgroundColor: "66fcf2",
     borderWidth: 0,
     height:50,
     width: 200,
