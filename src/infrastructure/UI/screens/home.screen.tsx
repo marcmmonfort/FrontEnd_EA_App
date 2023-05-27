@@ -7,72 +7,38 @@ import DiscoveryScreen from './discovery.screen';
 import CalendarEventsScreen from './calendar.screen';
 import ProfileScreen from './profile.screen';
 import PublicationUpScreenA from './Publication/publicationUp.screen';
+import { ImageBackground, StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeScreen() {
+
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: { backgroundColor: '#000000' },
-        tabBarShowLabel: false,
-      }}
-    >
-      <Tab.Screen
-        name="Feed"
-        component={FeedScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="image" size={30} color='#66fcf1' />
-          ),
-          headerStyle: { backgroundColor: '#000000' },
-          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }}
-      />
-      <Tab.Screen
-        name="Discovery"
-        component={DiscoveryScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="magnify" size={25} color='#66fcf1' />
-          ),
-          headerStyle: { backgroundColor: '#000000' },
-          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }}
-      />
-      <Tab.Screen
-        name="Post a Publication"
-        component={PublicationUpScreenA}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Fontisto name="camera" size={18} color='#66fcf1' />
-          ),
-          headerStyle: { backgroundColor: '#000000' },
-          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }}
-      />
-      <Tab.Screen
-        name="Calendar and Events"
-        component={CalendarEventsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Fontisto name="calendar" size={18} color='#66fcf1' />
-          ),
-          headerStyle: { backgroundColor: '#000000' },
-          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Fontisto name="home" size={18} color='#66fcf1' />
-          ),
-          headerStyle: { backgroundColor: '#000000' },
-          headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }}
-      />
+    
+    <Tab.Navigator screenOptions={{ tabBarStyle: { backgroundColor: '#000000', borderTopWidth: 0 }, tabBarShowLabel: false,  }}>
+      
+      <Tab.Screen name="Feed" component={FeedScreen} options={{ tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="image" size={30} color='#66fcf1' />
+          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+        }} />
+      <Tab.Screen name="Discovery" component={DiscoveryScreen} options={{ tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="magnify" size={25} color='#66fcf1' />
+          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+        }} />
+      <Tab.Screen name="Post a Publication" component={PublicationUpScreenA} options={{ tabBarIcon: ({ color, size }) => (
+          <Fontisto name="camera" size={18} color='#66fcf1' />
+          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+        }} />
+      <Tab.Screen name="Calendar and Events" component={CalendarEventsScreen} options={{ tabBarIcon: ({ color, size }) => (
+          <Fontisto name="calendar" size={18} color='#66fcf1' />
+          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+        }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarIcon: ({ color, size }) => (
+          <Fontisto name="home" size={18} color='#66fcf1' />
+          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30},
+        }} />
+
     </Tab.Navigator>
+    
   );
 }

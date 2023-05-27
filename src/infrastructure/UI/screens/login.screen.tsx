@@ -9,7 +9,7 @@ import Button_Type_1 from "../components/buttons/Button_Type_1";
 import { AuthEntity } from "../../../domain/user/user.entity";
 import { SessionService } from "../../services/user/session.service";
 import NormalText from "../components/texts/NormalText";
-import { Platform, StatusBar, TouchableOpacity, StyleSheet, ImageBackground, Image, View } from "react-native";
+import { Platform, StatusBar, TouchableOpacity, StyleSheet, ImageBackground, Image, View, Text} from "react-native";
 import Register from "../components/texts/Register";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
@@ -71,6 +71,7 @@ export default function LoginScreen() {
       flex: 1,
       alignItems: 'center',
       marginBottom: 0,
+      marginTop:-260,
     },
     image: {
       width: 30,
@@ -95,6 +96,27 @@ export default function LoginScreen() {
       width: 300,
       height: 50,
     },
+    normalText: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      marginTop: 38,
+      marginBottom: -2,
+    },
+    bottomText: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      marginTop: 44,
+      marginBottom: -4,
+    },
+    signUpText: {
+      color: '#66fcf1',
+      fontFamily: bodyFont,
+      fontSize: 28,
+      marginTop: 6,
+      marginBottom: 0
+    },
   });
 
   if (!fontsLoaded) {
@@ -110,7 +132,7 @@ export default function LoginScreen() {
           <Title style={styles.iconText}>Lplan</Title>
         </View>
         <View style={styles.formContainer}>
-          <SubTitle>Let's Go!</SubTitle>
+          <Text style={styles.normalText}>Let's Go!</Text>
           <StyledTextInputs style={styles.input} placeholder="Mail" value={inputEmail} onChangeText={setInputEmail}/>
           <StyledTextInputs style={styles.input} placeholder="Password" value={inputPassword} onChangeText={setInputPassword} secureTextEntry={true}/>
           <Button_Type_1 onPress={() => { const formData: AuthEntity = { mailUser: inputEmail, passwordUser: inputPassword, };
@@ -126,7 +148,7 @@ export default function LoginScreen() {
                     console.log("_id" + JSON.stringify(response.data.user.uuid));
                     console.log("token" + JSON.stringify(response.data.token));
                     console.log("Login Succesfull!");
-                    navigation.navigate('Profile' as never);
+                    navigation.navigate('HomeScreen' as never);
                   }
                 })
                 .catch((error) => {
@@ -146,9 +168,9 @@ export default function LoginScreen() {
                   }
                 });
             }} />
-          <NormalText>Aren't you still an @lplan member?</NormalText>
+          <Text style={styles.bottomText}>Aren't you still an @lplan member?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register" as never)}> 
-            <Register>Sign Up!</Register> 
+            <Text style={styles.signUpText}>Sign Up!</Text> 
           </TouchableOpacity>
           <StatusBar/>
         </View>      

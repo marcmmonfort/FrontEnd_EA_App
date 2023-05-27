@@ -3,7 +3,7 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity,Button } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity,Button, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -47,80 +47,83 @@ export default function ProfileScreen() {
   );
   
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.text}>Profile</Text>
-      </View>
-      <View style={styles.profileContour}>
-        {currentUser && (
-          <View style={styles.profileContainer}>
-            <View style={styles.profile}>
-              <Text style={styles.profileUserName}>
-                {currentUser.appUser}
-              </Text>
-              <View style={styles.profileImage}>
-                <Image
-                  source={{ uri: currentUser.photoUser }}
-                  style={styles.image}
-                />
-              </View>
-              <View style={styles.profileUserButtons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Edit" as never);
-                  }}
-                  style={styles.buttonProfile}
-                >
-                  <Text style={styles.buttonText}>Edit Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    // Acción al presionar el botón de Configuración
-                  }}
-                  style={styles.buttonProfile}
-                >
-                  <Text style={styles.buttonText}>Settings</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.profileStats}>
-                <Text style={styles.text}>Followers</Text>
-                <TouchableOpacity
-                  style={styles.profileStatCount}
-                  onPress={() => {}}
-                >
-                  <Text>{currentUser.followersUser?.length}</Text>
-                </TouchableOpacity>
-                <Text style={styles.text}>Following</Text>
-                <TouchableOpacity
-                  style={styles.profileStatCount}
-                  onPress={() => {}}
-                >
-                  <Text>{currentUser.followedUser?.length}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.profileBio}>
-                <Text style={styles.profileTitle}>Name</Text>
-                <Text>
-                  <Text style={styles.profileRealName}>
-                    {currentUser.nameUser}
-                  </Text>
+    <ImageBackground source={require('../../../../assets/visualcontent/background_7.png')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.text}>Profile</Text>
+        </View>
+        <View style={styles.profileContour}>
+          {currentUser && (
+            <View style={styles.profileContainer}>
+              <View style={styles.profile}>
+                <Text style={styles.profileUserName}>
+                  {currentUser.appUser}
                 </Text>
-                <Text style={styles.profileTitle}>Description</Text>
-                <Text>{currentUser.descriptionUser}</Text>
+                <View style={styles.profileImage}>
+                  <Image
+                    source={{ uri: currentUser.photoUser }}
+                    style={styles.image}
+                  />
+                </View>
+                <View style={styles.profileUserButtons}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Edit" as never);
+                    }}
+                    style={styles.buttonProfile}
+                  >
+                    <Text style={styles.buttonText}>Edit Profile</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // Acción al presionar el botón de Configuración
+                    }}
+                    style={styles.buttonProfile}
+                  >
+                    <Text style={styles.buttonText}>Settings</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileStats}>
+                  <Text style={styles.text}>Followers</Text>
+                  <TouchableOpacity
+                    style={styles.profileStatCount}
+                    onPress={() => {}}
+                  >
+                    <Text>{currentUser.followersUser?.length}</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.text}>Following</Text>
+                  <TouchableOpacity
+                    style={styles.profileStatCount}
+                    onPress={() => {}}
+                  >
+                    <Text>{currentUser.followedUser?.length}</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileBio}>
+                  <Text style={styles.profileTitle}>Name</Text>
+                  <Text>
+                    <Text style={styles.profileRealName}>
+                      {currentUser.nameUser}
+                    </Text>
+                  </Text>
+                  <Text style={styles.profileTitle}>Description</Text>
+                  <Text>{currentUser.descriptionUser}</Text>
+                </View>
               </View>
+              <Button title="LogOut" onPress={logOutButtonFunction} />
             </View>
-            <Button title="LogOut" onPress={logOutButtonFunction} />
-          </View>
-        )}
+          )}
+        </View>
       </View>
-    </View>
+    </ImageBackground>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -197,5 +200,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
   },
 });
