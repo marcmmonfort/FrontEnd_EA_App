@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { ImageBackground, Image, View, StyleSheet, Text } from 'react-native';
+import { ImageBackground, Image, View, StyleSheet, Text, Platform } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SplashScreen() {
+
   const navigation = useNavigation();
 
   const styles = StyleSheet.create({
@@ -20,7 +21,6 @@ export default function SplashScreen() {
     },
     text_normal: {
         color: 'white',
-        fontFamily: 'Arial',
         fontSize: 20,
         marginBottom: 10,
     },
