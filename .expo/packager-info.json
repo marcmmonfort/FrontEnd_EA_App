@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
   "expoServerPort": null,
   "packagerPort": null,
-=======
-  "expoServerPort": 19000,
-  "packagerPort": 19000,
->>>>>>> feed-dev
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null,
