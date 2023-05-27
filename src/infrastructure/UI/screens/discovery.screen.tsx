@@ -64,20 +64,30 @@ export default function DiscoveryScreen() {
     handleSearch(searchText, setUserList);
   };
   
+  const handleGoToScreenUser = (uuid:string) => {
+    navigation.navigate("UserScreen" as never, {uuid} as never);
+  };
+  
   return (
     <View>
       <SearchBar onSearch={handleSearchWrapper} />
 
-      <View style={styles.cardsUsers}>
+      <View>
         {userList && userList.length > 0 ? (
-          <FlatList data={userList} renderItem={({ item }) => ( 
-            <View>
-              <Text>{item.nameUser} {item.surnameUser}</Text> 
-              <Text>@{item.appUser}</Text> 
-            </View> 
-          )} keyExtractor={(item) => item.uuid.toString()} />
+          <FlatList
+            data={userList}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleGoToScreenUser(item.uuid)}>
+                <View>
+                  <Text>{item.nameUser} {item.surnameUser}</Text>
+                  <Text>@{item.appUser}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.uuid.toString()}
+          />
         ) : (
-          <Text style={styles.usersNotFound}>User Not Found</Text>
+          <Text>User Not Found</Text>
         )}
       </View>
     </View>
