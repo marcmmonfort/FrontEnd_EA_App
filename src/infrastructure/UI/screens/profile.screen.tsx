@@ -15,7 +15,7 @@ export default function ProfileScreen() {
   const [auxPhotoUser, setAux] = useState("");
   const [loading, setLoading] = useState(false);
   const [cam, setCam] = useState(false);
-let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
+  let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const navigation = useNavigation();
 
   const logOutButtonFunction = async () => {

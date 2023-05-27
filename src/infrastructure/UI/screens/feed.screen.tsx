@@ -13,7 +13,6 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Fontisto } from '@expo/vector-icons';
 
-
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
