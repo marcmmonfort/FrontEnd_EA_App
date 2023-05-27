@@ -3,16 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
 
-import * as Font from 'expo-font';
-
-/*async function loadFonts() {
-  await Font.loadAsync({
-    'SF UI Display': require('../../../assets/fonts/SF-UI-Display-Semibold.ttf'),
-  });
-}
-
-loadFonts();*/
-
 const ButtonGradientBirthdate = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
@@ -47,7 +37,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    //fontFamily: 'SF UI Display',
     fontWeight: 'bold',
     fontSize: 17,
     color: 'black',

@@ -4,8 +4,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import MainContainer from "../../components/containers/Main";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
-import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
-import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
+import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
+import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 
 interface RouteParams {
   appUser?: any;

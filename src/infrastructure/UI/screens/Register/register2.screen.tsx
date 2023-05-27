@@ -5,10 +5,10 @@ import MainContainer from "../../components/containers/Main";
 import React from "react";
 import SubTitle from "../../components/texts/Subtitle";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
-import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
-import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
+import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
+import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import { StyleSheet } from "react-native";
-import ButtonGradientShowPassword from "../../components/buttons/ButtonGradientShowPassword";
+import ButtonGradientShowPassword from "../../components/buttons/Button_Type_Show_Password";
 
 interface RouteParams {
   appUser?: any;

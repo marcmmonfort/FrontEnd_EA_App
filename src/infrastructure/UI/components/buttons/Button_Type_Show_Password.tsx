@@ -5,15 +5,7 @@ import { ButtonGradientProps } from './Types';
 
 import * as Font from 'expo-font';
 
-/*async function loadFonts() {
-  await Font.loadAsync({
-    'SF UI Display':require('../../../../../assets/fonts/SF-UI-Display-Semibold.ttf'),
-  });
-}
-
-loadFonts();*/
-
-const ButtonGradient = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
+const ButtonGradientShowPassword = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient
@@ -22,7 +14,7 @@ const ButtonGradient = ({ onPress, containerStyle, buttonStyle, textStyle }: But
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>LogIn</Text>
+        <Text style={[styles.text, textStyle]}>Show password</Text>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -32,11 +24,12 @@ const styles = StyleSheet.create({
   container: {
     width: 200,
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 100,
   },
   button: {
-    marginTop: -20,
-    height: 50,
+    marginTop: -44,
+    marginLeft:350,
+    height: 60,
     width: 120,
     borderRadius: 50,
     padding: 10,
@@ -46,9 +39,9 @@ const styles = StyleSheet.create({
   text: {
     //fontFamily: 'SF UI Display',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 17,
     color: 'black',
   },
 });
 
-export default ButtonGradient;
+export default ButtonGradientShowPassword;

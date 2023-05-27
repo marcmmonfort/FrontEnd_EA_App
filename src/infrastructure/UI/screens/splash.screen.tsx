@@ -1,18 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, Image, View, StyleSheet, Text, Platform } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Font from 'expo-font';
+import NormalText from '../components/texts/NormalText';
+import Color from '../constants/color/Color';
+import Video from 'react-native-video';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 export default function SplashScreen() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
 
   const navigation = useNavigation();
 
   const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#000000",
+    mainContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    footerContainer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      marginBottom: 32,
     },
     image: {
       width: 100,
@@ -20,9 +55,36 @@ export default function SplashScreen() {
       resizeMode: 'cover',
     },
     text_normal: {
-        color: 'white',
-        fontSize: 20,
-        marginBottom: 10,
+      color: 'white',
+      fontSize: 20,
+      marginBottom: 10,
+    },
+    titleText: {
+      color: 'white',
+      fontFamily: titleFont,
+      fontSize: 38,
+      marginTop: 20,
+    },
+    creditsText: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      marginTop: 14,
+    },
+    versionText: {
+      color: '#66fcf1',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      marginBottom: 2,
+    },
+    footerText: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 14,
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
     },
   });
 
@@ -41,17 +103,27 @@ export default function SplashScreen() {
             }
           };
         checkToken();
-    }, 3000);
+    }, 3600);
   }, []);
 
-  const imageUrl = require('../../../../assets/logo_lplan.png');
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-        <View style={styles.container}>
-            <Text style={styles.text_normal}>Welcome to LPLAN!</Text>
-            <Image source={imageUrl} style={styles.image} />
+    <ImageBackground source={require('../../../../assets/visualcontent/background_1.png')} style={styles.backgroundImage}>
+      <View style={styles.mainContainer}>
+        <View style={styles.mainContainer}>
+            <Image source={require('../../../../assets/logo_lplan.png')} style={styles.image} />
+            <Text style={styles.titleText}>Lplan</Text>
+            <Text style={styles.creditsText}>2023</Text>
         </View>
-    </View>
+        <View style={styles.footerContainer}>
+            <Text style={styles.versionText}>Group 3</Text>
+            <Text style={styles.footerText}>Eloi, Genís, Óscar, Victor, Marc</Text>
+        </View>
+      </View>
+    </ImageBackground>
+    
   );
 }

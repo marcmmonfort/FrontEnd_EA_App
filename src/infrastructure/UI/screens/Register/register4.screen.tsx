@@ -6,9 +6,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
-import ButtonGradientNext from "../../components/buttons/ButtonGradientNext";
-import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
-import ButtonGradientBirthdate from "../../components/buttons/ButtonGradientBirthdate";
+import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
+import ButtonGradientBack from "../../components/buttons/Button_Type_2";
+import ButtonGradientBirthdate from "../../components/buttons/Button_Type_Birthdate";
 
 interface RouteParams {
   appUser?: any;

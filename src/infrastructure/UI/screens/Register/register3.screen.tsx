@@ -6,8 +6,8 @@ import * as FileSystem from "expo-file-system";
 import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
-import ButtonGradientBack from "../../components/buttons/ButtonGradientBack";
-import ButtonGradientBack2 from "../../components/buttons/ButtonGradientBack2";
+import ButtonGradientBack from "../../components/buttons/Button_Type_2";
+import ButtonGradientBack2 from "../../components/buttons/Button_Type_3";
 import SubTitle from "../../components/texts/Subtitle";
 
 
