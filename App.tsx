@@ -33,7 +33,7 @@ export default function App() {
         <Stack.Screen
           name="ChatB"
           options={{ headerShown: false }}
-          component={ChatB}
+          component={ChatB as never}
         />
 
         <Stack.Screen

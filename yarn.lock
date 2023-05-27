@@ -2443,6 +2443,14 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
+"@types/react-native-webrtc@^1.75.5":
+  version "1.75.5"
+  resolved "https://registry.npmjs.org/@types/react-native-webrtc/-/react-native-webrtc-1.75.5.tgz"
+  integrity sha512-UuZvF+7Y4aD9TrlN1u9IM3GuwQa8Qp0OSABiF2lVNTjil7DqcdwVnKZ6cIV9w/2rO+Z1II9b0vHtkhNpxFFp8w==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native@*", "@types/react-native@^0.72.0":
   version "0.72.0"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.72.0.tgz"
