@@ -20,7 +20,7 @@ export default function SplashScreen() {
     },
     text_normal: {
         color: 'white',
-        fontFamily: 'Arial',
+        //fontFamily: 'Arial',
         fontSize: 20,
         marginBottom: 10,
     },
@@ -32,9 +32,11 @@ export default function SplashScreen() {
             try {
               const token = await AsyncStorage.getItem('token');
               if (token) {
-                navigation.navigate('HomeScreen' as never);
+                //navigation.navigate('HomeScreen' as never);
+                navigation.navigate('ChatA' as never);
               } else {
-                navigation.navigate('LoginScreen' as never);
+                //navigation.navigate('LoginScreen' as never);
+                navigation.navigate('ChatA' as never);
               }
             } catch (error) {
               console.log('Error al obtener el token:', error);

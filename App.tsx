@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { AppRegistry, StyleSheet, Text, View } from "react-native";
 import LoginScreen from "./src/infrastructure/UI/screens/login.screen";
 import RegisterScreen from "./src/infrastructure/UI/screens/Register/register.screen";
 import HomeScreen from "./src/infrastructure/UI/screens/home.screen";
@@ -16,6 +16,8 @@ import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
 import EditUserScreen from "./src/infrastructure/UI/screens/edit.user.screen";
 import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
+import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
+import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen
+          name="ChatA"
+          options={{ headerShown: false }}
+          component={ChatA}
+        />
+        <Stack.Screen
+          name="ChatB"
+          options={{ headerShown: false }}
+          component={ChatB}
+        />
 
         <Stack.Screen
           name="Splash"
@@ -34,6 +46,7 @@ export default function App() {
           options={{ headerShown: false }}
           component={LoginScreen}
         />
+        
         <Stack.Screen
           name="ScreenRegisterA"
           options={{ headerShown: false }}
