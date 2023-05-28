@@ -186,9 +186,9 @@ export default function FeedScreen() {
     console.log("Has pulsado el btn");
     setNumPagePublication((prevPage) => prevPage + 1);
     const userId = await SessionService.getCurrentUser();
-    console.log("HandleLoadMore:" + numPagePublication);
+    console.log("HandleLoadMore************************************************************:" + numPagePublication);
     if(userId){
-      PublicationService.feed((numPagePublication).toString(), userId)
+      PublicationService.feed((numPagePublication + 1).toString(), userId)
       .then(response => {
         console.log(response);
         console.log(response.data);
@@ -359,7 +359,6 @@ export default function FeedScreen() {
         }));
         console.log("Handle Like False: " + hasLiked[idPublication]);
 
-        
         PublicationService.updateLike(idPublication, userId)
         .then((response) => {
           console.log(response);
@@ -682,10 +681,13 @@ export default function FeedScreen() {
                   ))}
                 </View>
                 <View style={styles.heartMessageLayout}>
-                  <MaterialCommunityIcons name="heart" size={20} color="#fb3958" />
+                  
                   <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
-                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={20} color="#66fcf1" />
+                    <MaterialCommunityIcons name="heart" size={40} color="#fb3958" />
                     <Text>{publication.likesPublication?.length}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
+                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={40} color="#66fcf1" />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.postText}>{publication.textPublication}</Text>

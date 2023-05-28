@@ -7,33 +7,28 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "rea
 import { useNavigation } from "@react-navigation/native";
 
 interface RouteParams {
-    userId?: string;
-    mode?: string;
-  }
+  userId?: string;
+  mode?: string;
+}
 
-  export default function UsersList() {
-    const route = useRoute();
-    const {
-        userId, mode
-      }: RouteParams = route.params || {};
-    const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
-    const [userList, setUserList] = useState([]);
-    const [numPage, setNumPage] = useState(1); // Variable para el número de página
-    const navigation = useNavigation();
+export default function UsersList() {
+  const route = useRoute();
+  const {
+      userId, mode
+    }: RouteParams = route.params || {};
+  const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
+  const [userList, setUserList] = useState([]);
+  const [numPage, setNumPage] = useState(1); // Variable para el número de página
+  const navigation = useNavigation();
 
-    const isFollowersMode = mode === "followers";
-    const title = isFollowersMode ? "Followers" : "Following";
+  const isFollowersMode = mode === "followers";
+  const title = isFollowersMode ? "Followers" : "Following";
 
   useEffect(() => {
     if (userId) {
       loadUserList();
       loadUser();
     }
-
-    return () => {
-      // Restaurar el estilo de fondo al salir del componente
-      document.body.style.backgroundImage = "";
-    };
   }, [numPage]);
 
   const loadUser = async () => {
@@ -137,70 +132,70 @@ interface RouteParams {
   );
 };
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    header: {
-      marginBottom: 16,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: "#000",
-    },
-    userList: {
-      flex: 1,
-    },
-    userCard: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 16,
-    },
-    profileImage: {
-      width: 50,
-      height: 50,
-      borderRadius: 25,
-      marginRight: 8,
-    },
-    userInfo: {
-      flex: 1,
-    },
-    userName: {
-      fontSize: 16,
-      fontWeight: "bold",
-    },
-    username: {
-      fontSize: 14,
-      color: "#888",
-    },
-    notFoundText: {
-      fontSize: 16,
-      color: "#888",
-      textAlign: "center",
-    },
-    loadMoreButton: {
-      backgroundColor: "#66fcf1",
-      borderRadius: 20,
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 16,
-    },
-    loadMoreButtonText: {
-      color: "#000",
-      fontSize: 14,
-    },
-    loadMoreButtonDisabled: {
-      backgroundColor: "#ccc",
-      borderRadius: 20,
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 16,
-    },
-  });
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  header: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  userList: {
+    flex: 1,
+  },
+  userCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 8,
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  username: {
+    fontSize: 14,
+    color: "#888",
+  },
+  notFoundText: {
+    fontSize: 16,
+    color: "#888",
+    textAlign: "center",
+  },
+  loadMoreButton: {
+    backgroundColor: "#66fcf1",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  loadMoreButtonText: {
+    color: "#000",
+    fontSize: 14,
+  },
+  loadMoreButtonDisabled: {
+    backgroundColor: "#ccc",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+});
