@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
-import { StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button } from "react-native";
 import { Socket, io } from "socket.io-client";
-import { useRoute } from "@react-navigation/native";
+
+import { RouteProp, useRoute } from "@react-navigation/native";
 
 interface RouteParams {
   roomID?: string;
 }
-export default function ChatB() {
+
+const ChatB = () => {
   const peerRef = useRef<any>();
   const socketRef = useRef<Socket | undefined>();
   const otherUser = useRef();
@@ -19,6 +21,7 @@ export default function ChatB() {
     // Step 1: Connect with the Signal server
     try {
       socketRef.current = io("147.83.7.158:9000"); // Address of the Signal server REVISAR
+      console.log("socketRef.current=io('http://147.83.7.158:9000')");
     } catch (error) {
       console.log("Error connecting with signal server");
     }
@@ -107,28 +110,25 @@ export default function ChatB() {
       console.log("error on callUser");
     }
   }
+
   function Peer(userID: string) {
-    try{
-      const peer = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: "stun:147.83.7.158:3478",
-          },
-          {
-            urls: "147.83.7.158:3478",
-            credential: "oursecret",
-            username: "coturn",
-          },
-        ],
-      });
-      peer.onicecandidate = handleICECandidateEvent;
-      peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
-      return peer;
-    }catch(error){
-      console.log("Error")
-    }
-    
-  }
+    const peer = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: "stun:147.83.7.158:3478",
+        },
+        {
+          urls: "147.83.7.158:3478",
+          credential: "oursecret",
+          username: "coturn",
+        },
+      ],
+    });
+    peer.onicecandidate = handleICECandidateEvent;
+    peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
+    return peer;
+  } //Puede dar problemas
+
   function handleNegotiationNeededEvent(userID: string) {
     // Offer made by the initiating peer to the receiving peer.
     peerRef.current
@@ -149,32 +149,29 @@ export default function ChatB() {
       );
   }
 
-  function handleOffer(incoming: any): void {
-    
+  function handleOffer(incoming: any) {
     //Here we are exchanging config information
     //between the peers to establish communication
-  
+
     console.log("[INFO] Handling Offer");
-    peerRef.current = Peer(incoming.caller);
+    peerRef.current = Peer(incoming.caller); //Revisar
     peerRef.current.ondatachannel = (event: any) => {
       sendChannel.current = event.channel;
       if (sendChannel.current) {
         sendChannel.current.onmessage = handleReceiveMessage;
       }
+
       console.log("[SUCCESS] Connection established");
     };
 
-    
     //Session Description: It is the config information of the peer
     //SDP stands for Session Description Protocol. The exchange
     //of config information between the peers happens using this protocol
-  
+
     const desc = new RTCSessionDescription(incoming.sdp);
 
-    
-      //Remote Description : Information about the other peer
-      //Local Description: Information about you 'current peer'
-  
+    //Remote Description : Information about the other peer
+    //Local Description: Information about you 'current peer'
 
     peerRef.current
       .setRemoteDescription(desc)
@@ -183,6 +180,7 @@ export default function ChatB() {
         return peerRef.current.createAnswer();
       })
       .then((answer: any) => {
+        //revisar
         return peerRef.current.setLocalDescription(answer);
       })
       .then(() => {
@@ -191,9 +189,11 @@ export default function ChatB() {
           caller: socketRef.current?.id,
           sdp: peerRef.current.localDescription,
         };
-        socketRef.current?.emit("answer", payload);
+        if (socketRef.current) {
+          socketRef.current?.emit("answer", payload);
+        }
       });
-  }
+  } //Puede dar problemas
 
   function handleAnswer(message: any) {
     // Handle answer by the receiving peer
@@ -206,10 +206,12 @@ export default function ChatB() {
       console.log("Problems handling answer");
     }
   }
-  function handleReceiveMessage(e: MessageEvent): void {
+
+  function handleReceiveMessage(e: { data: any }) {
+    //revisar
     // Listener for receiving messages from the peer
     console.log("[INFO] Message received from peer", e.data);
-    const msg: IMessage[] = [
+    const msg = [
       {
         _id: Math.floor(Math.random() * 1000).toString(),
         text: e.data,
@@ -220,18 +222,18 @@ export default function ChatB() {
       },
     ];
     setMessages(
-      (previousMessages) => GiftedChat.append(previousMessages, msg) as never
-    );
+      (previousMessages) =>
+        GiftedChat.append(previousMessages, msg) as unknown as never
+    ); //Revisar
   }
 
-  function handleICECandidateEvent(e: any): void {
-    
+  function handleICECandidateEvent(e: any) {
     //ICE stands for Interactive Connectivity Establishment. Using this
-    //peers exchange information over the intenet. When establishing a
-    //connection between the peers, peers generally look for several 
+    //peers exchange information over the internet. When establishing a
+    //connection between the peers, peers generally look for several
     //ICE candidates and then decide which to choose best among possible
     //candidates
-  
+
     if (e.candidate) {
       const payload = {
         target: otherUser.current,
@@ -241,20 +243,23 @@ export default function ChatB() {
     }
   }
 
-  function handleNewICECandidateMsg(incoming: any): void {
-    const candidate: RTCIceCandidate = new RTCIceCandidate(incoming);
-
+  function handleNewICECandidateMsg(incoming: any) {
+    console.log("HandlingnewIceCandidate");
+    const candidate = new RTCIceCandidate(incoming);
+    console.log("Ice candidate: " + candidate);
     peerRef.current
       .addIceCandidate(candidate)
-      .catch((e: Error) => console.log(e));
+      .catch((e: any) => console.log(e));
   }
 
-  function sendMessage(messages: IMessage[] = []) {
-    if (sendChannel.current) {
-      sendChannel.current.send(messages[0].text);
+  function sendMessage(messages = []) {
+    if (messages.length > 0) {
+      console.log("Enviando mensaje");
+      const { text } = messages[0];
+      sendChannel.current?.send(text);
       setMessages(
         (previousMessages) =>
-          GiftedChat.append(previousMessages, messages) as never
+          GiftedChat.append(previousMessages, messages) as unknown as never
       );
     }
   }
@@ -268,7 +273,7 @@ export default function ChatB() {
       }}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -285,3 +290,4 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+export default ChatB;
