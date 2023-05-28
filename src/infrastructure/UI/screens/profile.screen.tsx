@@ -47,7 +47,7 @@ export default function ProfileScreen() {
   );
   
   return (
-    <ImageBackground source={require('../../../../assets/visualcontent/background_7.png')} style={styles.backgroundImage}>
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.text}>Profile</Text>

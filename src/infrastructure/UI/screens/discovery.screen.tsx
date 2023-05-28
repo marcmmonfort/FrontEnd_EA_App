@@ -3,7 +3,7 @@ import { SessionService } from "../../services/user/session.service";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserEntity } from "../../../domain/user/user.entity";
@@ -69,28 +69,30 @@ export default function DiscoveryScreen() {
   };
   
   return (
-    <View>
-      <SearchBar onSearch={handleSearchWrapper} />
-
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View>
-        {userList && userList.length > 0 ? (
-          <FlatList
-            data={userList}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleGoToScreenUser(item.uuid)}>
-                <View>
-                  <Text>{item.nameUser} {item.surnameUser}</Text>
-                  <Text>@{item.appUser}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.uuid.toString()}
-          />
-        ) : (
-          <Text>User Not Found</Text>
-        )}
+        <SearchBar onSearch={handleSearchWrapper} />
+
+        <View>
+          {userList && userList.length > 0 ? (
+            <FlatList
+              data={userList}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleGoToScreenUser(item.uuid)}>
+                  <View>
+                    <Text>{item.nameUser} {item.surnameUser}</Text>
+                    <Text>@{item.appUser}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.uuid.toString()}
+            />
+          ) : (
+            <Text>User Not Found</Text>
+          )}
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -100,6 +102,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
   },
   text: {
     fontSize: 24,

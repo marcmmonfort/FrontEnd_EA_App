@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet, TextInput, ImageBackground, Platform } from "react-native";
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { SessionService } from "../../services/user/session.service";
 import { PublicationService } from "../../services/publication/publication.service";
@@ -14,6 +14,14 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fontisto } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 export default function FeedScreen() {
   const navigation = useNavigation();
@@ -27,7 +35,24 @@ export default function FeedScreen() {
   const [showCommentForm, setShowCommentForm] = useState<{[key: string]: boolean; }>({});
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
   const [recargar, setRecargar] = useState<string>('');
+  const [userList, setUserList] = useState<UserEntity[] | null>(null);
 
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,7 +92,7 @@ export default function FeedScreen() {
   
                 const initialCommentButton = response.data.reduce(
                   (acc: { [key: string]: string }, publication: Publication) => {
-                    acc[publication.uuid] = "Show comments";
+                    acc[publication.uuid] = "Show Comments";
                     return acc;
                   },
                   {}
@@ -106,6 +131,36 @@ export default function FeedScreen() {
       fetchData();
     }, [numPagePublication, recargar])
   );
+
+  const handleSearch = async (query: string, setUserList: (users: UserEntity[]) => void) => {
+    console.log('He entrado en handleSearch.');
+    if (query.length > 0) {
+      try {
+        const response = await CRUDService.searchUsers(query);
+        console.log(response);
+        setUserList(response?.data);
+        console.log('He hecho el servicio de handleSearch.');
+        console.log('>> Lista de usuarios: ' + userList);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const response = await CRUDService.getUsers();
+        setUserList(response?.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleSearchWrapper = (searchText: string) => {
+    handleSearch(searchText, setUserList);
+  };
+  
+  const handleGoToScreenUser = (uuid:string) => {
+    navigation.navigate("UserScreen" as never, {uuid} as never);
+  };
 
   const handleLoadMore = async () => {
     console.log("Has pulsado el btn");
@@ -252,325 +307,388 @@ export default function FeedScreen() {
     }));
   };
 
+  const styles = StyleSheet.create({
+    feed: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    iconsLayout: {
+      flexDirection: 'row',
+      marginRight: 0,
+    },
+    headerContainer: {
+      flexDirection: 'row',
+      marginLeft: 10,
+      marginTop: 6,
+      marginRight:10,
+      marginBottom: 6,
+    },
+    limitedContainer: {
+      marginTop: 0,
+    },
+    post: {
+      flex:1,
+      flexGrow:1,
+      height: '100%',
+      flexDirection: 'column',
+      width: 340,
+      justifyContent: 'flex-start',
+      borderRadius: 20,
+      borderWidth: 1,
+      marginBottom: 6,
+    },
+    userLink: {
+      alignItems: 'center',
+      padding: 10,
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    postHeader: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      fontFamily: bodyFont,
+      justifyContent: 'flex-start',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    postProfileImg: {
+      width: 50,
+      height: 50,
+      resizeMode: 'cover',
+      marginRight: 10,
+      borderRadius: 50,
+    },
+    postInfo: {
+      flex: 1,
+      fontFamily: bodyFont,
+      textAlign: 'left',
+    },
+    postUsernameHeader: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      marginBottom: 0,
+      fontFamily: bodyFont,
+      marginTop: 0,
+      marginLeft: 0,
+      color: '#66fcf1',
+    },
+    postTimestampHeader: {
+      fontSize: 14,
+      color: '#fff',
+      marginLeft: 0,
+      fontFamily: bodyFont,
+      marginTop: 0,
+    },
+    postBody: {
+      alignItems: 'center',
+      padding: 10,
+    },
+    postImage: {
+      alignItems: 'center',
+      padding: 10,
+      width: 320, 
+      height: 320,
+    },
+    postText: {
+      textAlign: 'left',
+      fontSize: 22,
+      color: '#fff',
+      fontFamily: bodyFont,
+      marginTop: 2,
+      marginBottom: 6,
+      marginLeft: 10,
+    },
+    heartMessageLayout: {
+      textAlign: 'left',
+      fontSize: 22,
+      color: '#000',
+      flexDirection: 'row',
+      fontFamily: bodyFont,
+      marginTop: 0,
+      marginBottom: 6,
+      marginLeft: 10,
+    },
+    postComments:{
+      display:'flex',
+      flexDirection:'column',
+      fontFamily: bodyFont,
+      height:'flex',
+      justifyContent:'flex-start',
+      marginTop:0,
+      marginBottom: 10,
+    },
+    showHide:{
+      marginTop: -6,
+      marginBottom: 4,
+      padding: 6,
+      fontFamily: bodyFont,
+      borderWidth: 0,
+      textAlign: "center",
+      alignSelf: "center",
+    },
+    showHideText:{
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#66fcf1',
+    },
+    showHideTextNumber: {
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: 'yellow',
+    },
+    inputComment:{
+      borderWidth: 0,
+      height:70,
+      width: 200,
+      flex:1,
+      alignContent:'center',
+      fontFamily: bodyFont,
+    },
+    buttonSendComment:{
+  
+    },
+    textButtonSend:{
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#66fcf1',
+      marginTop: 8,
+      textAlign: "center",
+      marginRight: 4,
+    },
+    ButtonSend:{
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: 'yellow',
+      marginTop: 8,
+      textAlign: "center",
+    },
+    commentContainer:{
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      justifyContent: "flex-start",
+      marginTop: 0,
+      marginBottom: 10,
+    }, 
+    userComment:{
+      display: "flex",
+      fontFamily: bodyFont,
+      justifyContent: "flex-start",
+      borderWidth: 0,
+      marginTop:-6,
+    }, 
+    commentProfileImg:{
+  
+    }, 
+    userInfo:{
+  
+  
+    }, 
+    userName:{
+      borderWidth: 0,
+      fontFamily: bodyFont,
+      color: "yellow",
+      fontSize: 16,
+      marginBottom: 0,
+      marginLeft: 10,
+    }, 
+    commentText:{
+      fontSize: 14,
+      marginTop: 0,
+      fontFamily: bodyFont,
+      marginBottom: 0,
+      color: "#ffffff",
+      marginLeft: 10,
+    },
+    showMoreCommentsButton:{
+      marginTop: 2,
+      marginBottom: 14,
+      borderWidth: 0,
+      textAlign: "center",
+      alignSelf: "center",
+    },
+    showMoreCommentsButtonIcon:{
+      color: "#66fcf1"
+    },
+    showMoreCommentsButtonDisabled:{
+      margin: 18,
+      marginTop: 0,
+      marginBottom: 46,
+      padding: 6,
+      backgroundColor: "#66fcf27e",
+      borderWidth: 0,
+      borderRadius: 20,
+      width: 100,
+      textAlign: "center",
+      alignSelf: "center",
+      cursor: "not-allowed",
+    },
+    loadMoreButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 100,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+    },
+    loadMoreButtonText: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    input: {
+      width: 320,
+      height: 36,
+      marginLeft: 10,
+      marginTop:0,
+    },
+    sendLayout: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignSelf: "center",
+    }
+  });
+
   return (
-    <ScrollView>
-      <View>
-        <View style={styles.feed}>
-          {listPublications.map((publication) => (
-          <View style={styles.post} key={publication.uuid}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Profile' as never)}
-              style={styles.userLink}
-            >
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <View style={styles.headerContainer}>
+        {listPublications.map((publication) => (
+          <View style={styles.iconsLayout} key={publication.uuid}>
+            <TouchableOpacity onPress={() => handleGoToScreenUser(publication.idUser.uuid)} style={styles.userLink}>
               <View style={styles.postHeader}>
-                <Image
-                  source={{ uri: publication.idUser.photoUser }}
-                  style={styles.postProfileImg}
-                  resizeMode="cover"
-                />
-                <View style={styles.postInfo}>
-                  <Text style={styles.postUsernameHeader}>{publication.idUser.appUser}</Text>
-                  <Text style={styles.postTimestampHeader}>{new Date(publication.createdAt).toLocaleString()}</Text>
-                </View>
+                <Image source={{ uri: publication.idUser.photoUser }} style={styles.postProfileImg} resizeMode="cover" />
               </View>
             </TouchableOpacity>
-            <View style={styles.postBody}>
-              {publication.photoPublication.map((photo) => (
-                <Image
-                  key={photo}
-                  source={{ uri: photo }}
-                  style={styles.postImage}
-                  resizeMode="cover"
-                />
-              ))}
-              <Text style={styles.postText}>{publication.textPublication}</Text>
-            </View>
-            <View style={styles.commentContainer}>
-              <TouchableOpacity style={styles.showHide} onPress={() => {
-                getComments(publication.uuid.toString());
-                }}
+          </View>
+        ))}
+      </View>
+      <View style={styles.limitedContainer}>
+        <ScrollView>
+          <View>
+            <View style={styles.feed}>
+              {listPublications.map((publication) => (
+              <View style={styles.post} key={publication.uuid}>
+                <TouchableOpacity
+                  onPress={() => handleGoToScreenUser(publication.idUser.uuid)}
+                  style={styles.userLink}
                 >
-                <Text>
-                  {commentsVisibility[publication.uuid]}{" "}
-                  {commentButton[publication.uuid]}{" "}
-                  {publication.commentsPublication?.length}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }} onPress={() => {
-                  handleToggleCommentForm(publication.uuid.toString());
-                }}
-                >
-                <MaterialCommunityIcons name="comment" size={24} color="black" />
-              </TouchableOpacity>
-              {showCommentForm[publication.uuid] && (
-                <View>
-                  <StyledTextInputs
-                    //style={styles.inputComment}
-                    placeholder="write a comment"
-                    value={commentText[publication.uuid]}
-                    onChangeText={(event:string) => handleInputChange(event, publication.uuid.toString())}
-                  />
-                  <TouchableOpacity
-                    style={styles.buttonSendComment}
-                    onPress={(event) => handleSubmit(event, publication.uuid.toString())}
-                  >
-                    <Text style={styles.textButtonSend}>Send Comment</Text>
+                  <View style={styles.postHeader}>
+                    <Image
+                      source={{ uri: publication.idUser.photoUser }}
+                      style={styles.postProfileImg}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.postInfo}>
+                      <Text style={styles.postUsernameHeader}>{publication.idUser.appUser}</Text>
+                      <Text style={styles.postTimestampHeader}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.postBody}>
+                  {publication.photoPublication.map((photo) => (
+                    <Image
+                      key={photo}
+                      source={{ uri: photo }}
+                      style={styles.postImage}
+                      resizeMode="cover"
+                    />
+                  ))}
+                </View>
+                <View style={styles.heartMessageLayout}>
+                  <MaterialCommunityIcons name="heart" size={20} color="#fb3958" />
+                  <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
+                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={20} color="#66fcf1" />
                   </TouchableOpacity>
                 </View>
-              )}  
-            </View>
-            {commentsVisibility[publication.uuid] && (
-              <View>
-                {listCommentsPublication[publication.uuid].map((comment) => (
-                  <TouchableOpacity
-                    key={comment.uuid}
-                    //onPress={() => navigation.navigate('ProfileScreen', { userId: comment.idUserComment.uuid })}
-                    style={styles.commentContainer}
-                  >
-                    <View style={styles.userComment}>
-                      {comment.idUserComment.photoUser ? (
-                        <Image
-                          source={{ uri: comment.idUserComment.photoUser }}
-                          style={styles.commentProfileImg}
-                        />
-                      ) : (
-                        <Image
-                          source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
-                          style={styles.commentProfileImg}
-                        />
-                      )}
-                      <View style={styles.userInfo}>
-                        <Text style={styles.userName}>@{comment.idUserComment.appUser}</Text>
-                        <Text style={styles.commentText}>{comment.textComment}</Text>
-                      </View>
-                    </View>
+                <Text style={styles.postText}>{publication.textPublication}</Text>
+                <View style={styles.commentContainer}>
+                  <TouchableOpacity style={styles.showHide} onPress={() => {
+                    getComments(publication.uuid.toString());
+                    }}
+                    >
+                    <Text style={styles.showHideText}>
+                      {commentsVisibility[publication.uuid]}{" "}
+                      {commentButton[publication.uuid]}{" "}
+                      <Text style={styles.showHideTextNumber}>
+                        {publication.commentsPublication?.length}
+                      </Text>
+                    </Text>
                   </TouchableOpacity>
-                ))}
-                
-                {publication.commentsPublication &&
-                    publication.commentsPublication.length >
-                      (pageComments[publication?.uuid] ?? 0) * 2 ? (
-                      <TouchableOpacity
-                        style={styles.showMoreCommentsButton}
-                        onPress={() => {
-                          showMoreComments(publication.uuid);
-                        }}
-                      >
-                        <Text style={styles.showMoreCommentsButtonText}>Show More</Text>
+                  {showCommentForm[publication.uuid] && (
+                    <View>
+                      <StyledTextInputs style={styles.input} placeholder="Write a Comment" value={commentText[publication.uuid]} onChangeText={(event:string) => handleInputChange(event, publication.uuid.toString())}/>
+                      <TouchableOpacity style={styles.buttonSendComment} onPress={(event) => handleSubmit(event, publication.uuid.toString())} >
+                        <View style={styles.sendLayout}>
+                          <Text style={styles.textButtonSend}> Send</Text>
+                          <MaterialCommunityIcons style={styles.ButtonSend} name="send" size={20} />
+                        </View>
                       </TouchableOpacity>
-                    ) : (
+                    </View>
+                  )}  
+                </View>
+                {commentsVisibility[publication.uuid] && (
+                  <View>
+                    {listCommentsPublication[publication.uuid].map((comment) => (
                       <TouchableOpacity
-                        style={styles.showMoreCommentsButtonDisabled}
-                        onPress={() => {
-                          showMoreComments(publication.uuid);
-                        }}
-                        disabled
+                        key={comment.uuid}
+                        //onPress={() => navigation.navigate('ProfileScreen', { userId: comment.idUserComment.uuid })}
+                        style={styles.commentContainer}
                       >
-                        <Text style={styles.showMoreCommentsButtonText}>Show More </Text>
+                        <View style={styles.userComment}>
+                          {comment.idUserComment.photoUser ? (
+                            <Image
+                              source={{ uri: comment.idUserComment.photoUser }}
+                              style={styles.commentProfileImg}
+                            />
+                          ) : (
+                            <Image
+                              source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
+                              style={styles.commentProfileImg}
+                            />
+                          )}
+                          <View style={styles.userInfo}>
+                            <Text style={styles.userName}>@{comment.idUserComment.appUser}</Text>
+                            <Text style={styles.commentText}>{comment.textComment}</Text>
+                          </View>
+                        </View>
                       </TouchableOpacity>
-                )}                
+                    ))}
+                    
+                    {publication.commentsPublication &&
+                        publication.commentsPublication.length >
+                          (pageComments[publication?.uuid] ?? 0) * 2 ? (
+                          <TouchableOpacity
+                            style={styles.showMoreCommentsButton}
+                            onPress={() => {
+                              showMoreComments(publication.uuid);
+                            }}
+                          >
+                            <MaterialCommunityIcons style={styles.showMoreCommentsButtonIcon} name="plus" size={16} />
+                          </TouchableOpacity>
+                        ) : (
+                          <Text></Text>
+                    )}                
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-          ))}
-        </View>
-        <TouchableOpacity style={styles.loadMore} onPress={() => {handleLoadMore}}>
-          <Text style={styles.loadMoreText}>Load More</Text>
-        </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={styles.loadMoreButton} onPress={() => {handleLoadMore}}>
+              <Text style={styles.loadMoreButtonText}>Load More</Text>
+            </TouchableOpacity>
 
+          </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  feed: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  post: {
-    flex:1,
-    flexGrow:1,
-    height: 400,
-    flexDirection: 'column',
-    width: 300,
-    justifyContent: 'flex-start',
-    borderRadius: 20,
-    borderWidth: 1,
-    marginBottom: 6,
-  },
-  userLink: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  postHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 0,
-    marginBottom: 0,
-  },
-  postProfileImg: {
-    width: 50,
-    height: 50,
-    resizeMode: 'cover',
-    marginRight: 10,
-    borderRadius: 50,
-  },
-  postInfo: {
-    flex: 1,
-    textAlign: 'left',
-  },
-  postUsernameHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    marginTop: 6,
-    marginLeft: 0,
-    color: '#66fcf1',
-  },
-  postTimestampHeader: {
-    fontSize: 12,
-    color: '#000',
-    marginLeft: 0,
-    marginTop: 0,
-  },
-  postBody: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  postImage: {
-    alignItems: 'center',
-    padding: 10,
-    width: 200, 
-    height: 200
-  },
-  postText: {
-    textAlign: 'left',
-    fontSize: 18,
-    color: '#000',
-    marginTop: 10,
-    marginBottom: 0,
-  },
-  postComments:{
-    display:'flex',
-    flexDirection:'column',
-    height:'flex',
-    justifyContent:'flex-start',
-    marginTop:0,
-    marginBottom:10
-  },
-  showHide:{
-    marginTop: 2,
-    marginBottom: 0,
-    padding: 6,
-    borderWidth: 0,
-    width: 200,
-    textAlign: "center",
-    alignSelf: "center",
-  },
-  inputComment:{
-    borderWidth: 0,
-    height:50,
-    width: 200,
-    flex:1,
-    alignContent:'center',
-  },
-  buttonSendComment:{
-
-  },
-  textButtonSend:{
-
-  },
-  commentContainer:{
-    display: "flex",
-    flexDirection: "column",
-    flex: 1,
-    justifyContent: "flex-start",
-    marginTop: 0,
-    marginBottom: 10,
-  }, 
-  userComment:{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    borderWidth: 0,
-    height: 40,
-    marginTop: 0,
-    marginBottom: -20,
-    marginLeft: 0,
-    borderRadius: 40,
-    borderColor: "#fff",
-    paddingTop: 7,
-    paddingBottom: 7,
-
-  }, 
-  commentProfileImg:{
-
-  }, 
-  userInfo:{
-
-
-  }, 
-  userName:{
-    margin: 6,
-    padding: 6,
-    borderWidth: 0,
-    color: "#66fcf1",
-    fontSize: 16,
-    textAlign: "center",
-    alignSelf: "center",
-    marginBottom: 60,
-  }, 
-  commentText:{
-    fontSize: 14,
-    marginTop: 0,
-    marginBottom: 0,
-    color: "#000",
-  },
-  showMoreCommentsButton:{
-    marginTop: 2,
-    marginBottom: 0,
-    padding: 6,
-    backgroundColor: "66fcf2",
-    borderWidth: 0,
-    width: 200,
-    textAlign: "center",
-    alignSelf: "center",
-  },
-  showMoreCommentsButtonText:{
-    color: "#000000",
-    fontSize: 14,
-  },
-  showMoreCommentsButtonDisabled:{
-    margin: 18,
-    marginTop: 0,
-    marginBottom: 46,
-    padding: 6,
-    backgroundColor: "#66fcf27e",
-    borderWidth: 0,
-    borderRadius: 20,
-    width: 100,
-    textAlign: "center",
-    alignSelf: "center",
-    cursor: "not-allowed",
-  },
-  loadMore:{
-    margin: 6,
-    padding: 6,
-    backgroundColor: "#66fcf1",
-    borderRadius: 20,
-    width: 100,
-    textAlign: "center",
-    alignSelf: "center",
-    marginBottom: 60,
-  }, 
-  loadMoreText:{
-    textAlign: 'center',
-    fontSize: 14,
-    color: '#000',
-    marginTop: 10,
-    marginBottom: 0,
-  }
-});
