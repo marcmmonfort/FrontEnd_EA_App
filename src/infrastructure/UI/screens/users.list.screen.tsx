@@ -110,14 +110,27 @@ interface RouteParams {
         ) : (
           <Text style={styles.notFoundText}>User Not Found</Text>
         )}
-        {currentUser?.followersUser?.length !== undefined && currentUser.followersUser.length > numPage * 2 ? (
-          <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-            <Text style={styles.loadMoreButtonText}>Load More</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
-            <Text style={styles.loadMoreButtonText}>Load More</Text>
-          </TouchableOpacity>
+        {isFollowersMode ? (
+          currentUser?.followersUser?.length !== undefined && currentUser.followersUser.length > numPage * 2 ? (
+            <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+              <Text style={styles.loadMoreButtonText}>Load More</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
+              <Text style={styles.loadMoreButtonText}>Load More</Text>
+            </TouchableOpacity>
+          )
+        ):(
+          currentUser?.followedUser?.length !== undefined && currentUser.followedUser.length > numPage * 2 ? (
+            <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+              <Text style={styles.loadMoreButtonText}>Load More</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
+              <Text style={styles.loadMoreButtonText}>Load More</Text>
+            </TouchableOpacity>
+          )
+
         )}
       </View>
     </View>
