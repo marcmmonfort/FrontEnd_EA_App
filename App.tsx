@@ -19,6 +19,7 @@ import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/pu
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 
+
 const Stack = createStackNavigator();
 
 export default function App() {

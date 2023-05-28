@@ -1,13 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  RTCPeerConnection,
-  RTCSessionDescription,
-  RTCIceCandidate,
-} from "react-native-webrtc";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { StyleSheet } from "react-native";
 import { Socket, io } from "socket.io-client";
-
 import { useRoute } from "@react-navigation/native";
 
 interface RouteParams {
@@ -113,22 +107,27 @@ export default function ChatB() {
       console.log("error on callUser");
     }
   }
-  function Peer(userID: string): RTCPeerConnection {
-    const peer = new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: "stun:147.83.7.158:3478",
-        },
-        {
-          urls: "147.83.7.158:3478",
-          credential: "oursecret",
-          username: "coturn",
-        },
-      ],
-    });
-    peer.onicecandidate = handleICECandidateEvent;
-    peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
-    return peer;
+  function Peer(userID: string) {
+    try{
+      const peer = new RTCPeerConnection({
+        iceServers: [
+          {
+            urls: "stun:147.83.7.158:3478",
+          },
+          {
+            urls: "147.83.7.158:3478",
+            credential: "oursecret",
+            username: "coturn",
+          },
+        ],
+      });
+      peer.onicecandidate = handleICECandidateEvent;
+      peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
+      return peer;
+    }catch(error){
+      console.log("Error")
+    }
+    
   }
   function handleNegotiationNeededEvent(userID: string) {
     // Offer made by the initiating peer to the receiving peer.
@@ -151,10 +150,10 @@ export default function ChatB() {
   }
 
   function handleOffer(incoming: any): void {
-    /*
-    Here we are exchanging config information
-    between the peers to establish communication
-  */
+    
+    //Here we are exchanging config information
+    //between the peers to establish communication
+  
     console.log("[INFO] Handling Offer");
     peerRef.current = Peer(incoming.caller);
     peerRef.current.ondatachannel = (event: any) => {
@@ -165,17 +164,17 @@ export default function ChatB() {
       console.log("[SUCCESS] Connection established");
     };
 
-    /*
-    Session Description: It is the config information of the peer
-    SDP stands for Session Description Protocol. The exchange
-    of config information between the peers happens using this protocol
-  */
+    
+    //Session Description: It is the config information of the peer
+    //SDP stands for Session Description Protocol. The exchange
+    //of config information between the peers happens using this protocol
+  
     const desc = new RTCSessionDescription(incoming.sdp);
 
-    /* 
-      Remote Description : Information about the other peer
-      Local Description: Information about you 'current peer'
-  */
+    
+      //Remote Description : Information about the other peer
+      //Local Description: Information about you 'current peer'
+  
 
     peerRef.current
       .setRemoteDescription(desc)
@@ -226,13 +225,13 @@ export default function ChatB() {
   }
 
   function handleICECandidateEvent(e: any): void {
-    /*
-    ICE stands for Interactive Connectivity Establishment. Using this
-    peers exchange information over the intenet. When establishing a
-    connection between the peers, peers generally look for several 
-    ICE candidates and then decide which to choose best among possible
-    candidates
-  */
+    
+    //ICE stands for Interactive Connectivity Establishment. Using this
+    //peers exchange information over the intenet. When establishing a
+    //connection between the peers, peers generally look for several 
+    //ICE candidates and then decide which to choose best among possible
+    //candidates
+  
     if (e.candidate) {
       const payload = {
         target: otherUser.current,
