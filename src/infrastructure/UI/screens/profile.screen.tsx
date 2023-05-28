@@ -47,76 +47,78 @@ export default function ProfileScreen() {
   );
   
   return (
-    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.text}>Profile</Text>
-        </View>
-        <View style={styles.profileContour}>
-          {currentUser && (
-            <View style={styles.profileContainer}>
-              <View style={styles.profile}>
-                <Text style={styles.profileUserName}>
-                  {currentUser.appUser}
-                </Text>
-                <View style={styles.profileImage}>
-                  <Image
-                    source={{ uri: currentUser.photoUser }}
-                    style={styles.image}
-                  />
-                </View>
-                <View style={styles.profileUserButtons}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("Edit" as never);
-                    }}
-                    style={styles.buttonProfile}
-                  >
-                    <Text style={styles.buttonText}>Edit Profile</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      // Acción al presionar el botón de Configuración
-                    }}
-                    style={styles.buttonProfile}
-                  >
-                    <Text style={styles.buttonText}>Settings</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.profileStats}>
-                  <Text style={styles.text}>Followers</Text>
-                  <TouchableOpacity
-                    style={styles.profileStatCount}
-                    onPress={() => {}}
-                  >
-                    <Text>{currentUser.followersUser?.length}</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.text}>Following</Text>
-                  <TouchableOpacity
-                    style={styles.profileStatCount}
-                    onPress={() => {}}
-                  >
-                    <Text>{currentUser.followedUser?.length}</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.profileBio}>
-                  <Text style={styles.profileTitle}>Name</Text>
-                  <Text>
-                    <Text style={styles.profileRealName}>
-                      {currentUser.nameUser}
-                    </Text>
-                  </Text>
-                  <Text style={styles.profileTitle}>Description</Text>
-                  <Text>{currentUser.descriptionUser}</Text>
-                </View>
-              </View>
-              <Button title="LogOut" onPress={logOutButtonFunction} />
-            </View>
-          )}
-        </View>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.text}>Profile</Text>
       </View>
-    </ImageBackground>
-
+      <View style={styles.profileContour}>
+        {currentUser && (
+          <View style={styles.profileContainer}>
+            <View style={styles.profile}>
+              <Text style={styles.profileUserName}>
+                {currentUser.appUser}
+              </Text>
+              <View style={styles.profileImage}>
+                <Image
+                  source={{ uri: currentUser.photoUser }}
+                  style={styles.image}
+                />
+              </View>
+              <View style={styles.profileUserButtons}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Edit" as never);
+                  }}
+                  style={styles.buttonProfile}
+                >
+                  <Text style={styles.buttonText}>Edit Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // Acción al presionar el botón de Configuración
+                  }}
+                  style={styles.buttonProfile}
+                >
+                  <Text style={styles.buttonText}>Settings</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.profileStats}>
+                <TouchableOpacity
+                  style={styles.profileStatCount}
+                  onPress={() => {
+                    navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);
+                  }}
+                >
+                  <Text style={styles.text}>Followers</Text>
+                  <Text>{currentUser.followersUser?.length}</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={styles.profileStatCount}
+                  onPress={() => {
+                    navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);
+                  }}
+                >
+                  <Text style={styles.text}>Following</Text>
+                  <Text>{currentUser.followedUser?.length}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.profileBio}>
+                <Text style={styles.profileTitle}>Name</Text>
+                <Text>
+                  <Text style={styles.profileRealName}>
+                    {currentUser.nameUser}
+                  </Text>
+                </Text>
+                <Text style={styles.profileTitle}>Description</Text>
+                <Text>{currentUser.descriptionUser}</Text>
+              </View>
+            </View>
+            <Button title="LogOut" onPress={logOutButtonFunction} />
+          </View>
+        )}
+      </View>
+    </View>
   );
 }
 
