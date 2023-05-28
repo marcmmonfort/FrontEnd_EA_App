@@ -17,6 +17,7 @@ import EditUserScreen from "./src/infrastructure/UI/screens/edit.user.screen";
 import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
+import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
 
 const Stack = createStackNavigator();
 
@@ -90,6 +91,10 @@ export default function App() {
         <Stack.Screen
           name="UserScreen"
           component={UserScreen}
+          />
+        <Stack.Screen
+          name="UsersList"
+          component={UsersList}
           />
         
         

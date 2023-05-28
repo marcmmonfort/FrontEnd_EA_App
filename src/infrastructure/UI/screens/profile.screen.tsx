@@ -83,18 +83,23 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               </View>
               <View style={styles.profileStats}>
-                <Text style={styles.text}>Followers</Text>
                 <TouchableOpacity
                   style={styles.profileStatCount}
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);
+                  }}
                 >
+                  <Text style={styles.text}>Followers</Text>
                   <Text>{currentUser.followersUser?.length}</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>Following</Text>
+                
                 <TouchableOpacity
                   style={styles.profileStatCount}
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);
+                  }}
                 >
+                  <Text style={styles.text}>Following</Text>
                   <Text>{currentUser.followedUser?.length}</Text>
                 </TouchableOpacity>
               </View>

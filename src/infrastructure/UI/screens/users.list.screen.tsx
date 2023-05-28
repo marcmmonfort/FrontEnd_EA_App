@@ -1,4 +1,4 @@
-/*import { SessionService } from "../../services/user/session.service";
+import { SessionService } from "../../services/user/session.service";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
@@ -11,12 +11,12 @@ interface RouteParams {
     mode?: string;
   }
 
-const UsersList = () => {
+  export default function UsersList() {
     const route = useRoute();
     const {
         userId, mode
       }: RouteParams = route.params || {};
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
     const [userList, setUserList] = useState([]);
     const [numPage, setNumPage] = useState(1); // Variable para el número de página
     const navigation = useNavigation();
@@ -39,10 +39,11 @@ const UsersList = () => {
   const loadUser = async () => {
     try {
       const response = await CRUDService.getUser(userId ?? 'NoID');
-      setCurrentUser(response?.data.response);
+      console.log(userId)
+      setCurrentUser(response?.data);
       console.log("Obtenemos los datos del otro usuario: exito");
     } catch (error) {
-      navigation.navigate("Profile" as never);
+      navigation.navigate("ProfileScreen" as never);
       console.log("Obtenemos los datos del otro usuario: mal");
       console.error(error);
     }
@@ -58,7 +59,7 @@ const UsersList = () => {
           setUserList(prevUserList => [...prevUserList, ...response?.data] as never);
         })
         .catch(error => {
-            navigation.navigate("Profile" as never);
+            navigation.navigate("ProfileScreen" as never);
         });
     } else {
         CRUDService.getFollowed(userId, numPage.toString())
@@ -68,12 +69,13 @@ const UsersList = () => {
           setUserList(prevUserList => [...prevUserList, ...response?.data] as never);
         })
         .catch(error => {
-          navigation.navigate("Profile" as never);
+          navigation.navigate("ProfileScreen" as never);
         });
     }
   };
 
   const handleLoadMore = () => {
+    console.log("entro al load more");
     setNumPage(prevNumPage => prevNumPage + 1); // Aumentar el número de página al hacer clic en "Obtener más"
   };
 
@@ -85,12 +87,19 @@ const UsersList = () => {
       <View style={styles.userList}>
         {userList.length > 0 ? (
           <ScrollView>
-            {userList.map(user => (
-              <TouchableOpacity key={user.uuid} style={styles.userCard} onPress={() => navigation.navigate("User", { userId: user.uuid })}>
-                <Image
-                  source={user.photoUser ? { uri: user.photoUser } : require("//ssl.gstatic.com/accounts/ui/avatar_2x.png")}
-                  style={styles.profileImage}
-                />
+            {userList.map((user:UserEntity) => (
+              <TouchableOpacity key={user.uuid} style={styles.userCard} onPress={() => navigation.navigate("UserScreen" as never, {userId: user.uuid} as never)}>
+                {user.photoUser ? (
+                        <Image
+                          source={{ uri: user.photoUser }}
+                          style={styles.profileImage}
+                        />
+                      ) : (
+                        <Image
+                          source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
+                          style={styles.profileImage}
+                        />
+                      )}
                 <View style={styles.userInfo}>
                   <Text style={styles.userName}> {user.nameUser} {user.surnameUser} </Text>
                   <Text style={styles.username}>@{user.appUser}</Text>
@@ -182,4 +191,3 @@ const styles = StyleSheet.create({
       marginBottom: 16,
     },
   });
-export default UsersList;*/
