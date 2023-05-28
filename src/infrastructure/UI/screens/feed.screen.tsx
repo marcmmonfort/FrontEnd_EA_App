@@ -388,7 +388,8 @@ export default function FeedScreen() {
     },
     postImage: {
       alignItems: 'center',
-      padding: 10,
+      padding: 0,
+      marginTop: -8,
       width: 320, 
       height: 320,
     },
