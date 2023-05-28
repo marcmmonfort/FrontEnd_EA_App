@@ -15,6 +15,7 @@ import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fontisto } from '@expo/vector-icons';
 import * as Font from 'expo-font';
+import { useSpring, animated } from 'react-spring';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -36,6 +37,9 @@ export default function FeedScreen() {
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
   const [recargar, setRecargar] = useState<string>('');
   const [userList, setUserList] = useState<UserEntity[] | null>(null);
+  const [numPublications, setNumPublications] = useState<number>(0);
+  const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
+
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -116,6 +120,16 @@ export default function FeedScreen() {
                   {}
                 );
                 setCommentText(initialCommentText);
+
+                const initialShowLikes = response.data.reduce(
+                  (acc: { [key: string]: boolean }, publication: Publication) => {
+                    const hasLiked = publication.likesPublication?.includes(userId) || false;
+                    acc[publication.uuid] = hasLiked;
+                    return acc;
+                  },
+                  {}
+                );
+                setHasLiked(initialShowLikes);
   
                 setListPublications(response.data);
               })
@@ -123,6 +137,12 @@ export default function FeedScreen() {
                 //navigation.navigate('NotFoundScreen' as never);
                 console.log(error)
               });
+              PublicationService.numPublicationsFollowing(userId)
+              .then((response) => {
+                console.log(response);
+                console.log(response.data);
+                setNumPublications(response.data);
+              })
           } catch (error) {
             console.log("Encontre el id pero no va")
           }
@@ -304,8 +324,64 @@ export default function FeedScreen() {
     setCommentText((prevCommentText) => ({
       ...prevCommentText,
       [idPublication]: prevCommentText[idPublication] = "",
-    }));
+    }));  
+  
   };
+
+  const handleLike = async (idPublication:string) => {
+
+    console.log("Handle Like" + idPublication);
+    console.log("Handle Like" + hasLiked[idPublication]);
+    const userId = await SessionService.getCurrentUser();
+    if(userId){
+      if(hasLiked[idPublication]){
+
+        setHasLiked((prevLikes) => ({
+          ...prevLikes,
+          [idPublication]: !prevLikes[idPublication],
+        }));
+        console.log("Handle Like True: " + hasLiked[idPublication]);
+        PublicationService.deleteLike(idPublication, userId)
+        .then((response) => {
+          console.log(response);
+          console.log(response.data);
+          setRecargar("recargate");
+          console.log("Se ha recargado");
+        })
+        .catch(error => {
+          navigation.navigate("NotFoundScreen" as never);
+        });
+  
+      }else{
+        setHasLiked((prevLikes) => ({
+          ...prevLikes,
+          [idPublication]: !prevLikes[idPublication],
+        }));
+        console.log("Handle Like False: " + hasLiked[idPublication]);
+
+        
+        PublicationService.updateLike(idPublication, userId)
+        .then((response) => {
+          console.log(response);
+          console.log(response.data);
+          setRecargar("recargate");
+          console.log("Se ha recargado");
+        })
+        .catch(error => {
+          navigation.navigate("NotFoundScreen" as never);
+        });
+      }
+    }
+  }
+
+  const heartAnimation = useSpring({
+    from: { opacity: 0, y: 0 },
+    to: { opacity: hasLiked ? 1 : 0, y: hasLiked ? -100 : 0 },
+  });
+
+
+
+
 
   const styles = StyleSheet.create({
     feed: {
@@ -559,6 +635,7 @@ export default function FeedScreen() {
     }
   });
 
+  
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.headerContainer}>
@@ -606,8 +683,9 @@ export default function FeedScreen() {
                 </View>
                 <View style={styles.heartMessageLayout}>
                   <MaterialCommunityIcons name="heart" size={20} color="#fb3958" />
-                  <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
+                  <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={20} color="#66fcf1" />
+                    <Text>{publication.likesPublication?.length}</Text>
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.postText}>{publication.textPublication}</Text>
@@ -692,4 +770,7 @@ export default function FeedScreen() {
       </View>
     </ImageBackground>
   );
+
+
+
 };

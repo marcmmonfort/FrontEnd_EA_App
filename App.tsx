@@ -18,6 +18,7 @@ import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
+import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,10 @@ export default function App() {
           name="UsersList"
           component={UsersList}
           />
+        <Stack.Screen
+        name="NotFoundScreen"
+        component={NotFoundScreen}
+        />
         
         
       </Stack.Navigator>

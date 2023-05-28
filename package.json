@@ -50,6 +50,7 @@
     "react-native-video": "^5.2.1",
     "react-native-web": "~0.18.10",
     "react-router-dom": "^6.11.2",
+    "react-spring": "^9.7.1",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.5"
   },
