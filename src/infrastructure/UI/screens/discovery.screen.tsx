@@ -111,7 +111,7 @@ export default function DiscoveryScreen() {
       marginBottom: 0,
     },
     searchedDescription: {
-      color: 'white',
+      color: '#66fcf1',
       fontFamily: bodyFont,
       fontSize: 14,
       marginTop: 0,
@@ -149,7 +149,6 @@ export default function DiscoveryScreen() {
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View>
         <SearchBar onSearch={handleSearchWrapper} />
-
         <View>
           {userList && userList.length > 0 ? (
             <FlatList style={styles.searchedUsersContainer}
@@ -164,8 +163,8 @@ export default function DiscoveryScreen() {
                       />
                     <View>
                       <Text style={styles.searchedUsername}>@{item.appUser}</Text>
-                      <Text style={styles.searchedNameSurname} >{item.nameUser} {item.surnameUser}</Text>
-                      <Text style={styles.searchedDescription} >{item.descriptionUser}</Text>
+                      <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
+                      <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
