@@ -94,7 +94,8 @@ export default function SplashScreen() {
             try {
               const token = await AsyncStorage.getItem('token');
               if (token) {
-                navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);
+                navigation.navigate('LoginScreen' as never);
+                // navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);
               } else {
                 navigation.navigate('LoginScreen' as never);
               }

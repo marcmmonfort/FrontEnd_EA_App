@@ -94,7 +94,7 @@ export default function LoginScreen() {
     },
     input: {
       width: 300,
-      height: 50,
+      height: 40,
     },
     normalText: {
       color: 'white',
