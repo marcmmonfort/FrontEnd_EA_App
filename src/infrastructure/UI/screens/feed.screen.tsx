@@ -485,7 +485,13 @@ export default function FeedScreen() {
       fontFamily: bodyFont,
       marginTop: 0,
       marginBottom: 6,
+      marginLeft: 8,
+    },
+    numberOfLikesPost: {
+      fontFamily: bodyFont,
+      fontSize: 16,
       marginLeft: 10,
+      color: '#ffffff',
     },
     postComments:{
       display:'flex',
@@ -683,11 +689,11 @@ export default function FeedScreen() {
                 <View style={styles.heartMessageLayout}>
                   
                   <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
-                    <MaterialCommunityIcons name="heart" size={40} color="#fb3958" />
-                    <Text>{publication.likesPublication?.length}</Text>
+                    <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
+                    <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
-                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={40} color="#66fcf1" />
+                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={28} color="#66fcf1" />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.postText}>{publication.textPublication}</Text>
