@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useState } from "react";
-import { Alert, View, Text, Button, TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, View, Text, Button, TouchableOpacity, Platform, ImageBackground } from "react-native";
 import MainContainer from "../../components/containers/Main";
 import React from "react";
 import SubTitle from "../../components/texts/Subtitle";
@@ -9,7 +9,14 @@ import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import { StyleSheet } from "react-native";
 import ButtonGradientShowPassword from "../../components/buttons/Button_Type_Show_Password";
+import * as Font from 'expo-font';
 
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../../assets/fonts/SFNS.otf'),
+  });
+}
 interface RouteParams {
   appUser?: any;
   nameUser?: string;
@@ -25,6 +32,23 @@ export default function ScreenRegisterB() {
   const [passwordStrength, setPasswordStrength] = useState("");
 
   const navigation = useNavigation();
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
 
   const handleGoToScreenRegisterC = () => {
     if (!mailUser || !passwordUser || !confirmation) {
@@ -90,94 +114,102 @@ export default function ScreenRegisterB() {
     setShowPassword(!showPassword);
   };
 
-  return (
-    <MainContainer>
-      <Text style={styles.requiredText}>Fields with * are mandatory</Text>
-      <SubTitle>Introduce your credentials</SubTitle>
-      <View>
-        <StyledTextInputs
-          style={styles.textInput}
-          placeholder="*Email"
-          value={mailUser}
-          onChangeText={(value: React.SetStateAction<string>) => setMail(value)}
-        />
-        <StyledTextInputs
-          style={styles.textInput}
-          placeholder="*Password"
-          value={passwordUser}
-          onChangeText={handlePasswordChange}
-          secureTextEntry={!showPassword}
-        />
-        <View style={styles.passwordStrengthContainer}>
-          <View
-            style={[
-              styles.passwordStrengthBar,
-              { backgroundColor: getPasswordStrengthColor(passwordStrength) },
-            ]}
-          />
-          
-        </View>
-        <StyledTextInputs
-          style={styles.textInput}
-          placeholder="*Confirmation"
-          value={confirmation}
-          onChangeText={(value: React.SetStateAction<string>) => setConfirmation(value)}
-          secureTextEntry={!showPassword}
-        />
-        <View style={styles.showPasswordButton}>
-  <TouchableOpacity onPress={toggleShowPassword}>
-    <Text style={styles.showPasswordButtonText}>
-      {showPassword ? "Hide Password" : "Show Password"}
-    </Text>
-  </TouchableOpacity>
-</View>
+  const styles = StyleSheet.create({
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+    requiredText: {
+      color: "red",
+      marginTop: 10,
+      fontStyle: "italic",
+    },
+    passwordStrengthContainer: {
+      height: 10,
+      backgroundColor: "#EEE",
+      borderRadius: 5,
+      marginTop: 10,
+    },
+    passwordStrengthBar: {
+      height: 10,
+      borderRadius: 5,
+    },
+    textInput: {
+      width: 250,
+    },
+    showPasswordButton: {
+      alignSelf: "center",
+      marginTop: 5,
+      color:"red"
+    
+    },
+    showPasswordButtonText: {
+      color: "white",
+      marginTop: 10,
+      fontStyle: "italic",
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    mainContainer: {
+      backgroundColor: 'transparent',
+    },
+  });
 
-      </View>
-      <View style={styles.buttonContainer}>
-        <ButtonGradientNext onPress={handleGoToScreenRegisterC} />
-        <ButtonGradientBack onPress={handleGoBack} />
-      </View>
-    </MainContainer>
+  return (
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
+      <MainContainer style={styles.mainContainer}>
+        <Text style={styles.requiredText}>Fields with * are mandatory</Text>
+        <SubTitle>Introduce your credentials</SubTitle>
+        <View>
+          <StyledTextInputs
+            style={styles.textInput}
+            placeholder="*Email"
+            value={mailUser}
+            onChangeText={(value: React.SetStateAction<string>) => setMail(value)}
+          />
+          <StyledTextInputs
+            style={styles.textInput}
+            placeholder="*Password"
+            value={passwordUser}
+            onChangeText={handlePasswordChange}
+            secureTextEntry={!showPassword}
+          />
+          <View style={styles.passwordStrengthContainer}>
+            <View
+              style={[
+                styles.passwordStrengthBar,
+                { backgroundColor: getPasswordStrengthColor(passwordStrength) },
+              ]}
+            />
+            
+          </View>
+          <StyledTextInputs
+            style={styles.textInput}
+            placeholder="*Confirmation"
+            value={confirmation}
+            onChangeText={(value: React.SetStateAction<string>) => setConfirmation(value)}
+            secureTextEntry={!showPassword}
+          />
+          <View style={styles.showPasswordButton}>
+    <TouchableOpacity onPress={toggleShowPassword}>
+      <Text style={styles.showPasswordButtonText}>
+        {showPassword ? "Hide Password" : "Show Password"}
+      </Text>
+    </TouchableOpacity>
+  </View>
+
+        </View>
+        <View style={styles.buttonContainer}>
+          <ButtonGradientNext onPress={handleGoToScreenRegisterC} />
+          <ButtonGradientBack onPress={handleGoBack} />
+        </View>
+      </MainContainer>
+    </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  requiredText: {
-    color: "red",
-    marginTop: 10,
-    fontStyle: "italic",
-  },
-  passwordStrengthContainer: {
-    height: 10,
-    backgroundColor: "#EEE",
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  passwordStrengthBar: {
-    height: 10,
-    borderRadius: 5,
-  },
-  textInput: {
-    width: 250,
-  },
-  showPasswordButton: {
-    alignSelf: "center",
-    marginTop: 5,
-    color:"red"
-  
-  },
-  showPasswordButtonText: {
-    color: "white",
-    marginTop: 10,
-    fontStyle: "italic",
-  },
-});
-
 
 function getPasswordStrengthColor(strength: string) {
   switch (strength) {

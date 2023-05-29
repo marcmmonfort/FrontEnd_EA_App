@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Image, View, Platform, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Button, Image, View, Platform, Alert, ActivityIndicator, TouchableOpacity, ImageBackground } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
@@ -9,7 +9,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import ButtonGradientBack2 from "../../components/buttons/Button_Type_3";
 import SubTitle from "../../components/texts/Subtitle";
+import * as Font from 'expo-font';
+import MainContainer from "../../components/containers/Main";
 
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 interface RouteParams {
   appUser?: any;
@@ -27,6 +35,24 @@ export default function ScreenRegisterC() {
     mailUser,
     passwordUser,
   }: RouteParams = route.params || {};
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
+
   const [photoUser, setPhotoUser] = useState("");
   const [auxPhotoUser, setAux] = useState("");
   const [loading, setLoading] = useState(false);
@@ -157,85 +183,98 @@ export default function ScreenRegisterC() {
     navigation.goBack();
   };
 
-  return (
-    <View style={[styles.container, { backgroundColor: "black" }]}>
-      <SubTitle style={styles.text}>Upload your profile photo</SubTitle>
-      {loading ? (
-        <ActivityIndicator size="large" color="blue" />
-      ) : (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.buttonA, { backgroundColor: "black" }]} onPress={handleCameraPress}>
-            <LinearGradient
-              colors={["#66fcf1", "#66fcf1"]}
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              style={styles.gradient}
-            >
-              <Ionicons name="camera" size={32} color="black" />
-            </LinearGradient>
-          </TouchableOpacity>
+  const styles = StyleSheet.create({
+    text:{
+      marginBottom:50,
+    },
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      marginBottom: 20,
+    },
+    buttonContainerB: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 100,
+      marginBottom:-100
+      
+      
+    },
+    buttonA: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 20,
+    },
+    buttonB: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: 20,
+    },
+    gradient: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 40,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    mainContainer: {
+      backgroundColor: 'transparent',
+    },
+  });
+  
 
-          <TouchableOpacity style={[styles.buttonB, { backgroundColor: "black" }]} onPress={handleGalleryPress}>
-            <LinearGradient
-              colors={["#66fcf1", "#66fcf1"]}
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              style={styles.gradient}
-            >
-              <Ionicons name="image" size={32} color="black" />
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      )}
-      <View style={styles.buttonContainerB}>
-        <ButtonGradientBack2 onPress={handleGoBack} />
-      </View>
-    </View>
+  return (
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
+      <MainContainer style={styles.mainContainer}>
+        <View style={[styles.container, { backgroundColor: "black" }]}>
+          <SubTitle style={styles.text}>Upload your profile photo</SubTitle>
+          {loading ? (
+            <ActivityIndicator size="large" color="blue" />
+          ) : (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={[styles.buttonA, { backgroundColor: "black" }]} onPress={handleCameraPress}>
+                <LinearGradient
+                  colors={["#66fcf1", "#66fcf1"]}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  style={styles.gradient}
+                >
+                  <Ionicons name="camera" size={32} color="black" />
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.buttonB, { backgroundColor: "black" }]} onPress={handleGalleryPress}>
+                <LinearGradient
+                  colors={["#66fcf1", "#66fcf1"]}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  style={styles.gradient}
+                >
+                  <Ionicons name="image" size={32} color="black" />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          )}
+          <View style={styles.buttonContainerB}>
+            <ButtonGradientBack2 onPress={handleGoBack} />
+          </View>
+        </View>  
+      </MainContainer>
+    </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  text:{
-    marginBottom:50,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-  buttonContainerB: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 100,
-    marginBottom:-100
-    
-    
-  },
-  buttonA: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 20,
-  },
-  buttonB: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: 20,
-  },
-  gradient: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

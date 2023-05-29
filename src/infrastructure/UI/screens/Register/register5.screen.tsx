@@ -1,11 +1,19 @@
-import React, { useState } from "react";
-import { Alert, View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, View, Text, StyleSheet, Platform, ImageBackground } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import MainContainer from "../../components/containers/Main";
 import StyledTextInputs from "../../components/inputs/StyledTextInputs";
 import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
+import * as Font from 'expo-font';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 interface RouteParams {
   appUser?: any;
@@ -38,6 +46,23 @@ export default function ScreenRegisterE() {
   const [privacyUser, setPrivacyUser] = useState<boolean>(false);
 
   const navigation = useNavigation();
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
 
   const handleGoToScreenRegisterF = () => {
     if (!descriptionUser) {
@@ -104,48 +129,57 @@ export default function ScreenRegisterE() {
     textInput: {
       width: 250,
     },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    mainContainer: {
+      backgroundColor: 'transparent',
+    },
   });
 
   return (
-    <MainContainer>
-      <View>
-        <StyledTextInputs
-          style={styles.textInput}
-          placeholder="Description"
-          value={descriptionUser}
-          onChangeText={setDescriptionUser}
-        />
-        <Picker
-          selectedValue={roleUser}
-          style={styles.picker}
-          onValueChange={setRoleUser}
-        >
-          <Picker.Item label="Common" value="common" />
-          <Picker.Item label="Business" value="Business" />
-        </Picker>
-        <Picker
-          selectedValue={privacyUser ? "Private" : "Public"}
-          style={styles.picker}
-          onValueChange={(itemValue) => {
-            if(itemValue==="Private"){
-              setPrivacyUser(true);
-            }
-            else{
-              setPrivacyUser(false)}
-            }
-            }
-        >
-          <Picker.Item label="Private" value="Private" />
-          <Picker.Item label="Public" value="Public" />
-        </Picker>
-      </View>
-      <Text style={styles.text}>{descriptionUser}</Text>
-      <Text style={styles.text}>{roleUser}</Text>
-      <Text style={styles.text}>{privacyUser.toString()}</Text>
-      <View style={styles.buttonContainer}>
-        <ButtonGradientNext onPress={handleGoToScreenRegisterF} />
-        <ButtonGradientBack onPress={handleGoBack} />
-      </View>
-    </MainContainer>
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
+      <MainContainer style={styles.mainContainer}>
+        <View>
+          <StyledTextInputs
+            style={styles.textInput}
+            placeholder="Description"
+            value={descriptionUser}
+            onChangeText={setDescriptionUser}
+          />
+          <Picker
+            selectedValue={roleUser}
+            style={styles.picker}
+            onValueChange={setRoleUser}
+          >
+            <Picker.Item label="Common" value="common" />
+            <Picker.Item label="Business" value="Business" />
+          </Picker>
+          <Picker
+            selectedValue={privacyUser ? "Private" : "Public"}
+            style={styles.picker}
+            onValueChange={(itemValue) => {
+              if(itemValue==="Private"){
+                setPrivacyUser(true);
+              }
+              else{
+                setPrivacyUser(false)}
+              }
+              }
+          >
+            <Picker.Item label="Private" value="Private" />
+            <Picker.Item label="Public" value="Public" />
+          </Picker>
+        </View>
+        <Text style={styles.text}>{descriptionUser}</Text>
+        <Text style={styles.text}>{roleUser}</Text>
+        <Text style={styles.text}>{privacyUser.toString()}</Text>
+        <View style={styles.buttonContainer}>
+          <ButtonGradientNext onPress={handleGoToScreenRegisterF} />
+          <ButtonGradientBack onPress={handleGoBack} />
+        </View>
+      </MainContainer>
+    </ImageBackground>
   );
 }

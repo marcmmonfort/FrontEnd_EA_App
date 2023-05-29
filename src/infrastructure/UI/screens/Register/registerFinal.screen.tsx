@@ -1,8 +1,17 @@
-import React from "react";
-import { View, Text, Button, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Button, TouchableOpacity, Platform, StyleSheet, ImageBackground } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { SessionService } from "../../../services/user/session.service";
 import { UserAuthEntity } from "../../../../domain/user/user.entity";
+import * as Font from 'expo-font';
+import MainContainer from "../../components/containers/Main";
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 interface RouteParams {
   appUser?: any;
@@ -39,6 +48,24 @@ export default function ScreenRegisterFinal({
     roleUser,
     privacyUser,
   }: RouteParams = route.params || {};
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
+
   const handleRegister = async () => {
     try {
       const user: UserAuthEntity = {
@@ -83,21 +110,33 @@ export default function ScreenRegisterFinal({
     }
   };
 
+  const styles = StyleSheet.create({
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    mainContainer: {
+      backgroundColor: 'transparent',
+    },
+  });
+
   return (
-    <>
-      <Text>{appUser}</Text>
-      <Text>{nameUser}</Text>
-      <Text>{surnameUser}</Text>
-      <Text>{mailUser}</Text>
-      <Text>{passwordUser}</Text>
-      <Text>{photoUser}</Text>
-      <Text>{birthdateUser}</Text>
-      <Text>{genderUser}</Text>
-      <Text>{ocupationUser}</Text>
-      <Text>{descriptionUser}</Text>
-      <Text>{roleUser}</Text>
-      <Text>{privacyUser}</Text>
-      <Button title="Register" onPress={handleRegister} />
-    </>
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
+      <MainContainer style={styles.mainContainer}>
+        <Text>{appUser}</Text>
+        <Text>{nameUser}</Text>
+        <Text>{surnameUser}</Text>
+        <Text>{mailUser}</Text>
+        <Text>{passwordUser}</Text>
+        <Text>{photoUser}</Text>
+        <Text>{birthdateUser}</Text>
+        <Text>{genderUser}</Text>
+        <Text>{ocupationUser}</Text>
+        <Text>{descriptionUser}</Text>
+        <Text>{roleUser}</Text>
+        <Text>{privacyUser}</Text>
+        <Button title="Register" onPress={handleRegister}/>
+      </MainContainer>
+    </ImageBackground>
   );
 }
