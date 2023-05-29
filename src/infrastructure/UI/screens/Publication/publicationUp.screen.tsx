@@ -139,12 +139,7 @@ export default function PublicationUpScreenA() {
     if (!url) {
       Alert.alert("Hello", "You must complete all the fields");
     } else {
-      navigation.navigate(
-        "ScreenPublicationUpB" as never,
-        {
-          photoPublication: url, // Use the updated value directly
-        } as never
-      );
+      navigation.navigate("ScreenPublicationUpB" as never, { photoPublication: url } as never);
     }
   };
 

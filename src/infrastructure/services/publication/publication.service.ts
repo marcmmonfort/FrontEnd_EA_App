@@ -8,6 +8,20 @@ const API_URL = "http://147.83.7.158:5432/publication";
 
 
 export class PublicationService {
+
+  static async uploadPublication(publication:PublicationEntity){
+    const token = await AuthHeaderService.authHeader();
+    console.log("ESTO ES EL TOKEN:  "+token)
+    try{
+      console.log("ando aqui");
+      const response=await axios.post(API_URL, publication,{headers:token});
+      console.log("RESPUESTA: "+ response.data)
+      return response;
+    } catch(error){
+      console.error('Error during post publication: '+error);
+      throw error;
+    }
+  }
   
   static async feed(numPage: string, uuid: string) {
     const token = await AuthHeaderService.authHeader();

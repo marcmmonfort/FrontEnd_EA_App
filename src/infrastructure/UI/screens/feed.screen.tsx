@@ -467,6 +467,7 @@ export default function FeedScreen() {
       marginTop: -8,
       width: 320, 
       height: 320,
+      borderRadius: 20,
     },
     postText: {
       textAlign: 'left',
