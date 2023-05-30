@@ -19,9 +19,11 @@ const ChatB = () => {
   const [messages, setMessages] = useState([]); // Chats between the peers will be stored here
   useEffect(() => {
     // Step 1: Connect with the Signal server
+
     try {
-      socketRef.current = io("147.83.7.158:9000"); // Address of the Signal server REVISAR
-      console.log("socketRef.current=io('http://147.83.7.158:9000')");
+      
+      socketRef.current = io('147.83.7.158:3000'); // Address of the Signal server REVISAR
+      console.log('Socket:  '+socketRef.current);
     } catch (error) {
       console.log("Error connecting with signal server");
     }
@@ -29,7 +31,8 @@ const ChatB = () => {
     try {
       if (socketRef.current) {
         socketRef.current.emit("join room", roomID); // Room ID
-        console.log("socketRef.current.emit(join room, roomID)");
+        console.log("RoomID:  "+roomID)
+        console.log("estoy aqui")
       } else {
         console.log("socketRef.current void");
       }
@@ -40,9 +43,11 @@ const ChatB = () => {
     // Step 3: Waiting for the other peer to join the room
     try {
       if (socketRef.current) {
-        console.log(socketRef.current);
+        console.log("Waiting...")
+        //console.log(socketRef.current);
 
         socketRef.current.on("other user", (userID) => {
+          console.log('UserID: '+userID)
           callUser(userID);
           otherUser.current = userID;
         });
@@ -249,13 +254,14 @@ const ChatB = () => {
     console.log("Ice candidate: " + candidate);
     peerRef.current
       .addIceCandidate(candidate)
-      .catch((e: any) => console.log(e));
+      .catch((e: any) => console.log('Error:'+e));
   }
 
   function sendMessage(messages = []) {
     if (messages.length > 0) {
       console.log("Enviando mensaje");
       const { text } = messages[0];
+      console.log('Texto'+text)
       sendChannel.current?.send(text);
       setMessages(
         (previousMessages) =>

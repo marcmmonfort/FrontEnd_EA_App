@@ -32,7 +32,7 @@ export default function ChatA() {
     const handleCreateSubmit = () => {
     	// Make a new room ID
     	const room = generateID();
-    	console.log(room); // Share this room id to another peer in order to join in the same room
+    	console.log('RoomIDUnirse: '+room); // Share this room id to another peer in order to join in the same room
     	setRoomId(room);
         navigation.navigate('ChatB' as never, { roomID} as never);
     }

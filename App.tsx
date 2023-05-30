@@ -18,6 +18,7 @@ import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
+import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
 
 
 const Stack = createStackNavigator();
@@ -36,6 +37,17 @@ export default function App() {
           options={{ headerShown: false }}
           component={ChatB as never}
         />
+      <Stack.Screen
+          name="VideocallScreenA"
+          options={{ headerShown: false }}
+          component={VideocallScreenA}
+        />
+        <Stack.Screen
+          name="VideocallScreenB"
+          options={{ headerShown: false }}
+          component={VideocallScreenA}
+        />
+      
 
         <Stack.Screen
           name="Splash"
