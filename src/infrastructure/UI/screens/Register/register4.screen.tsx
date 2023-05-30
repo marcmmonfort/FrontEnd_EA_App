@@ -90,7 +90,7 @@ export default function ScreenRegisterD() {
 
   const handleGoToScreenRegisterE = () => {
     if (!birthdateUser) {
-      Alert.alert("Hello", "You must select a birthdate");
+      Alert.alert("Warning", "You must select a Birthdate!");
     } else {
       const selectedGender = genderUser || "male"; // Si no se selecciona ningún valor, se asigna "male" por defecto
       if (isDateValid(selectedDate)) {
@@ -164,9 +164,9 @@ export default function ScreenRegisterD() {
       marginTop: 20,
     },
     requiredText: {
-      color: "red",
+      color: 'yellow',
       marginTop: 10,
-      fontStyle: "italic",
+      fontFamily: bodyFont,
     },
     textInput: {
       width: 250,
@@ -187,50 +187,65 @@ export default function ScreenRegisterD() {
     mainContainer: {
       backgroundColor: 'transparent',
     },
+    nextBackButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      alignItems: 'center',
+    },
+    input: {
+      width: 300,
+      height: 40,
+    },
+    registerTitle: {
+      textAlign: 'center',
+      fontFamily: titleFont,
+      paddingTop: 4,
+      fontSize: 34,
+      color: '#ffffff',
+      height: 40,
+    },
+    stepTitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      color: '#ffffff',
+    },
   });
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.requiredTextB}>Please, fill all the fields</Text>
         <View>
           <View style={styles.buttonContainerB}>
-          <ButtonGradientBirthdate onPress={handleShowDatePicker} />
+            <ButtonGradientBirthdate onPress={handleShowDatePicker} />
           </View>
-          
-          <Text style={styles.text}>
-            Selected Birthdate: {formatDate(selectedDate)}
-          </Text>
+          <Text style={styles.text}>Selected Birthdate: {formatDate(selectedDate)}</Text>
           {showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-            />
+            <DateTimePicker value={selectedDate} mode="date" display="default" onChange={handleDateChange}/>
           )}
-          <Picker
-            selectedValue={genderUser}
-            style={styles.picker}
-            onValueChange={(itemValue) => setgenderUser(itemValue)}
-          >
+          <Picker selectedValue={genderUser} style={styles.picker} onValueChange={(itemValue) => setgenderUser(itemValue)}>
             <Picker.Item label="Male" value="male" />
             <Picker.Item label="Female" value="female" />
           </Picker>
-          <StyledTextInputs
-            style={styles.textInput}
-            placeholder="Ocupation"
-            value={ocupationUser}
-            onChangeText={(value: React.SetStateAction<string>) =>
-              setocupationUser(value)
-            }
-          />
-          
+          <StyledTextInputs style={styles.textInput} placeholder="Ocupation" value={ocupationUser} onChangeText={(value: React.SetStateAction<string>) => setocupationUser(value) }/>
         </View>
+        <Text style={styles.requiredText}>* Mandatory Fields</Text>
         <View style={styles.buttonContainer}>
-            <ButtonGradientNext  onPress={handleGoToScreenRegisterE} />
-            <ButtonGradientBack onPress={handleGoBack} />
-          </View>
+          <ButtonGradientNext  onPress={handleGoToScreenRegisterE} />
+          <ButtonGradientBack onPress={handleGoBack} />
+        </View>
       </MainContainer>
     </ImageBackground>
   );

@@ -118,6 +118,41 @@ export default function ScreenRegisterFinal({
     mainContainer: {
       backgroundColor: 'transparent',
     },
+    nextBackButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      alignItems: 'center',
+    },
+    input: {
+      width: 300,
+      height: 40,
+    },
+    registerTitle: {
+      textAlign: 'center',
+      fontFamily: titleFont,
+      paddingTop: 4,
+      fontSize: 34,
+      color: '#ffffff',
+      height: 40,
+    },
+    stepTitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      color: '#ffffff',
+    },
   });
 
   return (

@@ -10,6 +10,7 @@ import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import { StyleSheet } from "react-native";
 import ButtonGradientShowPassword from "../../components/buttons/Button_Type_Show_Password";
 import * as Font from 'expo-font';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -52,7 +53,7 @@ export default function ScreenRegisterB() {
 
   const handleGoToScreenRegisterC = () => {
     if (!mailUser || !passwordUser || !confirmation) {
-      Alert.alert("Hello", "You must complete all the fields");
+      Alert.alert("Warning", "Complete all the field to continue!");
     } else if (passwordUser !== confirmation) {
       Alert.alert("Password", "Passwords do not match");
     } else if (!isValidEmail(mailUser)) {
@@ -121,9 +122,9 @@ export default function ScreenRegisterB() {
       marginTop: 20,
     },
     requiredText: {
-      color: "red",
+      color: 'yellow',
       marginTop: 10,
-      fontStyle: "italic",
+      fontFamily: bodyFont,
     },
     passwordStrengthContainer: {
       height: 10,
@@ -139,15 +140,21 @@ export default function ScreenRegisterB() {
       width: 250,
     },
     showPasswordButton: {
+      marginTop: 10,
+      padding: 0,
+      backgroundColor: "transparent",
+      borderRadius: 20,
+      width: 140,
+      height: 36,
+      justifyContent: 'center',
       alignSelf: "center",
-      marginTop: 5,
-      color:"red"
-    
+      alignContent: "center",
+      alignItems: 'center',
     },
     showPasswordButtonText: {
-      color: "white",
-      marginTop: 10,
-      fontStyle: "italic",
+      color: "#66fcf1",
+      fontFamily: bodyFont,
+      fontSize: 18,
     },
     backgroundImage: {
       flex: 1,
@@ -156,55 +163,69 @@ export default function ScreenRegisterB() {
     mainContainer: {
       backgroundColor: 'transparent',
     },
+    nextBackButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      alignItems: 'center',
+    },
+    input: {
+      width: 300,
+      height: 40,
+    },
+    registerTitle: {
+      textAlign: 'center',
+      fontFamily: titleFont,
+      paddingTop: 4,
+      fontSize: 34,
+      color: '#ffffff',
+      height: 40,
+    },
+    stepTitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      color: '#ffffff',
+    },
   });
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.requiredText}>Fields with * are mandatory</Text>
-        <SubTitle>Introduce your credentials</SubTitle>
+        <Text style={styles.registerTitle}>Register</Text>
+        <Text style={styles.stepTitle}>Step 2</Text>
         <View>
-          <StyledTextInputs
-            style={styles.textInput}
-            placeholder="*Email"
-            value={mailUser}
-            onChangeText={(value: React.SetStateAction<string>) => setMail(value)}
-          />
-          <StyledTextInputs
-            style={styles.textInput}
-            placeholder="*Password"
-            value={passwordUser}
-            onChangeText={handlePasswordChange}
-            secureTextEntry={!showPassword}
-          />
+          <StyledTextInputs style={styles.input} placeholder="Email *" value={mailUser} onChangeText={(value: React.SetStateAction<string>) => setMail(value)}/>
+          <StyledTextInputs style={styles.input} placeholder="Password *" value={passwordUser} onChangeText={handlePasswordChange} secureTextEntry={!showPassword}/>
           <View style={styles.passwordStrengthContainer}>
-            <View
-              style={[
-                styles.passwordStrengthBar,
-                { backgroundColor: getPasswordStrengthColor(passwordStrength) },
-              ]}
-            />
-            
+            <View style={[ styles.passwordStrengthBar, { backgroundColor: getPasswordStrengthColor(passwordStrength) }, ]}/>
           </View>
-          <StyledTextInputs
-            style={styles.textInput}
-            placeholder="*Confirmation"
-            value={confirmation}
-            onChangeText={(value: React.SetStateAction<string>) => setConfirmation(value)}
-            secureTextEntry={!showPassword}
-          />
+          <StyledTextInputs style={styles.input} placeholder="Repeat Password *" value={confirmation} onChangeText={(value: React.SetStateAction<string>) => setConfirmation(value)} secureTextEntry={!showPassword} />
           <View style={styles.showPasswordButton}>
-    <TouchableOpacity onPress={toggleShowPassword}>
-      <Text style={styles.showPasswordButtonText}>
-        {showPassword ? "Hide Password" : "Show Password"}
-      </Text>
-    </TouchableOpacity>
-  </View>
-
+            <TouchableOpacity onPress={toggleShowPassword}>
+              <Text style={styles.showPasswordButtonText}> {showPassword ? "Hide Password" : "Show Password"} </Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        <Text style={styles.requiredText}>* Mandatory Fields</Text>
         <View style={styles.buttonContainer}>
-          <ButtonGradientNext onPress={handleGoToScreenRegisterC} />
-          <ButtonGradientBack onPress={handleGoBack} />
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
+            <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoToScreenRegisterC}>
+            <MaterialCommunityIcons color="#000000" name="arrow-right" size={24} />
+          </TouchableOpacity>
         </View>
       </MainContainer>
     </ImageBackground>

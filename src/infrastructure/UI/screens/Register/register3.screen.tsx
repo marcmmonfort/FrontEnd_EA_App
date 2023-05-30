@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Image, View, Platform, Alert, ActivityIndicator, TouchableOpacity, ImageBackground } from "react-native";
+import { Button, Image, View, Platform, Alert, ActivityIndicator, TouchableOpacity, ImageBackground, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
@@ -11,6 +11,7 @@ import ButtonGradientBack2 from "../../components/buttons/Button_Type_3";
 import SubTitle from "../../components/texts/Subtitle";
 import * as Font from 'expo-font';
 import MainContainer from "../../components/containers/Main";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -158,7 +159,7 @@ export default function ScreenRegisterC() {
   };
   const handleUpload = (url:any) => {
     if (!url) {
-      Alert.alert("Hello", "You must complete all the fields");
+      Alert.alert("Warning", "Complete all the field to continue!");
     } else {
       console.log(appUser);
       console.log(nameUser);
@@ -185,7 +186,7 @@ export default function ScreenRegisterC() {
 
   const styles = StyleSheet.create({
     text:{
-      marginBottom:50,
+      marginBottom:0,
     },
     container: {
       flex: 1,
@@ -194,15 +195,14 @@ export default function ScreenRegisterC() {
     },
     buttonContainer: {
       flexDirection: "row",
-      marginBottom: 20,
+      marginBottom: 10,
+      marginTop: 10,
     },
     buttonContainerB: {
       flexDirection: "row",
       justifyContent: "center",
-      marginTop: 100,
-      marginBottom:-100
-      
-      
+      marginTop: 0,
+      marginBottom:0,
     },
     buttonA: {
       width: 80,
@@ -234,45 +234,92 @@ export default function ScreenRegisterC() {
     mainContainer: {
       backgroundColor: 'transparent',
     },
+    nextBackButton: {
+      margin: 0,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 0,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 10,
+      alignItems: 'center',
+    },
+    newPost: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 40,
+      width: 62,
+      height: 62,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 0,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      alignItems: 'center',
+    },
+    input: {
+      width: 300,
+      height: 40,
+    },
+    registerTitle: {
+      textAlign: 'center',
+      fontFamily: titleFont,
+      paddingTop: 4,
+      fontSize: 34,
+      color: '#ffffff',
+      height: 40,
+    },
+    stepTitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      color: '#ffffff',
+    },
+    stepSubtitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: 'yellow',
+      marginTop: 10,
+      marginBottom: 14,
+    },
   });
   
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <View style={[styles.container, { backgroundColor: "black" }]}>
-          <SubTitle style={styles.text}>Upload your profile photo</SubTitle>
-          {loading ? (
-            <ActivityIndicator size="large" color="blue" />
+        <Text style={styles.registerTitle}>Register</Text>
+        <Text style={styles.stepTitle}>Step 3</Text>
+        <Text style={styles.stepSubtitle}>Upload a Profile Picture</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="blue" />
           ) : (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.buttonA, { backgroundColor: "black" }]} onPress={handleCameraPress}>
-                <LinearGradient
-                  colors={["#66fcf1", "#66fcf1"]}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 0, y: 1 }}
-                  style={styles.gradient}
-                >
-                  <Ionicons name="camera" size={32} color="black" />
-                </LinearGradient>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.buttonB, { backgroundColor: "black" }]} onPress={handleGalleryPress}>
-                <LinearGradient
-                  colors={["#66fcf1", "#66fcf1"]}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 0, y: 1 }}
-                  style={styles.gradient}
-                >
-                  <Ionicons name="image" size={32} color="black" />
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          )}
-          <View style={styles.buttonContainerB}>
-            <ButtonGradientBack2 onPress={handleGoBack} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.newPost} onPress={handleCameraPress}>
+              <Ionicons name="camera" size={32} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.newPost} onPress={handleGalleryPress}>
+              <Ionicons name="image" size={32} color="black" />
+            </TouchableOpacity>
           </View>
-        </View>  
+        )}
+        <View style={styles.buttonContainerB}>
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
+            <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />
+          </TouchableOpacity>
+        </View>
       </MainContainer>
     </ImageBackground>
   );

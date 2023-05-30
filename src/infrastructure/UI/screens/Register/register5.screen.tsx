@@ -66,7 +66,7 @@ export default function ScreenRegisterE() {
 
   const handleGoToScreenRegisterF = () => {
     if (!descriptionUser) {
-      Alert.alert("Hello", "You must complete all the fields");
+      Alert.alert("Warning", "Complete all the field to continue!");
     } else {
       const selectedRole=roleUser || "common";
       const selectedPrivact=privacyUser || false;
@@ -136,40 +136,57 @@ export default function ScreenRegisterE() {
     mainContainer: {
       backgroundColor: 'transparent',
     },
+    nextBackButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      alignItems: 'center',
+    },
+    input: {
+      width: 300,
+      height: 40,
+    },
+    registerTitle: {
+      textAlign: 'center',
+      fontFamily: titleFont,
+      paddingTop: 4,
+      fontSize: 34,
+      color: '#ffffff',
+      height: 40,
+    },
+    stepTitle: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      color: '#ffffff',
+    },
   });
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
         <View>
-          <StyledTextInputs
-            style={styles.textInput}
-            placeholder="Description"
-            value={descriptionUser}
-            onChangeText={setDescriptionUser}
-          />
-          <Picker
-            selectedValue={roleUser}
-            style={styles.picker}
-            onValueChange={setRoleUser}
-          >
+          <StyledTextInputs style={styles.textInput} placeholder="Description" value={descriptionUser} onChangeText={setDescriptionUser}/>
+          <Picker selectedValue={roleUser} style={styles.picker} onValueChange={setRoleUser}>
             <Picker.Item label="Common" value="common" />
             <Picker.Item label="Business" value="Business" />
           </Picker>
-          <Picker
-            selectedValue={privacyUser ? "Private" : "Public"}
-            style={styles.picker}
-            onValueChange={(itemValue) => {
-              if(itemValue==="Private"){
-                setPrivacyUser(true);
-              }
-              else{
-                setPrivacyUser(false)}
-              }
-              }
-          >
-            <Picker.Item label="Private" value="Private" />
-            <Picker.Item label="Public" value="Public" />
+          <Picker selectedValue={privacyUser ? "Private" : "Public"} style={styles.picker} onValueChange={(itemValue) => {
+            if (itemValue==="Private"){ setPrivacyUser(true); }
+            else { setPrivacyUser(false)} }}>
+          <Picker.Item label="Private" value="Private" />
+          <Picker.Item label="Public" value="Public" />
           </Picker>
         </View>
         <Text style={styles.text}>{descriptionUser}</Text>
