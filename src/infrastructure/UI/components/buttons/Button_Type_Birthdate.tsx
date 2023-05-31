@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
 
@@ -12,7 +12,7 @@ const ButtonGradientBirthdate = ({ onPress, containerStyle, buttonStyle, textSty
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>BIRTHDATE</Text>
+        <Text style={[styles.text, textStyle]}>Birthdate</Text>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -22,14 +22,12 @@ const styles = StyleSheet.create({
   container: {
     width: 200,
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 0,
     
   },
   button: {
-    marginTop: -44,
-    marginLeft:0,
-    marginRight:0,
-    height: 60,
+    marginTop: 0,
+    height: 38,
     width: 120,
     borderRadius: 50,
     padding: 10,
@@ -41,6 +39,10 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'black',
   },
+  input: {
+    width: 300,
+    height: 40,
+  }
 });
 
 export default ButtonGradientBirthdate;

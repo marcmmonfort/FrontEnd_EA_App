@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, View, Text, Button, Platform, ImageBackground } from "react-native";
+import { Alert, View, Text, Button, Platform, ImageBackground, TouchableOpacity } from "react-native";
 import MainContainer from "../../components/containers/Main";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { StyleSheet } from "react-native";
@@ -10,6 +10,7 @@ import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import ButtonGradientBirthdate from "../../components/buttons/Button_Type_Birthdate";
 import * as Font from 'expo-font';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -137,10 +138,10 @@ export default function ScreenRegisterD() {
 
   const styles = StyleSheet.create({
     text: {
-      color: "white",
-      fontStyle:'italic',
-      marginBottom:20,
-      marginTop:20,
+      color: "black",
+      marginBottom: 0,
+      fontSize: 20,
+      marginTop: 0,
       alignContent:"center",
     },
     picker: {
@@ -149,9 +150,17 @@ export default function ScreenRegisterD() {
       backgroundColor: "#66fcf1",
       borderWidth: 1,
       borderColor: "white",
-      borderRadius: 5,
-      marginTop: 10,
-      marginBottom: 10,
+      borderRadius: 14,
+      marginTop: 20,
+      marginBottom: 0,
+      width: 160,
+      height: 62,
+    },
+    pickerItem:{
+      fontSize: 16,
+      color: "black",
+      fontFamily: bodyFont,
+      height: 60,
     },
     buttonContainer: {
       flexDirection: "row",
@@ -165,11 +174,14 @@ export default function ScreenRegisterD() {
     },
     requiredText: {
       color: 'yellow',
-      marginTop: 10,
+      marginTop: 20,
       fontFamily: bodyFont,
     },
     textInput: {
-      width: 250,
+      width: 300,
+      height: 40,
+      justifyContent:"center",
+      alignItems: 'center',
     },
     date:{
       justifyContent:"center"
@@ -177,7 +189,7 @@ export default function ScreenRegisterD() {
     requiredTextB: {
       color: "red",
       marginTop: 10,
-      marginBottom:-25,
+      marginBottom: 0,
       fontStyle: "italic",
     },
     backgroundImage: {
@@ -222,29 +234,45 @@ export default function ScreenRegisterD() {
       fontSize: 18,
       color: '#ffffff',
     },
+    formContainer: {
+      alignItems: 'center',
+    },
+    dateTimePicker: {
+      backgroundColor: 'transparent',
+      width: 68,
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop:4,
+    },
   });
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <View>
+        <Text style={styles.registerTitle}>Register</Text>
+        <Text style={styles.stepTitle}>Step 4</Text>
+        <View style={styles.formContainer}>
           <View style={styles.buttonContainerB}>
             <ButtonGradientBirthdate onPress={handleShowDatePicker} />
           </View>
-          <Text style={styles.text}>Selected Birthdate: {formatDate(selectedDate)}</Text>
           {showDatePicker && (
-            <DateTimePicker value={selectedDate} mode="date" display="default" onChange={handleDateChange}/>
+            <DateTimePicker value={selectedDate} mode="date" display="default" style={styles.dateTimePicker} onChange={handleDateChange}/>
           )}
-          <Picker selectedValue={genderUser} style={styles.picker} onValueChange={(itemValue) => setgenderUser(itemValue)}>
+          <StyledTextInputs style={styles.textInput} placeholder="Ocupation" value={ocupationUser} onChangeText={(value: React.SetStateAction<string>) => setocupationUser(value) }/>
+          <Picker selectedValue={genderUser} style={styles.picker} itemStyle={styles.pickerItem} onValueChange={(itemValue) => setgenderUser(itemValue)}>
             <Picker.Item label="Male" value="male" />
             <Picker.Item label="Female" value="female" />
           </Picker>
-          <StyledTextInputs style={styles.textInput} placeholder="Ocupation" value={ocupationUser} onChangeText={(value: React.SetStateAction<string>) => setocupationUser(value) }/>
         </View>
         <Text style={styles.requiredText}>* Mandatory Fields</Text>
         <View style={styles.buttonContainer}>
-          <ButtonGradientNext  onPress={handleGoToScreenRegisterE} />
-          <ButtonGradientBack onPress={handleGoBack} />
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
+            <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoToScreenRegisterE}>
+            <MaterialCommunityIcons color="#000000" name="arrow-right" size={24} />
+          </TouchableOpacity>
         </View>
       </MainContainer>
     </ImageBackground>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, View, Text, StyleSheet, Platform, ImageBackground } from "react-native";
+import { Alert, View, Text, StyleSheet, Platform, ImageBackground, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import MainContainer from "../../components/containers/Main";
@@ -7,6 +7,7 @@ import StyledTextInputs from "../../components/inputs/StyledTextInputs";
 import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import * as Font from 'expo-font';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -113,13 +114,23 @@ export default function ScreenRegisterE() {
     },
     picker: {
       color: "black",
-      fontWeight: "bold",
+      fontWeight:'bold',
       backgroundColor: "#66fcf1",
       borderWidth: 1,
       borderColor: "white",
-      borderRadius: 5,
-      marginTop: 10,
-      marginBottom: 10,
+      borderRadius: 14,
+      marginTop: 20,
+      marginBottom: 0,
+      width: 160,
+      height: 62,
+    },
+    insidePicker: {
+      backgroundColor: 'transparent',
+      width: 68,
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop:4,
     },
     buttonContainer: {
       flexDirection: "row",
@@ -127,7 +138,10 @@ export default function ScreenRegisterE() {
       marginTop: 20,
     },
     textInput: {
-      width: 250,
+      width: 300,
+      height: 40,
+      justifyContent:"center",
+      alignItems: 'center',
     },
     backgroundImage: {
       flex: 1,
@@ -135,6 +149,7 @@ export default function ScreenRegisterE() {
     },
     mainContainer: {
       backgroundColor: 'transparent',
+      alignItems: 'center',
     },
     nextBackButton: {
       margin: 6,
@@ -171,30 +186,42 @@ export default function ScreenRegisterE() {
       fontSize: 18,
       color: '#ffffff',
     },
+    pickerItem:{
+      fontSize: 16,
+      color: "black",
+      fontFamily: bodyFont,
+      height: 60,
+    },
+    formContainer: {
+      alignItems: 'center',
+    },
   });
 
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <View>
-          <StyledTextInputs style={styles.textInput} placeholder="Description" value={descriptionUser} onChangeText={setDescriptionUser}/>
-          <Picker selectedValue={roleUser} style={styles.picker} onValueChange={setRoleUser}>
+        <Text style={styles.registerTitle}>Register</Text>
+        <Text style={styles.stepTitle}>Step 5</Text>
+        <View style={styles.formContainer}>
+          <Picker selectedValue={roleUser} style={styles.picker} itemStyle={styles.pickerItem}  onValueChange={setRoleUser}>
             <Picker.Item label="Common" value="common" />
             <Picker.Item label="Business" value="Business" />
           </Picker>
-          <Picker selectedValue={privacyUser ? "Private" : "Public"} style={styles.picker} onValueChange={(itemValue) => {
-            if (itemValue==="Private"){ setPrivacyUser(true); }
-            else { setPrivacyUser(false)} }}>
-          <Picker.Item label="Private" value="Private" />
-          <Picker.Item label="Public" value="Public" />
+          <Picker selectedValue={privacyUser ? "Private" : "Public"} style={styles.picker} itemStyle={styles.pickerItem} onValueChange={(itemValue) => {
+              if (itemValue==="Private"){ setPrivacyUser(true); }
+              else { setPrivacyUser(false)} }}>
+            <Picker.Item label="Private" value="Private" />
+            <Picker.Item label="Public" value="Public" />
           </Picker>
+          <StyledTextInputs style={styles.textInput} placeholder="Description" value={descriptionUser} onChangeText={setDescriptionUser}/>
         </View>
-        <Text style={styles.text}>{descriptionUser}</Text>
-        <Text style={styles.text}>{roleUser}</Text>
-        <Text style={styles.text}>{privacyUser.toString()}</Text>
         <View style={styles.buttonContainer}>
-          <ButtonGradientNext onPress={handleGoToScreenRegisterF} />
-          <ButtonGradientBack onPress={handleGoBack} />
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
+            <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.nextBackButton} onPress={handleGoToScreenRegisterF}>
+            <MaterialCommunityIcons color="#000000" name="arrow-right" size={24} />
+          </TouchableOpacity>
         </View>
       </MainContainer>
     </ImageBackground>
