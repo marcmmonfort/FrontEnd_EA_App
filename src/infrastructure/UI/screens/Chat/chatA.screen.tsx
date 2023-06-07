@@ -25,7 +25,7 @@ export default function ChatA() {
     const handleSubmit = () => {
         if (roomID !== '') {
         	// Enter the room
-            navigation.navigate('ChatB'as never, { roomID } as never);
+            navigation.navigate('ChatB'as never, {roomID} as never);
         }
     }
 
@@ -34,7 +34,9 @@ export default function ChatA() {
     	const room = generateID();
     	console.log('RoomIDUnirse: '+room); // Share this room id to another peer in order to join in the same room
     	setRoomId(room);
-        navigation.navigate('ChatB' as never, { roomID} as never);
+        console.log('La rom puesta es:  '+roomID)
+        
+        navigation.navigate('ChatB' as never, {roomID: room} as never);
     }
 
     return (

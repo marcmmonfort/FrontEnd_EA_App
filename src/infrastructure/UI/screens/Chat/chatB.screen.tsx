@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { Text, View, StyleSheet, TextInput, Button } from "react-native";
 import { Socket, io } from "socket.io-client";
+import socketIOClient from "socket.io-client";
 
 import { RouteProp, useRoute } from "@react-navigation/native";
 
@@ -11,18 +12,20 @@ interface RouteParams {
 
 const ChatB = () => {
   const peerRef = useRef<any>();
-  const socketRef = useRef<Socket | undefined>();
+  let socketRef = useRef<Socket | undefined>();
   const otherUser = useRef();
   const sendChannel = useRef<RTCDataChannel | undefined>(); //Data channel
   const route = useRoute();
-  const { roomID }: RouteParams = route.params || {};
+  const {roomID}: RouteParams = route.params || {};
+  console.log("Mi Room ID es: "+roomID)
   const [messages, setMessages] = useState([]); // Chats between the peers will be stored here
   useEffect(() => {
     // Step 1: Connect with the Signal server
 
     try {
-      
-      socketRef.current = io('147.83.7.158:3000'); // Address of the Signal server REVISAR
+      console.log("hola")
+      socketRef.current = socketIOClient('http://147.83.7.158:3000'); // Address of the Signal server REVISAR
+      //socketRef.current = socketIOClient('http://localhost:3000');
       console.log('Socket:  '+socketRef.current);
     } catch (error) {
       console.log("Error connecting with signal server");
