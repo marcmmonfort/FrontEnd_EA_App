@@ -3,8 +3,9 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
 import { SessionService } from "../../services/user/session.service";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList, Platform } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList, Platform, ImageBackground } from "react-native";
 import * as Font from 'expo-font';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -124,7 +125,7 @@ export default function UserScreen() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#ffffff",
+      backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
     },
@@ -142,7 +143,8 @@ export default function UserScreen() {
       height: 36,
       justifyContent: 'center',
       alignSelf: "center",
-      marginBottom: 96,
+      marginBottom: 60,
+      marginTop: 10,
     },
     followingButton: {
       margin: 6,
@@ -153,7 +155,8 @@ export default function UserScreen() {
       height: 36,
       justifyContent: 'center',
       alignSelf: "center",
-      marginBottom: 96,
+      marginBottom: 60,
+      marginTop: 10,
     },
     followButtonText: {
       textAlign: 'center',
@@ -178,62 +181,133 @@ export default function UserScreen() {
       marginTop: 0,
       marginBottom: 0,
     },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
     titleContainer: {},
     titleSection: {},
-    profileContour: {},
-    profileContainer: {},
-    profile: {},
-    profileUserName: {},
-    profileImage: {},
+    profileContour: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profileContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profile: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profileUserName: {
+      fontSize: 28,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      color: "#66fcf1",
+      marginRight: 4,
+    },
+    profileImage: {
+      marginTop: 20,
+      marginBottom: 18,
+    },
     profileImgCard: {},
     profileUserButton: {},
     profileUserButtons: {},
     buttonProfile: {},
-    profileStats: {},
+    profileStats: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      marginBottom: 20,
+    },
     profileTitle: {},
-    profileStatCount: {},
-    profileBio: {},
+    profileStatCount: {
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+    },
+    profileBio: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
     profileRealName: {},
+    profileStatCountLeft: {
+      marginRight: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profileStatCountRight: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    textFoll: {
+      fontSize: 14,
+      fontFamily: bodyFont,
+      color: "yellow",
+    },
+    numFoll: {
+      fontFamily: bodyFont,
+      fontSize: 26,
+      color: '#66fcf1',
+    },
+    usernameAndVerified: {
+      flexDirection: "row",
+      alignItems: 'center',
+    },
+    iconVerified: {
+      marginTop: 2,
+    },
+    titleNameDescription: {
+      fontSize: 14,
+      fontFamily: bodyFont,
+      color: "white",
+    },
+    textNameDescription: {
+      fontSize: 22,
+      fontFamily: bodyFont,
+      color: "#66fcf1",
+      marginBottom: 10,
+    },
   })
 
   return (
-    <View style={styles.container}>
-      <View style={styles.profileContour}>
-        {currentUser && (
-          <View style={styles.profileContainer}>
-            <View style={styles.profile}>
-              <Text style={styles.profileUserName}>@{currentUser.appUser}</Text>
-              <View style={styles.profileImage}>
-                  <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <View style={styles.profileContour}>
+          {currentUser && (
+            <View style={styles.profileContainer}>
+              <View style={styles.profile}>
+                <View style={styles.usernameAndVerified}>
+                  <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
+                  <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
                 </View>
-              <View style={styles.profileStats}>
-                <Text style={styles.text}>Followers</Text>
-                <Text style={styles.profileStatCount}>
-                  {currentUser.followersUser?.length}
-                </Text>
-                <Text style={styles.text}>Following</Text>
-                <Text style={styles.profileStatCount}>
-                  {currentUser.followedUser?.length}
-                </Text>
-              </View>
-              <View style={styles.profileBio}>
-                <Text style={styles.profileTitle}>Name</Text>
-                <Text>
-                  <Text style={styles.profileRealName}>
-                    {currentUser.nameUser}
-                  </Text>
-                </Text>
-                <Text style={styles.profileTitle}>Description</Text>
-                <Text>{currentUser.descriptionUser}</Text>
+                <View style={styles.profileImage}>
+                    <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
+                  </View>
+                <View style={styles.profileStats}>
+                  <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
+                    <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
+                    <Text style={styles.textFoll}>Followers</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
+                    <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
+                    <Text style={styles.textFoll}>Following</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileBio}>
+                  <Text style={styles.titleNameDescription}>Name</Text>
+                  <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
+                  <Text style={styles.titleNameDescription}>Description</Text>
+                  <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
+        <TouchableOpacity onPress={handleFollow} style={isFollowing ? styles.followingButton : styles.followButton}>
+          <Text style={isFollowing ? styles.followingButtonText : styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={handleFollow} style={isFollowing ? styles.followingButton : styles.followButton}>
-        <Text style={isFollowing ? styles.followingButtonText : styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
-      </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );  
 
 }
