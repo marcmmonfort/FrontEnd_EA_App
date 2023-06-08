@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
 import { SessionService } from "../../services/user/session.service";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList, Platform } from "react-native";
+import * as Font from 'expo-font';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 interface RouteParams {
     uuid: string
@@ -18,6 +26,22 @@ export default function UserScreen() {
   const routeParams = route.params as RouteParams | undefined;
   const uuid = routeParams?.uuid;
   const navigation = useNavigation();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -49,6 +73,15 @@ export default function UserScreen() {
       fetchData();
     }, [uuid])
   );
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+      headerTitle: () => (
+        <Text style={{ color: '#66fcf1', fontSize: 30, fontFamily: bodyFont }}>List</Text>
+      )
+    });
+  }, [navigation]);
 
   const handleFollow = async () => {
       
@@ -88,41 +121,91 @@ export default function UserScreen() {
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#ffffff",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    text: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#000",
+    },
+    followButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "#66fcf1",
+      borderRadius: 20,
+      width: 100,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+    },
+    followingButton: {
+      margin: 6,
+      padding: 6,
+      backgroundColor: "black",
+      borderRadius: 20,
+      width: 100,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 96,
+    },
+    followButtonText: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#000',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    followingButtonText: {
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      color: '#66fcf1',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    image: {
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    titleContainer: {},
+    titleSection: {},
+    profileContour: {},
+    profileContainer: {},
+    profile: {},
+    profileUserName: {},
+    profileImage: {},
+    profileImgCard: {},
+    profileUserButton: {},
+    profileUserButtons: {},
+    buttonProfile: {},
+    profileStats: {},
+    profileTitle: {},
+    profileStatCount: {},
+    profileBio: {},
+    profileRealName: {},
+  })
 
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.text}>Profile</Text>
-      </View>
       <View style={styles.profileContour}>
         {currentUser && (
           <View style={styles.profileContainer}>
             <View style={styles.profile}>
-              <Text style={styles.profileUserName}>{currentUser.appUser} Hola</Text>
+              <Text style={styles.profileUserName}>@{currentUser.appUser}</Text>
               <View style={styles.profileImage}>
-                <Image
-                  source={{ uri: currentUser.photoUser }}
-                  style={styles.profileImgCard}
-                />
-              </View>
-              <View style={styles.profileUserButtons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // Acción al presionar el botón de Editar perfil
-                  }}
-                  style={styles.buttonProfile}
-                >
-                  <Text style={styles.text}>Edit Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    // Acción al presionar el botón de Configuración
-                  }}
-                  style={styles.buttonProfile}
-                >
-                  <Text style={styles.text}>Settings</Text>
-                </TouchableOpacity>
-              </View>
+                  <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
+                </View>
               <View style={styles.profileStats}>
                 <Text style={styles.text}>Followers</Text>
                 <Text style={styles.profileStatCount}>
@@ -147,55 +230,11 @@ export default function UserScreen() {
           </View>
         )}
       </View>
-      <TouchableOpacity
-            onPress={handleFollow}
-            style={isFollowing ? styles.followingButton : styles.followButton}
-        >
-            <Text>{isFollowing ? "Following" : "Follow"}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={handleFollow} style={isFollowing ? styles.followingButton : styles.followButton}>
+        <Text style={isFollowing ? styles.followingButtonText : styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
+      </TouchableOpacity>
     </View>
   );  
 
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  followingButton: {
-      backgroundColor: "green",
-      padding: 10,
-      borderRadius: 5,
-    },
-  
-    followButton: {
-      backgroundColor: "blue",
-      padding: 10,
-      borderRadius: 5,
-    },
-  titleContainer: {},
-  titleSection: {},
-  profileContour: {},
-  profileContainer: {},
-  profile: {},
-  profileUserName: {},
-  profileImage: {},
-  profileImgCard: {},
-  profileUserButton: {},
-  profileUserButtons: {},
-  buttonProfile: {},
-  profileStats: {},
-  profileTitle: {},
-  profileStatCount: {},
-  profileBio: {},
-  profileRealName: {},
-})
 
