@@ -13,7 +13,7 @@ interface RouteParams {
 const ChatB = () => {
   const peerRef = useRef<any>();
   let socketRef = useRef<Socket | undefined>();
-  const otherUser = useRef();
+  const otherUser = useRef<any>();
   const sendChannel = useRef<RTCDataChannel | undefined>(); //Data channel
   const route = useRoute();
   const {roomID}: RouteParams = route.params || {};
@@ -62,76 +62,53 @@ const ChatB = () => {
     }
 
     // Signals that both peers have joined the room
-    try {
-      if (socketRef.current)
-        socketRef.current.on("user joined", (userID) => {
-          otherUser.current = userID;
-        });
-      else {
-        console.log("socketRef.current void");
-      }
-    } catch (error) {
-      console.log("Error signalling joining");
-    }
+    if(socketRef.current){
+    socketRef.current.on("user joined", userID => {
+      otherUser.current = userID;
+    });
 
-    try {
-      if (socketRef.current) socketRef.current.on("offer", handleOffer);
-      else {
-        console.log("socketRef.current void");
-      }
-    } catch (error) {
-      console.log("Error signalling offering");
-    }
+    socketRef.current.on("offer", handleOffer);
+    console.log("ey")
+    
+    socketRef.current.on("answer", handleAnswer);
 
-    try {
-      if (socketRef.current) socketRef.current.on("answer", handleAnswer);
-      else {
-        console.log("socketRef.current void");
-      }
-    } catch (error) {
-      console.log("Error signalling answering");
-    }
-
-    try {
-      if (socketRef.current)
-        socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
-      else {
-        console.log("socketRef.current void");
-      }
-    } catch (error) {
-      console.log("Error signalling");
-    }
+    socketRef.current.on("ice-candidate", handleNewICECandidateMsg);}
+    
   }, []);
 
   function callUser(userID: any) {
     // This will initiate the call for the receiving peer
     console.log("[INFO] Initiated a call");
     try {
-      if (peerRef.current) {
+      console.log("try de call user...")
+        console.log("usus:  "+userID)
         peerRef.current = Peer(userID);
+        console.log("peer:  "+peerRef.current)
         sendChannel.current = peerRef.current.createDataChannel("sendChannel");
         if (sendChannel.current)
           // listen to incoming messages from other peer
           sendChannel.current.onmessage = handleReceiveMessage;
-      }
+      
     } catch (error) {
       console.log("error on callUser");
     }
   }
 
   function Peer(userID: string) {
+    console.log("ayo")
     const peer = new RTCPeerConnection({
       iceServers: [
         {
           urls: "stun:147.83.7.158:3478",
         },
         {
-          urls: "147.83.7.158:3478",
+          urls: "turn:147.83.7.158:3478",
           credential: "oursecret",
           username: "coturn",
         },
       ],
     });
+    console.log("ayo2")
     peer.onicecandidate = handleICECandidateEvent;
     peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
     return peer;
