@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, TextInput, Button } from "react-native";
-import MapView from "react-native-leaflet-view";
-import { LatLng, LeafletView } from 'react-native-leaflet-view';
+import React, { useEffect, useState, useRef } from "react";
+import { View, StyleSheet, TouchableOpacity, TextInput, Text, Button } from "react-native";
+import MapView, { Callout } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
+import { Marker } from "react-native-maps";
 
 const customIcon = require("./path/to/custom-icon.png");
 
-const MapPage = () => {
-  const [locations, setLocationList] = useState([]);
+const MapScreen = () => {
+  const [locations, setLocationList] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         setLocationList((prevLocations) =>
-          prevLocations.map((location) => ({
-            ...location,
-            lat: latitude,
-            lon: longitude,
-          }))
+          prevLocations.map((location) => ({...location, lat: latitude, lon: longitude}))
         );
       },
       (error) => console.error("Error al obtener la posición:", error)
@@ -29,15 +25,15 @@ const MapPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${searchValue}&format=json`
-      );
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${searchValue}&format=json`);
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {
       console.error("Error en la búsqueda:", error);
     }
   };
+
+  const mapRef = useRef<MapView>(null);
 
   const handleSearchResult = (result: {
     lat: any;
@@ -46,7 +42,13 @@ const MapPage = () => {
   }) => {
     const { lat, lon, importance } = result;
     const zoom = calculateZoom(importance);
-    map.flyTo([parseFloat(lat), parseFloat(lon)], zoom);
+    const region = {
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lon),
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0922,
+    };
+    mapRef.current?.animateToRegion(region, zoom);
   };
 
   const calculateZoom = (importance: number) => {
@@ -55,45 +57,29 @@ const MapPage = () => {
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: searchResults[0]?.lat,
-          longitude: searchResults[0]?.lon,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0922,
-        }}
-        zoomLevel={13}
-      >
+      <MapView style={styles.map} initialRegion={{latitude: searchResults[0]?.lat, longitude: searchResults[0]?.lon, latitudeDelta: 0.0922, longitudeDelta: 0.0922}} maxZoomLevel={13} ref={mapRef}>
         {locations.map((location) => (
-          <Marker
-            key={location.uuid}
-            coordinate={[
-              parseFloat(location.latLocation),
-              parseFloat(location.lonLocation),
-            ]}
-            icon={customIcon}
-          >
-            <Popup>{location.nameLocation}</Popup>
+          <Marker key={location.uuid} coordinate={{ latitude: parseFloat(location.latLocation), longitude: parseFloat(location.lonLocation)}} icon={customIcon}>
+            <Callout>
+              <View>
+                <Text>{location.nameLocation}</Text>
+              </View>
+            </Callout>
           </Marker>
         ))}
         {searchResults.map((result: any, index: number) => (
-          <Marker
-            key={result.lat}
-            coordinate={[
-              parseFloat(result.lat),
-              parseFloat(result.lon),
-            ]}
-            eventHandlers={{
-              click: () => handleSearchResult(result),
-            }}
-          >
-            <Popup>{result.display_name}</Popup>
+          <Marker key={result.lat} coordinate={{latitude: parseFloat(result.lat), longitude: parseFloat(result.lon)}} onPress={() => handleSearchResult(result)}>
+            <Callout>
+              <View>
+                <Text>{result.display_name}</Text>
+              </View>
+            </Callout>
           </Marker>
         ))}
       </MapView>
     </View>
   );
+    
 };
 
 const styles = StyleSheet.create({
@@ -107,4 +93,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapPage;
+export default MapScreen;
+

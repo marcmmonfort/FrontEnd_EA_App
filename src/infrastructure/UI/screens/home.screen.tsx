@@ -8,6 +8,7 @@ import CalendarEventsScreen from './calendar.screen';
 import ProfileScreen from './profile.screen';
 import PublicationUpScreenA from './Publication/publicationUp.screen';
 import { ImageBackground, StyleSheet } from 'react-native';
+import MapScreen from './map.screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,10 +30,14 @@ export default function HomeScreen() {
           <Fontisto name="camera" size={18} color='#66fcf1' />
           ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }} />
-      <Tab.Screen name="Calendar and Events" component={CalendarEventsScreen} options={{ tabBarIcon: ({ color, size }) => (
+      <Tab.Screen name="Calendar" component={CalendarEventsScreen} options={{ tabBarIcon: ({ color, size }) => (
           <Fontisto name="calendar" size={18} color='#66fcf1' />
           ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }} />
+      <Tab.Screen name="Locations" component={CalendarEventsScreen} options={{ tabBarIcon: ({ color, size }) => (
+        <Fontisto name="map" size={18} color='#66fcf1' />
+        ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+      }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarIcon: ({ color, size }) => (
           <Fontisto name="home" size={18} color='#66fcf1' />
           ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30},
