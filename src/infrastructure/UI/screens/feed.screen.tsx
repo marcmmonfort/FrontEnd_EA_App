@@ -40,7 +40,6 @@ export default function FeedScreen() {
   const [numPublications, setNumPublications] = useState<number>(0);
   const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
 
-
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
