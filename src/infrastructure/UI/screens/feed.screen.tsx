@@ -36,15 +36,19 @@ export default function FeedScreen() {
   const [showCommentForm, setShowCommentForm] = useState<{[key: string]: boolean; }>({});
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
   const [recargar, setRecargar] = useState<string>('');
-  const [userList, setUserList] = useState<UserEntity[] | null>(null);
   const [numPublications, setNumPublications] = useState<number>(0);
   const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
+
+  // STORIES
+  const [userList, setUserList] = useState<UserEntity[]>([]);
+  const [numPage, setNumPage] = useState(1);
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
     loadFonts().then(() => {
       setFontsLoaded(true);
+      loadUserList();
     });
   }, []);
 
@@ -143,7 +147,7 @@ export default function FeedScreen() {
                 setNumPublications(response.data);
               })
           } catch (error) {
-            console.log("Encontre el id pero no va")
+            console.log("Encontre el id pero no va");
           }
         }
       };
@@ -372,14 +376,46 @@ export default function FeedScreen() {
     }
   }
 
+  const loadUserList = async () => {
+    const userId = await SessionService.getCurrentUser();
+    if (userId) {
+      try {
+        CRUDService.getFollowed(userId, numPage.toString())
+          .then(response => {
+            setUserList(response?.data || []);
+          })
+          .catch(error => {
+            console.log("Error al obtener los usuarios a los que seguimos: " + error);
+          });
+      } catch {
+        console.log("Error al obtener los usuarios a los que seguimos.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadUserList();
+  }, [numPage]);
+
+  const handlePageDecrease = () => {
+    if (numPage > 1) {
+      setNumPage(prevNumPage => prevNumPage - 1);
+    }
+  };
+  
+  const handlePageIncrease = async () => {
+    // setNumPage(prevNumPage => prevNumPage + 1);
+    if (currentUser != null && currentUser.followedUser != null){
+      if (numPage < currentUser.followedUser.length/2) {
+        setNumPage(prevNumPage => prevNumPage + 1);
+      }
+    }
+  };  
+
   const heartAnimation = useSpring({
     from: { opacity: 0, y: 0 },
     to: { opacity: hasLiked ? 1 : 0, y: hasLiked ? -100 : 0 },
   });
-
-
-
-
 
   const styles = StyleSheet.create({
     feed: {
@@ -389,13 +425,19 @@ export default function FeedScreen() {
     iconsLayout: {
       flexDirection: 'row',
       marginRight: 0,
+      marginLeft: 0,
+      marginTop: 0,
+      marginBottom: 0,
     },
     headerContainer: {
       flexDirection: 'row',
       marginLeft: 10,
-      marginTop: 6,
+      marginTop: 0,
       marginRight:10,
-      marginBottom: 6,
+      marginBottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 80,
     },
     limitedContainer: {
       marginTop: 0,
@@ -433,6 +475,14 @@ export default function FeedScreen() {
       height: 50,
       resizeMode: 'cover',
       marginRight: 10,
+      borderRadius: 50,
+    },
+    postProfileStories: {
+      width: 50,
+      height: 50,
+      resizeMode: 'cover',
+      marginRight: 10,
+      marginLeft: 10,
       borderRadius: 50,
     },
     postInfo: {
@@ -637,22 +687,44 @@ export default function FeedScreen() {
       flexDirection: 'row',
       justifyContent: 'center',
       alignSelf: "center",
-    }
+    },
+    nextBackButton: {
+      padding: 6,
+      backgroundColor: "transparent",
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignSelf: "center",
+      marginBottom: 0,
+      textAlign: 'center',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      marginTop: 0,
+      alignItems: 'center',
+      marginLeft: 16,
+      marginRight: 16,
+    },
   });
-
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.headerContainer}>
-        {listPublications.map((publication) => (
-          <View style={styles.iconsLayout} key={publication.uuid}>
-            <TouchableOpacity onPress={() => handleGoToScreenUser(publication.idUser.uuid)} style={styles.userLink}>
+        <TouchableOpacity onPress={handlePageDecrease} style={styles.nextBackButton}>
+          <MaterialCommunityIcons color="#66fcf1" name="arrow-left" size={24} />
+        </TouchableOpacity>
+        {userList.map((user) => (
+          <View style={styles.iconsLayout} key={user.uuid}>
+            <TouchableOpacity onPress={() => handleGoToScreenUser(user.uuid)} style={styles.userLink}>
               <View style={styles.postHeader}>
-                <Image source={{ uri: publication.idUser.photoUser }} style={styles.postProfileImg} resizeMode="cover" />
+                <Image source={{ uri: user.photoUser }} style={styles.postProfileStories} resizeMode="cover" />
               </View>
             </TouchableOpacity>
           </View>
         ))}
+        <TouchableOpacity onPress={handlePageIncrease} style={styles.nextBackButton}>
+          <MaterialCommunityIcons color="#66fcf1" name="arrow-right" size={24} />
+        </TouchableOpacity>
       </View>
       <View style={styles.limitedContainer}>
         <ScrollView>
@@ -660,10 +732,7 @@ export default function FeedScreen() {
             <View style={styles.feed}>
               {listPublications.map((publication) => (
               <View style={styles.post} key={publication.uuid}>
-                <TouchableOpacity
-                  onPress={() => handleGoToScreenUser(publication.idUser.uuid)}
-                  style={styles.userLink}
-                >
+                <TouchableOpacity onPress={() => handleGoToScreenUser(publication.idUser.uuid)} style={styles.userLink}>
                   <View style={styles.postHeader}>
                     <Image
                       source={{ uri: publication.idUser.photoUser }}
@@ -687,7 +756,6 @@ export default function FeedScreen() {
                   ))}
                 </View>
                 <View style={styles.heartMessageLayout}>
-                  
                   <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
                     <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
@@ -772,7 +840,6 @@ export default function FeedScreen() {
             <TouchableOpacity style={styles.loadMoreButton} onPress={() => {handleLoadMore}}>
               <Text style={styles.loadMoreButtonText}>Load More</Text>
             </TouchableOpacity>
-
           </View>
         </ScrollView>
       </View>
