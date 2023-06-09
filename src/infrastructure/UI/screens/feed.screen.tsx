@@ -8,14 +8,11 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React from "react";
 import { CommentService } from "../../services/comment/comment.service";
-import { AuthHeaderService } from "../../services/user/authHeaders.service";
 import { CommentEntity } from "../../../domain/comment/comment.entity";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Fontisto } from '@expo/vector-icons';
 import * as Font from 'expo-font';
-import { useSpring, animated } from 'react-spring';
+import { useSpring } from 'react-spring';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -35,10 +32,10 @@ export default function FeedScreen() {
   const [listCommentsPublication, setListCommentsPublication] = useState<{ [key: string]: CommentEntity[] }>({});
   const [showCommentForm, setShowCommentForm] = useState<{[key: string]: boolean; }>({});
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
-  const [recargar, setRecargar] = useState<string>('');
-  const [userList, setUserList] = useState<UserEntity[] | null>(null);
+  const [recargar, setRecargar] = useState<string>('Inicio');
   const [numPublications, setNumPublications] = useState<number>(0);
   const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
+  const [reloadPublication, setReloadPublication] = useState<string>('');
 
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -83,7 +80,13 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setCommentsVisibility(initialVisibility);
+                //setCommentsVisibility(initialVisibility);
+                //setCommentsVisibility((prevVisibility) => ({...prevVisibility, initialVisibility}));
+                setCommentsVisibility(prevVisibility => {
+                  const updatedVisibility = Object.assign({}, prevVisibility, initialVisibility);
+                  return updatedVisibility;
+                });
+
   
                 const initialPage = response.data.reduce(
                   (acc: { [key: string]: number }, publication: Publication) => {
@@ -92,7 +95,12 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setPageComments(initialPage);
+                //setPageComments(initialPage);
+                //setPageComments((prevPageComments) => ({...prevPageComments,initialPage}));
+                setPageComments(prevPageComments => {
+                  const updatedPageComments = Object.assign({}, prevPageComments, initialPage);
+                  return updatedPageComments;
+                });
   
                 const initialCommentButton = response.data.reduce(
                   (acc: { [key: string]: string }, publication: Publication) => {
@@ -101,7 +109,12 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setCommentButton(initialCommentButton);
+                //setCommentButton(initialCommentButton);
+                //setCommentButton((prevCommentButton) => ({...prevCommentButton,initialCommentButton}));
+                setCommentButton(prevCommentButton => {
+                  const updatedCommentButton = Object.assign({}, prevCommentButton, initialCommentButton);
+                  return updatedCommentButton;
+                });
   
                 const initialListComments = response.data.reduce(
                   (acc: { [key: string]: Comment[] }, publication: Publication) => {
@@ -110,7 +123,12 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setListCommentsPublication(initialListComments);
+                //setListCommentsPublication(initialListComments);
+                //setListCommentsPublication((prevListCommentsPublication) => ({...prevListCommentsPublication,initialListComments}));
+                setListCommentsPublication(prevListCommentsPublication => {
+                  const updatedListCommentsPublication = Object.assign({}, prevListCommentsPublication, initialListComments);
+                  return updatedListCommentsPublication;
+                });
 
                 const initialCommentText= response.data.reduce(
                   (acc: { [key: string]: string }, publication: Publication) => {
@@ -119,7 +137,12 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setCommentText(initialCommentText);
+                //setCommentText(initialCommentText);
+                //setCommentText((prevCommentButton) => ({...prevCommentButton,initialCommentText}));
+                setCommentText(prevCommentButton => {
+                  const updatedCommentText = Object.assign({}, prevCommentButton, initialCommentText);
+                  return updatedCommentText;
+                });
 
                 const initialShowLikes = response.data.reduce(
                   (acc: { [key: string]: boolean }, publication: Publication) => {
@@ -129,12 +152,18 @@ export default function FeedScreen() {
                   },
                   {}
                 );
-                setHasLiked(initialShowLikes);
+                //setHasLiked(initialShowLikes);
+                //setHasLiked((prevHasLiked) => ({...prevHasLiked,initialShowLikes}));
+                setHasLiked(prevHasLiked => {
+                  const updatedHasLiked = Object.assign({}, prevHasLiked, initialShowLikes);
+                  return updatedHasLiked;
+                });
+                
   
-                setListPublications(response.data);
+                setListPublications(prevPublications => [...prevPublications, ...response.data]);
               })
               .catch(error => {
-                //navigation.navigate('NotFoundScreen' as never);
+                navigation.navigate('NotFoundScreen' as never);
                 console.log(error)
               });
               PublicationService.numPublicationsFollowing(userId)
@@ -148,56 +177,41 @@ export default function FeedScreen() {
           }
         }
       };
-      fetchData();
-    }, [numPagePublication, recargar])
+      console.log(recargar);
+      if(recargar == "Inicio" || recargar == "More Publications" ){
+        console.log(numPagePublication);
+        fetchData();
+      }else if(recargar == "New Comment" || recargar == "Delete Like" || recargar == "Update Like"){
+        console.log(reloadPublication);
+        PublicationService.onePublication(reloadPublication)
+        .then((response) => {
+          console.log(response.data);
+          const index = listPublications.findIndex((publication) => publication.uuid === reloadPublication);
+
+          if (index >= 0) {
+            listPublications.splice(index, 1, (response.data));
+            setListPublications([...listPublications]);
+          }
+
+        })
+        .catch(error => {
+          navigation.navigate('NotFoundScreen' as never);
+          console.log(error)
+        });
+      }
+      
+    }, [recargar])
   );
-
-  const handleSearch = async (query: string, setUserList: (users: UserEntity[]) => void) => {
-    console.log('He entrado en handleSearch.');
-    if (query.length > 0) {
-      try {
-        const response = await CRUDService.searchUsers(query);
-        console.log(response);
-        setUserList(response?.data);
-        console.log('He hecho el servicio de handleSearch.');
-        console.log('>> Lista de usuarios: ' + userList);
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
-        const response = await CRUDService.getUsers();
-        setUserList(response?.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const handleSearchWrapper = (searchText: string) => {
-    handleSearch(searchText, setUserList);
-  };
   
   const handleGoToScreenUser = (uuid:string) => {
     navigation.navigate("UserScreen" as never, {uuid} as never);
+    setRecargar("No Recargues");
   };
 
   const handleLoadMore = async () => {
     console.log("Has pulsado el btn");
+    setRecargar("More Publications");
     setNumPagePublication((prevPage) => prevPage + 1);
-    const userId = await SessionService.getCurrentUser();
-    console.log("HandleLoadMore************************************************************:" + numPagePublication);
-    if(userId){
-      PublicationService.feed((numPagePublication + 1).toString(), userId)
-      .then(response => {
-        console.log(response);
-        console.log(response.data);
-        setListPublications(prevPublications => [...prevPublications, ...response.data]);
-      }) .catch(error => {
-        //navigation.navigate('NotFoundScreen');
-        console.log(error);
-      });
-    }
   };
 
   const getComments = (idPublication: string) => {
@@ -230,7 +244,7 @@ export default function FeedScreen() {
           }));
         })
         .catch(error => {
-          //navigation.navigate('NotFoundScreen' as never);
+          navigation.navigate('NotFoundScreen' as never);
         });
       } else {
         setCommentButton((prevCommentButton) => ({
@@ -312,7 +326,8 @@ export default function FeedScreen() {
         .then((response) => {
           console.log(response);
           console.log(response.data);
-          setRecargar("recargate");
+          setReloadPublication(idPublication);
+          setRecargar("New Comment");
         })
         .catch(error => {
           //navigation.navigate("");
@@ -345,7 +360,8 @@ export default function FeedScreen() {
         .then((response) => {
           console.log(response);
           console.log(response.data);
-          setRecargar("recargate");
+          setReloadPublication(idPublication);
+          setRecargar("Delete Like");
           console.log("Se ha recargado");
         })
         .catch(error => {
@@ -363,7 +379,8 @@ export default function FeedScreen() {
         .then((response) => {
           console.log(response);
           console.log(response.data);
-          setRecargar("recargate");
+          setReloadPublication(idPublication);
+          setRecargar("Update Like");
           console.log("Se ha recargado");
         })
         .catch(error => {
@@ -728,7 +745,7 @@ export default function FeedScreen() {
                     {listCommentsPublication[publication.uuid].map((comment) => (
                       <TouchableOpacity
                         key={comment.uuid}
-                        //onPress={() => navigation.navigate('ProfileScreen', { userId: comment.idUserComment.uuid })}
+                        onPress={() => handleGoToScreenUser(comment.idUserComment.uuid)}
                         style={styles.commentContainer}
                       >
                         <View style={styles.userComment}>
@@ -770,10 +787,13 @@ export default function FeedScreen() {
               </View>
               ))}
             </View>
-            <TouchableOpacity style={styles.loadMoreButton} onPress={() => {handleLoadMore}}>
-              <Text style={styles.loadMoreButtonText}>Load More</Text>
-            </TouchableOpacity>
-
+            <View>
+              {numPublications > numPagePublication * 3 && (
+                <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                  <Text style={styles.loadMoreButtonText}>Load More</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </ScrollView>
       </View>
