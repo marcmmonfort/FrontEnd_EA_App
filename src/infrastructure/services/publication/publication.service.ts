@@ -35,6 +35,18 @@ export class PublicationService {
     }
   }
 
+  // BEREAL
+  static async obtainOwnPosts(uuid: string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.get(API_URL + "/ownPosts/" + uuid, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error when obtaining the own posts:', error);
+      throw error;
+    }
+  }
+
   static async numPublicationsFollowing( uuid: string) {
     const token = await AuthHeaderService.authHeader();
     try {

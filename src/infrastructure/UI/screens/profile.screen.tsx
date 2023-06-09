@@ -3,11 +3,15 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity,Button, ImageBackground, Platform } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity,Button, ImageBackground, Platform, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+// BEREAL
+import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
+import { PublicationService } from "../../services/publication/publication.service";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -24,6 +28,13 @@ export default function ProfileScreen() {
   const [cam, setCam] = useState(false);
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const navigation = useNavigation();
+
+  // BEREAL
+  const [listOwnPublications, setListOwnPublications] = useState<Publication[]>([]);
+  const [numPagePublication, setNumPagePublication] = useState<number>(1);
+  const [numOwnPublications, setNumOwnPublications] = useState<number>(0);
+  const [recargar, setRecargar] = useState<string>('');
+  const [currentPublicationIndex, setCurrentPublicationIndex] = useState(1);
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -70,6 +81,31 @@ export default function ProfileScreen() {
     }, [])
   );
 
+  useFocusEffect(
+    React.useCallback(() => {
+      let isMounted = true;
+      const fetchData = async () => {
+        try {
+          const userId = await SessionService.getCurrentUser();
+          if (userId && isMounted) {
+            const response = await PublicationService.obtainOwnPosts(userId);
+            const publications = response.data;
+
+            if (isMounted) {
+              setListOwnPublications(publications);
+              setNumOwnPublications(publications.length);
+            }
+          }
+        } catch (error) {
+          console.error("Error obtaining our own publications: ", error);
+        }
+      };
+      fetchData();
+      return () => {
+        isMounted = false;
+      };
+    }, [numPagePublication, recargar])
+  );  
   
 const styles = StyleSheet.create({
   container: {
@@ -77,6 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 38,
   },
   titleContainer: {
     marginBottom: 20,
@@ -88,6 +125,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   },
   profile: {
     alignItems: "center",
@@ -136,7 +174,8 @@ const styles = StyleSheet.create({
   buttonLogOut: {
     justifyContent: 'center',
     alignSelf: "center",
-    marginTop:10,
+    marginTop: 8,
+    marginBottom: 8,
   },
   buttonText: {
     textAlign: 'center',
@@ -204,7 +243,50 @@ const styles = StyleSheet.create({
   },
   iconVerified: {
     marginTop: 2,
-  }
+  },
+  post_images: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    resizeMode: 'cover',
+  },
+  posts: {
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  post_complete: {
+    alignItems: 'center',
+    marginRight: 4,
+    marginLeft: 4,
+  },
+  post_description: {
+    alignItems: 'center',
+    width: 120,
+    backgroundColor: 'black',
+    marginTop: 4,
+    borderRadius: 16,
+  },
+  text_post: {
+    fontSize: 16,
+    fontFamily: bodyFont,
+    color: "white",
+    marginTop: 4,
+
+  },
+  time_post: {
+    fontSize: 12,
+    fontFamily: bodyFont,
+    color: "yellow",
+    marginTop: 2,
+    marginBottom: 6,
+  },
+  scrow_style: {
+    marginTop: 10,
+    marginBottom: 0,
+    marginLeft: 0,
+    flex: 1,
+  },
 });
   
   return (
@@ -253,6 +335,15 @@ const styles = StyleSheet.create({
               <TouchableOpacity style={styles.buttonLogOut} onPress={logOutButtonFunction}>
                 <MaterialCommunityIcons color="#3897f0" name="logout" size={24} />
               </TouchableOpacity>
+              <ScrollView style={styles.scrow_style} horizontal>
+                {listOwnPublications.map((publication, index) => (
+                  <View key={index} style={styles.post_complete}>
+                    <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                    <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>
+                    <Text style={styles.text_post}>{publication.textPublication}</Text>
+                  </View>
+                ))}
+              </ScrollView>
             </View>
           )}
         </View>

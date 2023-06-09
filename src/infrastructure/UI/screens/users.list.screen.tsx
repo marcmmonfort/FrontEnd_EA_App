@@ -26,7 +26,7 @@ export default function UsersList() {
     }: RouteParams = route.params || {};
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
   const [userList, setUserList] = useState([]);
-  const [numPage, setNumPage] = useState(1); // Variable para el número de página
+  const [numPage, setNumPage] = useState(1);
   const navigation = useNavigation();
 
   const isFollowersMode = mode === "followers";
