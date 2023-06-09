@@ -4,7 +4,7 @@ import MapView, { Callout } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 import { Marker } from "react-native-maps";
 
-const customIcon = require("./path/to/custom-icon.png");
+const customIcon = require('../../../../assets/location_apple.png');
 
 const MapScreen = () => {
   const [locations, setLocationList] = useState<any[]>([]);
