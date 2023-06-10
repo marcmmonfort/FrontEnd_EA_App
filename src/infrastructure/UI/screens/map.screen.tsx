@@ -1,13 +1,20 @@
-
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import MapView from 'react-native-maps';
 import { LocationEntity } from "../../../domain/location/location.entity";
 import SearchBar from "../components/searchbar/searchbar";
 const customIcon = require('../../../../assets/location_apple.png');
-
+import * as Font from 'expo-font';
 import * as Location from 'expo-location';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../assets/fonts/SFNS.otf'),
+  });
+}
+
 
 const MapScreen = () => {
   const [locations, setLocationList] = useState<LocationEntity[]>([]);
@@ -15,6 +22,23 @@ const MapScreen = () => {
   const [searchValue, setSearchValue] = useState("");
   const mapRef = useRef<MapView>(null);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
+
 
   useEffect(() => {
     const getCurrentLocation = async () => {
@@ -46,7 +70,7 @@ const MapScreen = () => {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   const handleSearchWrapper = (searchText: string) => {
-    // setSearchValue(searchText);
+    setSearchValue(searchText);
     handleSearch();
   };
 
@@ -104,17 +128,36 @@ const MapScreen = () => {
       padding: 0,
     },
     locationList: {
-      marginTop: 10,
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      padding: 10,
+      backgroundColor: 'transparent',
+      borderRadius: 0,
+      padding: 0,
+      marginTop: -18,
+      marginLeft: 20,
+      marginRight: 20,
     },
     locationItem: {
-      paddingVertical: 5,
+      borderRadius: 8,
+      overflow: 'hidden',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      marginBottom: 10,
     },
-    selectedLocationItem: {
-      backgroundColor: 'lightblue',
+    locationResult: {
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      padding: 6,
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 14,
+      marginBottom: 0,
     },
+    selectedLocationResult: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      padding: 6,
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 14,
+      marginBottom: 0,
+    },
+    selectedLocationItem: {},
   });
 
   return (
@@ -130,7 +173,7 @@ const MapScreen = () => {
             title={result.display_name}
             description={result.address}
             onPress={() => handleSearchResult(result)}
-            pinColor={result === selectedLocation ? "blue" : "red"} // Marcar la ubicación seleccionada con un color diferente
+            pinColor={result === selectedLocation ? "blue" : "red"}
           />
         ))}
       </MapView>
@@ -142,11 +185,18 @@ const MapScreen = () => {
               key={result.place_id}
               style={[
                 styles.locationItem,
-                result === selectedLocation && styles.selectedLocationItem, // Resaltar la ubicación seleccionada
+                result === selectedLocation && styles.selectedLocationItem,
               ]}
               onPress={() => handleSearchResult(result)}
             >
-              <Text>{result.display_name}</Text>
+              <Text
+                style={[
+                  styles.locationResult,
+                  result === selectedLocation && styles.selectedLocationResult,
+                ]}
+              >
+                {result.display_name}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -156,121 +206,4 @@ const MapScreen = () => {
 
 };
 
-/*
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
-*/
-
 export default MapScreen;
-
-/*
-
-import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, TouchableOpacity, TextInput, Text, Button } from "react-native";
-import MapView, { Callout } from "react-native-maps";
-import Geolocation from "react-native-geolocation-service";
-import { Marker } from "react-native-maps";
-
-const customIcon = require('../../../../assets/location_apple.png');
-
-const MapScreen = () => {
-  const [locations, setLocationList] = useState<any[]>([]);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentLocation, setCurrentLocation] = useState(null);
-
-  useEffect(() => {
-    Geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        setLocationList((prevLocations) =>
-          prevLocations.map((location) => ({...location, lat: latitude, lon: longitude}))
-        );
-      },
-      (error) => console.error("Error al obtener la posición:", error)
-    );
-  }, []);
-
-
-  const handleSearch = async () => {
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${searchValue}&format=json`);
-      const data = await response.json();
-      setSearchResults(data);
-    } catch (error) {
-      console.error("Error en la búsqueda:", error);
-    }
-  };
-
-  const mapRef = useRef<MapView>(null);
-
-  const handleSearchResult = (result: {
-    lat: any;
-    lon: any;
-    importance: any;
-  }) => {
-    const { lat, lon, importance } = result;
-    const zoom = calculateZoom(importance);
-    const region = {
-      latitude: parseFloat(lat),
-      longitude: parseFloat(lon),
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0922,
-    };
-    mapRef.current?.animateToRegion(region, zoom);
-  };
-
-  const calculateZoom = (importance: number) => {
-    return Math.floor(18 - Math.log2(importance));
-  };
-
-  return (
-    <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={{latitude: searchResults[0]?.lat, longitude: searchResults[0]?.lon, latitudeDelta: 0.0922, longitudeDelta: 0.0922}} maxZoomLevel={13} ref={mapRef}>
-        {locations.map((location) => (
-          <Marker key={location.uuid} coordinate={{ latitude: parseFloat(location.latLocation), longitude: parseFloat(location.lonLocation)}} icon={customIcon}>
-            <Callout>
-              <View>
-                <Text>{location.nameLocation}</Text>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-        {searchResults.map((result: any, index: number) => (
-          <Marker key={result.lat} coordinate={{latitude: parseFloat(result.lat), longitude: parseFloat(result.lon)}} onPress={() => handleSearchResult(result)}>
-            <Callout>
-              <View>
-                <Text>{result.display_name}</Text>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-      </MapView>
-    </View>
-  );
-    
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
-
-export default MapScreen;
-
-*/
-
