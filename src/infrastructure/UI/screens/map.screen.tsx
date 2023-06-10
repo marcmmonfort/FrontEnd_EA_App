@@ -4,9 +4,9 @@ import { Callout, Marker } from "react-native-maps";
 import MapView from 'react-native-maps';
 import { LocationEntity } from "../../../domain/location/location.entity";
 import SearchBar from "../components/searchbar/searchbar";
-const customIcon = require('../../../../assets/location_apple.png');
 import * as Font from 'expo-font';
 import * as Location from 'expo-location';
+import { LocationService } from "../../../infrastructure/services/location/location.service";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -15,7 +15,6 @@ async function loadFonts() {
   });
 }
 
-
 const MapScreen = () => {
   const [locations, setLocationList] = useState<LocationEntity[]>([]);
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -23,6 +22,29 @@ const MapScreen = () => {
   const mapRef = useRef<MapView>(null);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const locationIcon = require('../../../../assets/location_apple.png');
+  const fireIcon = require('../../../../assets/location_fire.png');
+
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  const fetchActivities = async () => {
+    try {
+      const response = await LocationService.getLocations();
+      if (response) {
+        const activities = response.data;
+        setActivities(activities);
+      } else {
+        console.error('Error fetching activities: Response is undefined');
+      }
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+    }
+  };
 
   useEffect(() => {
     loadFonts().then(() => {

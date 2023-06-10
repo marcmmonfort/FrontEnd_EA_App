@@ -5,13 +5,12 @@ import { AuthHeaderService } from "../user/authHeaders.service";
 const API_URL = "http://147.83.7.158:5432/location";
 
 export class LocationService {
-  //OK
   static async getLocations() {
     const token = await AuthHeaderService.authHeader();
     if (token) {
       try {
         const response = await axios.get(
-          "http://localhost:5432/locations/all",
+          "http://147.83.7.158:5432/locations/all",
           {
             headers: token,
           }
