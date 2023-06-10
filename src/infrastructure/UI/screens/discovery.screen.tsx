@@ -20,7 +20,6 @@ export default function DiscoveryScreen() {
 
   const navigation = useNavigation();
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [userList, setUserList] = useState<UserEntity[] | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -57,6 +56,15 @@ export default function DiscoveryScreen() {
           }
         }
       };
+      const getByDefect = async() =>{
+        try {
+          const response = await CRUDService.getUsers();
+          setUserList(response?.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      getByDefect();
       getUser();
     }, [])
   );
