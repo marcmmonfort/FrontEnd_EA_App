@@ -3,15 +3,45 @@ import React, { useEffect, useState, useRef } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import MapView from 'react-native-maps';
-import Geolocation from "react-native-geolocation-service";
 import { LocationEntity } from "../../../domain/location/location.entity";
+import SearchBar from "../components/searchbar/searchbar";
 const customIcon = require('../../../../assets/location_apple.png');
 
-const MapScreen = () => {
+import * as Location from 'expo-location';
 
+const MapScreen = () => {
   const [locations, setLocationList] = useState<LocationEntity[]>([]);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState("");
+  const mapRef = useRef<MapView>(null);
+
+  useEffect(() => {
+    const getCurrentLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status === "granted") {
+          const location = await Location.getCurrentPositionAsync({});
+
+          const { latitude, longitude } = location.coords;
+
+          const region = {
+            latitude,
+            longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          };
+
+          mapRef.current?.animateToRegion(region);
+        }
+      } catch (error) {
+        console.log("Error al obtener la ubicación:", error);
+      }
+    };
+
+    getCurrentLocation();
+  }, []);
+
   /*
   useEffect(() => {
     const getLocation = async () => {
@@ -127,6 +157,10 @@ const MapScreen = () => {
   );
   */
 
+  const handleSearchWrapper = (searchText: string) => {
+  
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -135,11 +169,22 @@ const MapScreen = () => {
       width: '100%',
       height: '100%',
     },
+    searchContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+      padding: 0,
+    },
   });
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} />
+      <MapView style={styles.map} ref={mapRef} />
+      <View style={styles.searchContainer}>
+        <SearchBar onSearch={handleSearchWrapper} />
+      </View>
     </View>
   );
 
