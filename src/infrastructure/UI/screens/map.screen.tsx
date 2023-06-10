@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
+import { ImageBackground, Image} from 'react-native';
 import { Callout, Marker } from "react-native-maps";
 import MapView from 'react-native-maps';
 import { LocationEntity } from "../../../domain/location/location.entity";
@@ -26,7 +27,7 @@ const MapScreen = () => {
   const locationIcon = require('../../../../assets/location_apple.png');
   const fireIcon = require('../../../../assets/location_fire.png');
 
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<LocationEntity[]>([]);  // Estas son las Locations pero nuestras (las de las actividades).
 
   useEffect(() => {
     fetchActivities();
@@ -36,7 +37,7 @@ const MapScreen = () => {
     try {
       const response = await LocationService.getLocations();
       if (response) {
-        const activities = response.data;
+        const activities = response.data as LocationEntity[];
         setActivities(activities);
       } else {
         console.error('Error fetching activities: Response is undefined');
@@ -88,8 +89,6 @@ const MapScreen = () => {
 
     getCurrentLocation();
   }, []);
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   const handleSearchWrapper = (searchText: string) => {
     setSearchValue(searchText);
@@ -198,6 +197,20 @@ const MapScreen = () => {
             pinColor={result === selectedLocation ? "blue" : "red"}
           />
         ))}
+  
+        {activities.map((activity) => (
+        <Marker
+          key={activity.uuid}
+          coordinate={{
+            latitude: parseFloat(activity.latLocation),
+            longitude: parseFloat(activity.lonLocation),
+          }}
+          title={activity.nameLocation}
+          description={activity.descriptionLocation}
+          image={fireIcon}
+          style={{ width: 40, height: 40 }} 
+        />
+      ))}
       </MapView>
       <View style={styles.searchContainer}>
         <SearchBar onSearch={handleSearchWrapper} />
@@ -225,6 +238,7 @@ const MapScreen = () => {
       </View>
     </View>
   );
+  
 
 };
 
