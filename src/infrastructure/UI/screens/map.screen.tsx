@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import MapView from 'react-native-maps';
 import { LocationEntity } from "../../../domain/location/location.entity";
@@ -14,6 +14,7 @@ const MapScreen = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const mapRef = useRef<MapView>(null);
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   useEffect(() => {
     const getCurrentLocation = async () => {
@@ -42,49 +43,37 @@ const MapScreen = () => {
     getCurrentLocation();
   }, []);
 
-  /*
-  useEffect(() => {
-    const getLocation = async () => {
-      try {
-        const position = await Geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            setLocationList(prevLocations =>
-              prevLocations.map(location => ({
-                ...location,
-                lat: latitude,
-                lon: longitude,
-              }))
-            );
-          },
-          error => {
-            console.error("Error al obtener la posición:", error);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
-      } catch (error) {
-        console.error("Error al obtener la posición:", error);
-      }
-    };
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-    getLocation();
-  }, []);
+  const handleSearchWrapper = (searchText: string) => {
+    // setSearchValue(searchText);
+    handleSearch();
+  };
 
   const handleSearch = async () => {
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${searchValue}&format=json`
       );
+      console.log("SE ESTÁ BUSCANDO:", `https://nominatim.openstreetmap.org/search?q=${searchValue}&format=json`);
       const data = await response.json();
-      setSearchResults(data);
+      const limitedResults = data.slice(0, 3);
+      setSearchResults(limitedResults);
     } catch (error) {
       console.error("Error en la búsqueda:", error);
     }
   };
 
-  const mapRef = useRef<MapView>(null);
+  useEffect(() => {
+    console.log("RESPUESTA LOCATIONS:", searchResults);
+  }, [searchResults]);
+
+  const calculateZoom = (importance: number) => {
+    return Math.floor(18 - Math.log2(importance));
+  };
 
   const handleSearchResult = (result: any) => {
+    setSelectedLocation(result);
     const { lat, lon, importance } = result;
     const zoom = calculateZoom(importance);
     const region = {
@@ -96,70 +85,7 @@ const MapScreen = () => {
     mapRef.current?.animateToRegion(region, zoom);
   };
 
-  const calculateZoom = (importance: number) => {
-    return Math.floor(18 - Math.log2(importance));
-  };
-
-  return (
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: searchResults[0]?.lat,
-          longitude: searchResults[0]?.lon,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0922,
-        }}
-        maxZoomLevel={13}
-        ref={mapRef}
-      >
-        {locations.map(location => (
-          <Marker
-            key={location.uuid}
-            coordinate={{
-              latitude: parseFloat(location.latLocation),
-              longitude: parseFloat(location.lonLocation),
-            }}
-            icon={customIcon}
-          >
-            <Callout>
-              <View>
-                <Text>{location.nameLocation}</Text>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-        {searchResults.map((result, index) => (
-          <Marker
-            key={result.lat}
-            coordinate={{
-              latitude: parseFloat(result.lat),
-              longitude: parseFloat(result.lon),
-            }}
-            onPress={() => handleSearchResult(result)}
-          >
-            <Callout>
-              <View>
-                <Text>{result.display_name}</Text>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-      </MapView>
-    </View>
-  );
-
-  */
-
-  /*
-  return (
-    <Text>Hola 27</Text>
-  );
-  */
-
-  const handleSearchWrapper = (searchText: string) => {
-  
-  };
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   const styles = StyleSheet.create({
     container: {
@@ -177,13 +103,53 @@ const MapScreen = () => {
       zIndex: 1,
       padding: 0,
     },
+    locationList: {
+      marginTop: 10,
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      padding: 10,
+    },
+    locationItem: {
+      paddingVertical: 5,
+    },
+    selectedLocationItem: {
+      backgroundColor: 'lightblue',
+    },
   });
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} ref={mapRef} />
+      <MapView style={styles.map} ref={mapRef}>
+        {searchResults.map((result) => (
+          <Marker
+            key={result.place_id}
+            coordinate={{
+              latitude: parseFloat(result.lat),
+              longitude: parseFloat(result.lon),
+            }}
+            title={result.display_name}
+            description={result.address}
+            onPress={() => handleSearchResult(result)}
+            pinColor={result === selectedLocation ? "blue" : "red"} // Marcar la ubicación seleccionada con un color diferente
+          />
+        ))}
+      </MapView>
       <View style={styles.searchContainer}>
         <SearchBar onSearch={handleSearchWrapper} />
+        <View style={styles.locationList}>
+          {searchResults.map((result) => (
+            <TouchableOpacity
+              key={result.place_id}
+              style={[
+                styles.locationItem,
+                result === selectedLocation && styles.selectedLocationItem, // Resaltar la ubicación seleccionada
+              ]}
+              onPress={() => handleSearchResult(result)}
+            >
+              <Text>{result.display_name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </View>
   );
