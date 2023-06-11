@@ -6,26 +6,32 @@ import { Activity } from "../../../domain/activity/activity.entity";
 import { SessionService } from "../../services/user/session.service";
 import React from "react";
 import Agenda from "../components/calendar/calendar";
+import CalendarScreen from "../components/calendar/calendar";
 
 
 function CalendarEventsScreen() {
-  const [actividades, setActividades] = useState<Activity[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [currentUser, setCurrentUser] = useState<string>(""); 
 
   useEffect(() => {
     //Obtenemos el usuario que ha iniciado sesión en la app
+    
     const fetchData = async () => {
-      setCurrentUser(await SessionService.getCurrentUser());
-
-      //Pedimos el horario de la semana del usuario logeado
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0);
-      console.log(currentDate);
-      const date = currentDate.toString();
-      const myScheduleResponse = await ActivityService.getMySchedule(currentUser, date);
-      if(myScheduleResponse){
-        setActividades(myScheduleResponse.data);
+      const userId = await SessionService.getCurrentUser();
+      setCurrentUser(userId);
+      
+      if(userId){
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+        console.log(currentDate);
+        const date = currentDate.toString();
+        const myScheduleResponse = await ActivityService.getMySchedule(userId, date);
+        console.log(myScheduleResponse);
+        if(myScheduleResponse){
+          setActivities(myScheduleResponse.data);
+        }
       }
+      
     }
     fetchData();
     
@@ -35,7 +41,7 @@ function CalendarEventsScreen() {
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <SafeAreaView style={styles.container}>
-        <Agenda></Agenda>
+        <CalendarScreen activities={activities} uuid={currentUser}/>
       </SafeAreaView>
     </ImageBackground>
   );

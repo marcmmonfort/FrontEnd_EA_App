@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import FeedScreen from './feed.screen';
 import DiscoveryScreen from './discovery.screen';
-import CalendarEventsScreen from './calendar.screen';
+import CalendarEventsScreen from './calendarevents.screen';
 import ProfileScreen from './profile.screen';
 import PublicationUpScreenA from './Publication/publicationUp.screen';
 import { ImageBackground, StyleSheet } from 'react-native';

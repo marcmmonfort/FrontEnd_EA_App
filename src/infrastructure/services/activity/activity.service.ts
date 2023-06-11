@@ -1,7 +1,7 @@
-import { ActivityEntity } from './../../../../../Backend_H_EA/src/domain/activity/activity.entity';
 import axios from "axios";
 import { AuthHeaderService } from "../user/authHeaders.service";
 import { CommentEntity } from "../../../domain/comment/comment.entity";
+import { ActivityEntity } from "../../../domain/activity/activity.entity";
 
 
 const  API_URL = "http://147.83.7.158:5432/activity";
@@ -16,7 +16,7 @@ export class ActivityService {
         console.log("try response " + response)
         return response;
       } catch (error) {
-        console.error('Error during loading comments:', error);
+        console.error('Error during loading activities:', error);
         throw error;
       }
     }
@@ -25,11 +25,13 @@ export class ActivityService {
     static async getMySchedule(uuid: string, date: string) {
       const token = await AuthHeaderService.authHeader();
       try {
+        console.log("uuid", uuid);
+        console.log("date", date);
         const response = await axios.get(API_URL + "/myweek/" + uuid + "/" + date, { headers: token });
         console.log("try response " + response)
         return response;
       } catch (error) {
-        console.error('Error during loading comments:', error);
+        console.error('Error during loading activities:', error);
         throw error;
       }
     }
