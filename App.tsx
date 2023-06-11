@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
 import { AppRegistry, StyleSheet, Text, View } from "react-native";
 import LoginScreen from "./src/infrastructure/UI/screens/login.screen";
 import RegisterScreen from "./src/infrastructure/UI/screens/Register/register.screen";
@@ -19,6 +18,7 @@ import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/pu
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
+import React from "react";
 
 
 const Stack = createStackNavigator();
@@ -27,27 +27,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen
-          name="ChatA"
-          options={{ headerShown: false }}
-          component={ChatA}
-        />
-        <Stack.Screen
-          name="ChatB"
-          options={{ headerShown: false }}
-          component={ChatB as never}
-        />
-      <Stack.Screen
-          name="VideocallScreenA"
-          options={{ headerShown: false }}
-          component={VideocallScreenA}
-        />
-        <Stack.Screen
-          name="VideocallScreenB"
-          options={{ headerShown: false }}
-          component={VideocallScreenA}
-        />
-      
+     
 
         <Stack.Screen
           name="Splash"
@@ -94,6 +74,21 @@ export default function App() {
           name="HomeScreen"
           options={{ title: "LPlan", headerShown: false }}
           component={HomeScreen}
+        />
+         <Stack.Screen
+          name="ChatA"
+          options={{ headerShown: false }}
+          component={ChatA}
+        />
+      <Stack.Screen
+          name="ChatB"
+          options={{ headerShown: false }}
+          component={ChatB}
+        />
+        <Stack.Screen
+          name="VideocallScreenA"
+          options={{ headerShown: false }}
+          component={VideocallScreenA}
         />
         <Stack.Screen
           name="Register"
