@@ -55,6 +55,7 @@ export default function ActivitiesLocationList() {
     };
 
     useEffect(() => {
+        obtainActivitiesLocation();
         loadFonts().then(() => {
           setFontsLoaded(true);
         });
@@ -80,26 +81,41 @@ export default function ActivitiesLocationList() {
     const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "transparent",
         alignItems: "center",
         justifyContent: "center",
-    }
+    },
+    backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
+    text_activity_name: {
+        color: 'white',
+        fontFamily: titleFont,
+        fontSize: 24,
+        paddingTop: 6,
+        marginBottom: 0,
+    },
     });
 
     return (
-        <View style={styles.container}>
-          {activities.length > 0 ? (
-            activities.map((activity) => (
-              <View key={activity.uuid}>
-                <Text>{activity.nameActivity}</Text>
-                <Text>{activity.descriptionActivity}</Text>
-                {/* Agrega aquí cualquier otro componente o lógica adicional */}
-              </View>
-            ))
-          ) : (
-            <Text>No activities found</Text>
-          )}
-        </View>
+        <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+            <View style={styles.container}>
+            {activities.length > 0 ? (
+                activities.map((activity) => (
+                <View key={activity.uuid}>
+                    <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
+                    <Text>{activity.descriptionActivity}</Text>
+                    <Text>{activity.dateActivity}</Text>
+                    <Text>From {activity.hoursActivity[0]} to {activity.hoursActivity[1]}</Text>
+                    <Text>{activity.participantsActivity}</Text>
+                </View>
+                ))
+            ) : (
+                <Text>No activities found</Text>
+            )}
+            </View>
+        </ImageBackground>
       );
 };
 
