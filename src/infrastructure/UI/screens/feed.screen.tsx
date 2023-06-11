@@ -776,8 +776,11 @@ export default function FeedScreen() {
                 <View style={styles.heartMessageLayout}>
                   <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
-                    <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity  onPress={() => {navigation.navigate("UsersList" as never, { userId: publication.uuid, mode: "likes"} as never);}}>
+                     <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
+                  </TouchableOpacity>
+                  
                   <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={28} color="#66fcf1" />
                   </TouchableOpacity>
