@@ -221,9 +221,7 @@ export default function FeedScreen() {
   const getComments = (idPublication: string) => {
     console.log("Ver comentarios");
     console.log("idPublication: " + idPublication);
-    console.log(
-      "commentsVisibility[PublicationId]=" + commentsVisibility[idPublication]
-    );
+    console.log("commentsVisibility[PublicationId]=" + commentsVisibility[idPublication]);
     console.log("pageComments[PublicationId]=" + pageComments[idPublication]);
     setCommentsVisibility((prevVisibility) => {
       const updatedVisibility = {

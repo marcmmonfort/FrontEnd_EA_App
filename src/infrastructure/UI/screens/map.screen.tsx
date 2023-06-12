@@ -8,6 +8,7 @@ import SearchBar from "../components/searchbar/searchbar";
 import * as Font from 'expo-font';
 import * as Location from 'expo-location';
 import { LocationService } from "../../../infrastructure/services/location/location.service";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -23,6 +24,8 @@ const MapScreen = () => {
   const mapRef = useRef<MapView>(null);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const navigation = useNavigation();
+  const [clickedLocation, setClickedLocation] = useState("");
 
   const locationIcon = require('../../../../assets/location_apple.png');
   const fireIcon = require('../../../../assets/location_fire.png');
@@ -130,6 +133,16 @@ const MapScreen = () => {
     mapRef.current?.animateToRegion(region, zoom);
   };
 
+  const handleGoToListActivities = (uuid:string) => {
+    if (clickedLocation.toString() == uuid.toString()){
+      setClickedLocation("");
+      navigation.navigate("ActivitiesLocation" as never, {uuid} as never); // UserScreen
+    }
+    else{
+      setClickedLocation(uuid);
+    }
+  };
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   const styles = StyleSheet.create({
@@ -208,8 +221,10 @@ const MapScreen = () => {
           title={activity.nameLocation}
           description={activity.descriptionLocation}
           image={fireIcon}
+          onPress={() => handleGoToListActivities(activity.uuid)}
           style={{ width: 40, height: 40 }} 
-        />
+        >
+        </Marker>
       ))}
       </MapView>
       <View style={styles.searchContainer}>
