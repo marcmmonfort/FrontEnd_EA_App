@@ -21,6 +21,7 @@ import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
 import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
 import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactivitieslocation.screen";
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
+import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
 
 const Stack = createStackNavigator();
 
@@ -86,19 +87,23 @@ export default function App() {
         <Stack.Screen
           name="ScreenPublicationUpB"
           component={ScreenPublicationUpB}
-          />
+        />
+        <Stack.Screen
+          name="ScreenPublicationUpC"
+          component={ScreenPublicationUpC}
+        />
         <Stack.Screen
             name="Edit"
             component={EditUserScreen}
-            />
+        />
         <Stack.Screen
           name="UserScreen"
           component={UserScreen}
-          />
+        />
         <Stack.Screen
           name="UsersList"
           component={UsersList}
-          />
+        />
         <Stack.Screen
         name="NotFoundScreen"
         component={NotFoundScreen}

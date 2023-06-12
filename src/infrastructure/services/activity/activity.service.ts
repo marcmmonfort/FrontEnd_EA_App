@@ -68,5 +68,30 @@ export class ActivityService {
         console.error('Error obtaining the activities of a location: '+error);
         throw error;
     }
-  }  
+  }
+
+  // Obtener todas las actividades en las que participa un usuario durante la semana actual.
+  static async obtainMyActivitiesOfTheWeek(uuid: string, date: string){
+    const token = await AuthHeaderService.authHeader();
+    try{
+        const response=await axios.get(API_URL + "activity/myweek/" + uuid + "/" + date,{headers:token});
+        return response;
+    } catch(error){
+        console.error('Error obtaining the activities I have this week: '+error);
+        throw error;
+    }
+  }
+
+  // Update activity.
+  // routeActivity.put("/activity/:uuid",checkJwt,activityCtrl.updateActivityCtrl);
+  static async updateActivity(uuid: string, updatedActivity: any) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.put(API_URL + "activity/" + uuid, updatedActivity, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error updating an activity.' + error);
+      throw error;
+    }
+  }
 }

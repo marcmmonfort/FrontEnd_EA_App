@@ -4,9 +4,6 @@ import { PublicationEntity } from "../../../domain/publication/publication.entit
 
 const API_URL = "http://147.83.7.158:5432/publication";
 
-
-
-
 export class PublicationService {
 
   static async uploadPublication(publication:PublicationEntity){

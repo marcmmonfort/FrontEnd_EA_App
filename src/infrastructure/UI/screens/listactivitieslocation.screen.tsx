@@ -82,6 +82,7 @@ export default function ActivitiesLocationList() {
     const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         backgroundColor: "transparent",
         alignItems: "center",
         justifyContent: "center",
@@ -115,10 +116,11 @@ export default function ActivitiesLocationList() {
       marginBottom: 8,
     },
     activity_container: {
+      flex: 1,
+      width: '100%',
       paddingTop: 12,
       padding: 10,
       marginBottom: 10,
-      width: 300,
       textAlign: "center",
       alignContent: "center",
       justifyContent: "center",
@@ -154,11 +156,19 @@ export default function ActivitiesLocationList() {
       marginRight: 10,
     },
     scroll_profiles: {
-      paddingLeft: 10,
-      width: 300,
+      paddingLeft: 0,
+      width: "100%",
+      flex: 1,
       marginTop: 2,
       marginBottom: 2,
     },
+    scroll_vertical: {
+      paddingTop: 10,
+      flex: 1,
+      width: '100%',
+      paddingRight: 10,
+      paddingLeft: 10,
+    }
     });
 
     const getUserProfilePhoto = async (userId: string) => {
@@ -214,6 +224,7 @@ export default function ActivitiesLocationList() {
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
+        <ScrollView style={styles.scroll_vertical}>
         {activities.length > 0 ? (
           activities.map((activity) => (
             <TouchableOpacity key={activity.uuid} onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
@@ -251,6 +262,7 @@ export default function ActivitiesLocationList() {
             <Text style={styles.text_activity_none}>What a boring place!</Text>
           </View>
         )}
+        </ScrollView>
       </View>
     </ImageBackground>
   );

@@ -5,7 +5,7 @@ export interface ActivityEntity {
     nameActivity: string;
     creatorActivity: string;
     participantsActivity?: [string];
-    photoActivity?: [string];
+    publicationActivity?: [string];
     dateActivity: string;
     hoursActivity: [string];
     idLocation?: string;

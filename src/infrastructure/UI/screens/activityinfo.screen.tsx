@@ -18,6 +18,8 @@ import { LocationService } from "../../../infrastructure/services/location/locat
 import { ActivityService } from "../../../infrastructure/services/activity/activity.service";
 import { ActivityEntity } from "../../../domain/activity/activity.entity";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
+import { PublicationService } from "../../services/publication/publication.service";
 
 async function loadFonts() {
     await Font.loadAsync({
@@ -48,12 +50,17 @@ export default function ActivityInfo() {
         android: 'SFNS',
     });
 
+    const [listPublicationsActivity, setListPublicationsActivity] = useState<Publication[]>([]);
+    const [numPublicationsActivity, setNumPublicationsActivity] = useState<number>(0);
+    const [recargar, setRecargar] = useState<string>('');
+
     const obtainActivity = async () => {
         if (uuid){
             try {
                 const response = await ActivityService.getActivityById(uuid);
                 if (response) {
                   const activity = response.data as ActivityEntity;
+                  console.log("ACTIVITY CARGAA EN INFO: ", activity);
                   setActivity(activity);
                 } else {
                   console.error('Error fetching activities: Response is undefined');
@@ -70,6 +77,12 @@ export default function ActivityInfo() {
           setFontsLoaded(true);
         });
       }, []);
+      
+    useEffect(() => {
+    if (activity) {
+        getPublicationsForActivity();
+    }
+    }, [activity]);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -84,7 +97,8 @@ export default function ActivityInfo() {
             flex: 1,
             backgroundColor: "transparent",
             alignItems: "center",
-            justifyContent: "center",
+            marginTop: 200,
+            justifyContent: "center", 
         },
         inside_container: {
             flex: 1,
@@ -135,29 +149,100 @@ export default function ActivityInfo() {
             alignItems: "center",
             borderRadius: 40,
             marginRight: 10,
-        },
+            marginBottom: 10,
+          },
+          post_complete: {
+            alignItems: 'center',
+            marginRight: 4,
+            marginLeft: 4,
+          },
+          post_description: {
+            alignItems: 'center',
+            width: 120,
+            backgroundColor: 'black',
+            marginTop: 4,
+            borderRadius: 16,
+          },
+          text_post: {
+            fontSize: 16,
+            fontFamily: bodyFont,
+            color: "white",
+            marginTop: 4,
+        
+          },
+          time_post: {
+            fontSize: 12,
+            fontFamily: bodyFont,
+            color: "yellow",
+            marginTop: 2,
+            marginBottom: 6,
+          },
+          post_images: {
+            width: 120,
+            height: 120,
+            borderRadius: 16,
+            resizeMode: 'cover',
+          },
+          scroll_posts: {
+            marginTop: 10,
+            marginBottom: 0,
+            marginLeft: 0,
+            alignSelf: 'flex-start', // Agregar este estilo
+          },
+          
+          scrollViewContent: {
+            flexGrow: 1,
+            alignItems: "center",
+            justifyContent: "flex-start", // Alinear el contenido en la parte superior
+          },
     });
+
+    const getPublicationsForActivity = async () => {
+        const publicationIds = activity?.publicationActivity;
+        if (publicationIds){
+            for (const publicationId of publicationIds) {
+                try {
+                  const response = await PublicationService.onePublication(publicationId);
+                  const publication = response.data;
+                  setListPublicationsActivity((prevList) => [...prevList, publication]);
+                } catch (error) {
+                  console.error("Error al obtener la publicación:", error);
+                }
+              }
+        }
+    };
 
     return (
         <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
           <View style={styles.container}>
-          {activity && (
+            {activity && (
+              <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.inside_container}>
-                    <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
-                    <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
-                    <Text style={styles.text_activity_date}>
-                        {new Date(activity.dateActivity).getDate()}.
-                        {new Date(activity.dateActivity).getMonth() + 1}.
-                        {new Date(activity.dateActivity).getFullYear()}
-                    </Text>
-                    <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
-                    <View style={styles.plus_icon}>
-                        <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
-                    </View>
+                  <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
+                  <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
+                  <Text style={styles.text_activity_date}>
+                    {new Date(activity.dateActivity).getDate()}.
+                    {new Date(activity.dateActivity).getMonth() + 1}.
+                    {new Date(activity.dateActivity).getFullYear()}
+                  </Text>
+                  <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
+                  <View style={styles.plus_icon}>
+                    <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
+                  </View>
+                  <ScrollView horizontal>
+                    {listPublicationsActivity.map((publication, index) => (
+                      <View key={index} style={styles.post_complete}>
+                        <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                        <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>
+                        <Text style={styles.text_post}>{publication.textPublication}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
                 </View>
+              </ScrollView>
             )}
           </View>
         </ImageBackground>
-    );
+      );      
 }
     

@@ -27,6 +27,8 @@ export default function ScreenPublicationUpB() {
   const [textPublication, setTextPublication] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [createdPublication, setCreatedPublication] = useState<PublicationEntity | null>(null);
+
   const route = useRoute();
   const navigation = useNavigation();
   const { photoPublication }: RouteParams = route.params || {};
@@ -57,7 +59,6 @@ export default function ScreenPublicationUpB() {
   useEffect(() => {
     setLoading(true);
     const loadPhoto = async () => {
-      // Simulating image loading delay
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -87,13 +88,14 @@ export default function ScreenPublicationUpB() {
       textPublication: textPublication ?? "",
       photoPublication: photoPublication ?? "",
     };
-    console.log("FORM DATA:   " + JSON.stringify(formData));
+    console.log("FORM DATA: " + JSON.stringify(formData));
     PublicationService.uploadPublication(formData)
       .then((response) => {
         console.log("QQQ" + response);
         if (response.status === 200) {
-          console.log("BIEN" + response.data);
-          navigation.navigate('HomeScreen' as never, { screen: 'FeedScreen' } as never);
+          console.log("RESPUESTA en JSON: ", JSON.stringify(response.data));
+          setCreatedPublication(formData);
+          navigation.navigate("ScreenPublicationUpC" as never, { publication: formData } as never);
         } else {
           console.log("STATUS:" + response.status);
         }
@@ -111,8 +113,8 @@ export default function ScreenPublicationUpB() {
             console.log("Error2");
             break;
         }
+        navigation.navigate("HomeScreen" as never);
       });
-    navigation.navigate("HomeScreen" as never);
   };
 
   const styles = StyleSheet.create({
@@ -163,10 +165,10 @@ export default function ScreenPublicationUpB() {
         {loading ? ( <ActivityIndicator size="large" color="blue" />
         ) : (
           <View>
-            <Text style={styles.titleText}>Image</Text>
-            <Image style={styles.postImage} source={{ uri: photoPublication }}/>
             <Text style={styles.titleText}>Description</Text>
             <StyledTextInputs style={styles.input} placeholder="Write Here" value={textPublication} onChangeText={(value: React.SetStateAction<string>) => setTextPublication(value) }/>
+            <Text style={styles.titleText}>Image</Text>
+            <Image style={styles.postImage} source={{ uri: photoPublication }}/>
             <Text style={styles.titleText}>Upload</Text>
             <TouchableOpacity style={styles.buttonForPosting} onPress={handlePublication}>
               <MaterialCommunityIcons color="#3897f0" name="upload" size={24} />
