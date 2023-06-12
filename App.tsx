@@ -19,6 +19,7 @@ import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
 import React from "react";
+import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
 
 
 const Stack = createStackNavigator();
@@ -44,6 +45,11 @@ export default function App() {
           name="ScreenRegisterA"
           options={{ headerShown: false }}
           component={ScreenRegisterA}
+        />
+        <Stack.Screen
+          name="GoogleLogin" // Agrega el nuevo Screen para el inicio de sesión con Google
+          options={{ headerShown: false }}
+          component={GoogleLogin}
         />
         <Stack.Screen
           name="ScreenRegisterB"
