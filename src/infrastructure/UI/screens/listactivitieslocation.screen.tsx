@@ -17,6 +17,7 @@ import * as Location from 'expo-location';
 import { LocationService } from "../../../infrastructure/services/location/location.service";
 import { ActivityService } from "../../../infrastructure/services/activity/activity.service";
 import { ActivityEntity } from "../../../domain/activity/activity.entity";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface RouteParams {
     uuid?: string;
@@ -90,33 +91,151 @@ export default function ActivitiesLocationList() {
         resizeMode: 'cover',
     },
     text_activity_name: {
-        color: 'white',
+        color: 'yellow',
         fontFamily: titleFont,
-        fontSize: 24,
-        paddingTop: 6,
-        marginBottom: 0,
+        fontSize: 28,
+        paddingTop: 8,
+    },
+    text_activity_description: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 16,
+      marginTop: 8,
+    },
+    text_activity_date: {
+      color: "#66fcf1",
+      fontFamily: bodyFont,
+      fontSize: 14,
+      marginTop: 8,
+    },
+    text_activity_time: {
+      color: "#66fcf1",
+      fontFamily: bodyFont,
+      fontSize: 14,
+      marginBottom: 8,
+    },
+    activity_container: {
+      paddingTop: 12,
+      padding: 10,
+      marginBottom: 10,
+      width: 300,
+      textAlign: "center",
+      alignContent: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      borderRadius: 10,
+    },
+    text_activity_none: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 16,
+    },
+    shock_icon: {
+      width: 36,
+      height: 36,
+      marginBottom: 6,
+      marginTop: -20,
+    },
+    participant_profile_image: {
+      width: 46,
+      height: 46,
+      borderRadius: 40,
+      marginRight: 10,
+    },
+    plus_icon: {
+      width: 46,
+      height: 46,
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      alignItems: "center",
+      borderRadius: 40,
+      marginRight: 10,
+    },
+    scroll_profiles: {
+      paddingLeft: 10,
+      width: 300,
+      marginTop: 2,
+      marginBottom: 2,
     },
     });
 
-    return (
-        <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-            <View style={styles.container}>
-            {activities.length > 0 ? (
-                activities.map((activity) => (
-                <View key={activity.uuid}>
-                    <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
-                    <Text>{activity.descriptionActivity}</Text>
-                    <Text>{activity.dateActivity}</Text>
-                    <Text>From {activity.hoursActivity[0]} to {activity.hoursActivity[1]}</Text>
-                    <Text>{activity.participantsActivity}</Text>
-                </View>
-                ))
-            ) : (
-                <Text>No activities found</Text>
-            )}
-            </View>
-        </ImageBackground>
+    const getUserProfilePhoto = async (userId: string) => {
+      try {
+          const response = await CRUDService.getUser(userId);
+          if (response) {
+              const user = response.data as UserEntity;
+              return user.photoUser;
+          } else {
+              console.error('Error fetching user:', userId);
+              return null;
+          }
+      } catch (error) {
+          console.error('Error fetching user:', error);
+          return null;
+      }
+  };
+
+  const [userProfilePhotos, setUserProfilePhotos] = useState<Map<string, string[]>>(new Map());
+
+  useEffect(() => {
+    const fetchUserProfilePhotos = async () => {
+      const photos = new Map<string, string[]>();
+
+      await Promise.all(
+        activities.map(async (activity) => {
+          if (activity.participantsActivity && activity.uuid) {
+            const photosForActivity = await Promise.all(
+              activity.participantsActivity.map((userId) => getUserProfilePhoto(userId))
+            );
+
+            const cleanedPhotosForActivity = photosForActivity.filter((photo) => photo !== null) as string[];
+
+            photos.set(activity.uuid, cleanedPhotosForActivity);
+          }
+        })
       );
-};
+
+      setUserProfilePhotos(photos);
+    };
+
+    fetchUserProfilePhotos();
+  }, [activities]);
+
+  return (
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        {activities.length > 0 ? (
+          activities.map((activity) => (
+            <View style={styles.activity_container} key={activity.uuid}>
+              <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
+              <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
+              <Text style={styles.text_activity_date}>
+                {new Date(activity.dateActivity).getDate()}.
+                {new Date(activity.dateActivity).getMonth() + 1}.
+                {new Date(activity.dateActivity).getFullYear()}
+              </Text>
+              <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
+              <ScrollView style={styles.scroll_profiles} horizontal>
+                <View style={styles.plus_icon}>
+                  <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
+                </View>
+                {activity.uuid && userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
+                  <Image style={styles.participant_profile_image} key={index} source={photoUrl ? { uri: photoUrl } : undefined}/>
+                ))}
+              </ScrollView>
+            </View>
+          ))
+        ) : (
+          <View style={styles.container}>
+            <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }}/>
+            <Text style={styles.text_activity_none}>What a boring place!</Text>
+          </View>
+        )}
+      </View>
+    </ImageBackground>
+  );
+}
 
 
