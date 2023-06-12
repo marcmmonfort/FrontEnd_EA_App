@@ -96,23 +96,10 @@ export default function SplashScreen() {
             try {
               const token = await AsyncStorage.getItem('token');
               if (token) {
-                const decodedToken : DecodedToken = jwtDecode(token);
-                const currentTime = Date.now() / 1000; // Obtener la hora actual en segundos
-                console.log("DECODED TOKEN: ", decodedToken);
-
-                if (decodedToken.exp < currentTime) {
-                  
-                  // El token ha expirado, redirigir al usuario a la pantalla de inicio de sesión
-                  navigation.navigate('LoginScreen' as never);
-                } else {
-                  // El token es válido, redirigir al usuario a la pantalla principal
-                  console.log("El token es válido");
-                  navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);
-                }
-                
-                // navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);
+                navigation.navigate('HomeScreen' as never);
               } else {
                 navigation.navigate('LoginScreen' as never);
+                //navigation.navigate('ChatA' as never);
               }
             } catch (error) {
               console.log('Error al obtener el token:', error);

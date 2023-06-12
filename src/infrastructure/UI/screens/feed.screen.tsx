@@ -12,7 +12,7 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
-import { useSpring } from 'react-spring';
+//import { useSpring } from '@react-spring/native';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -428,10 +428,10 @@ export default function FeedScreen() {
     }
   };  
 
-  const heartAnimation = useSpring({
+  /*const heartAnimation = useSpring({
     from: { opacity: 0, y: 0 },
     to: { opacity: hasLiked ? 1 : 0, y: hasLiked ? -100 : 0 },
-  });
+  });*/
 
   const styles = StyleSheet.create({
     feed: {

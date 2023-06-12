@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import { Button } from "react-native-paper";
 import * as Font from 'expo-font';
 
 async function loadFonts() {
@@ -27,14 +28,7 @@ export default function PublicationUpScreenA() {
     });
   }, []);
 
-  const titleFont = Platform.select({
-    ios: 'Rafaella',
-    android: 'Rafaella',
-  });
-  const bodyFont = Platform.select({
-    ios: 'SFNS',
-    android: 'SFNS',
-  });
+ 
 
   const navigation = useNavigation();
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
@@ -142,6 +136,67 @@ export default function PublicationUpScreenA() {
       navigation.navigate("ScreenPublicationUpB" as never, { photoPublication: url } as never);
     }
   };
+  const handleButtonPress = () => {
+    // Navegar hacia otra pantalla aquí
+    navigation.navigate("ChatA" as never);
+  };
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
+  return (
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator size="large" color="blue" />
+      ) : (
+        <>
+          <TouchableOpacity style={styles.button} onPress={handleCameraPress}>
+            <Ionicons name="camera" size={32} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleGalleryPress}>
+            <Ionicons name="image" size={32} color="white" />
+          </TouchableOpacity>
+        </>
+      )}
+
+      <TouchableOpacity style={styles.bottomButton} onPress={handleButtonPress}>
+        <Ionicons name="arrow-forward" size={32} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+/*const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  bottomButton: {
+    position: "absolute",
+    bottom: 20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});*/
 
   const styles = StyleSheet.create({
     container: {
@@ -167,15 +222,25 @@ export default function PublicationUpScreenA() {
     },
     bottomText: {
       color: 'white',
-      fontFamily: bodyFont,
+      //fontFamily: bodyFont,
       fontSize: 18,
       marginTop: 0,
       marginBottom: 4,
     },
+    bottomButton: {
+      position: "absolute",
+      bottom: 20,
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: "green",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });
  
 
-  return (
+  /*return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         {loading ? (
@@ -197,5 +262,4 @@ export default function PublicationUpScreenA() {
       </View>
     </ImageBackground>
     
-  );
-}
+  );*/
