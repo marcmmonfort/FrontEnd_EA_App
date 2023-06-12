@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Platform, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Font from 'expo-font';
+import { PublicationService } from "../../services/publication/publication.service";
+import { PublicationLikes } from "../../../domain/publication/publication.entity";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -21,16 +23,18 @@ interface RouteParams {
 
 export default function UsersList() {
   const route = useRoute();
-  const {
-      userId, mode
-    }: RouteParams = route.params || {};
+  const { userId, mode }: RouteParams = route.params || {};
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
+  const [currentPublication, setcurrentPublication] = useState<PublicationLikes | null>(null);
   const [userList, setUserList] = useState([]);
   const [numPage, setNumPage] = useState(1);
   const navigation = useNavigation();
 
   const isFollowersMode = mode === "followers";
-  const title = isFollowersMode ? "Followers" : "Following";
+  const isFollowingMode = mode === "following";
+  const isLikesMode = mode === "likes";
+
+  const title = isFollowersMode ? "Followers" : isFollowingMode ? "Following" : "Likes";
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -50,11 +54,22 @@ export default function UsersList() {
   });
 
   useEffect(() => {
-    if (userId) {
-      loadUserList();
-      loadUser();
-    }
+    if(userId){
+      
+      if(isFollowersMode || isFollowingMode){
+        console.log("Entro donde no tenia que entrar");
+        loadUser();
+      }else{
+        console.log("Entra la publicación");
+        loadPublication();
+      }
+
+      loadUserList(); 
+    } // Cargar la lista de usuarios al inicializar
+
+    // Actualizar la lista de usuarios cuando cambie la página
   }, [numPage]);
+
 
   const loadUser = async () => {
     try {
@@ -81,7 +96,7 @@ export default function UsersList() {
         .catch(error => {
             navigation.navigate("ProfileScreen" as never);
         });
-    } else {
+    } else if (isFollowingMode){
         CRUDService.getFollowed(userId, numPage.toString())
         .then(response => {
           console.log(response);
@@ -91,6 +106,28 @@ export default function UsersList() {
         .catch(error => {
           navigation.navigate("ProfileScreen" as never);
         });
+    } else if (isLikesMode) {
+      PublicationService.getListLikes(userId, numPage.toString())
+      .then(response => {
+        console.log(response);
+        console.log(response.data.likesPublication);
+        setUserList(prevUserList => [...prevUserList, ...response.data.likesPublication] as never);
+      })
+      .catch(error => {
+        navigation.navigate("ProfileScreen" as never);
+      });
+    }
+  };
+
+  const loadPublication = async () => {
+    try {
+      const response = await PublicationService.getPublication(userId ?? 'NoID');
+      setcurrentPublication(response.data);
+      console.log("Obtenemos los datos del otro usuario: exito");
+    } catch (error) {
+      navigation.navigate("NotFoundScreen" as never);
+      console.log("Obtenemos los datos del otro usuario: mal");
+      console.error(error);
     }
   };
 

@@ -128,6 +128,17 @@ export class CRUDService{
         throw error;
       }
     }
+
+    static async getPerson(userId: string) {
+      const token=await AuthHeaderService.authHeader()
+      try {
+        const response = await axios.get(API_URL + "/" + userId, { headers: token });
+        return response;
+      } catch (error) {
+        console.error("Error when obtaining person:", error);
+        throw error;
+      }
+    }
     
 }
 

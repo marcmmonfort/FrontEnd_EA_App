@@ -29,6 +29,7 @@ export class SessionService {
     }
   }
 
+  
   static async getCurrentUser() {
     try {
       const userId = await AsyncStorage.getItem('uuid');
@@ -43,6 +44,7 @@ export class SessionService {
       console.error("Error al obtener el usuario actual:", error);
     }
   }
+
   
 
   static setCurrentUser(userId: string, token: string) {
