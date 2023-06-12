@@ -18,18 +18,27 @@ import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/pu
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
-import React from "react";
 import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
+import React, { useEffect } from 'react';
+import { Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging'
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  /*useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);*/
   return (
     <NavigationContainer>
       <Stack.Navigator>
      
-
+      
         <Stack.Screen
           name="Splash"
           options={{ headerShown: false }}
@@ -81,6 +90,7 @@ export default function App() {
           options={{ title: "LPlan", headerShown: false }}
           component={HomeScreen}
         />
+        
          <Stack.Screen
           name="ChatA"
           options={{ headerShown: false }}

@@ -9,6 +9,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 import expo.modules.ReactActivityDelegateWrapper;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
 public class MainActivity extends ReactActivity {
   @Override

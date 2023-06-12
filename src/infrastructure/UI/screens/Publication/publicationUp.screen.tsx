@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import { Button } from "react-native-paper";
 
 export default function PublicationUpScreenA() {
   const [photoPublication, setPhotoPublication] = useState("");
@@ -122,6 +123,10 @@ export default function PublicationUpScreenA() {
       );
     }
   };
+  const handleButtonPress = () => {
+    // Navegar hacia otra pantalla aquí
+    navigation.navigate("ChatA" as never);
+  };
 
   return (
     <View style={styles.container}>
@@ -138,6 +143,10 @@ export default function PublicationUpScreenA() {
           </TouchableOpacity>
         </>
       )}
+
+      <TouchableOpacity style={styles.bottomButton} onPress={handleButtonPress}>
+        <Ionicons name="arrow-forward" size={32} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -156,5 +165,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+  },
+  bottomButton: {
+    position: "absolute",
+    bottom: 20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
