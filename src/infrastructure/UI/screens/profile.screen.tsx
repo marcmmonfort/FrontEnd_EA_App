@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
                       <MaterialCommunityIcons color="black" name="pencil" size={18} />
                     </View>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {}} style={styles.buttonForChanges}>
+                  <TouchableOpacity onPress={() => {navigation.navigate("Settings" as never)}} style={styles.buttonForChanges}>
                     <View style={styles.insideButtonForChanges}>
                       <MaterialCommunityIcons color="black" name="cog" size={18} />
                     </View>
