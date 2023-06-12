@@ -203,29 +203,42 @@ export default function ActivitiesLocationList() {
     fetchUserProfilePhotos();
   }, [activities]);
 
+  const handleGoToScreenUser = (uuid:string) => {
+    navigation.navigate("UserScreen" as never, {uuid} as never);
+  };
+
+  const handleGoToActivity = (uuid:string) => {
+    navigation.navigate("Activity" as never, {uuid} as never);
+  };
+
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         {activities.length > 0 ? (
           activities.map((activity) => (
+            <TouchableOpacity onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
             <View style={styles.activity_container} key={activity.uuid}>
-              <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
-              <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
-              <Text style={styles.text_activity_date}>
-                {new Date(activity.dateActivity).getDate()}.
-                {new Date(activity.dateActivity).getMonth() + 1}.
-                {new Date(activity.dateActivity).getFullYear()}
-              </Text>
-              <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
-              <ScrollView style={styles.scroll_profiles} horizontal>
-                <View style={styles.plus_icon}>
-                  <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
-                </View>
-                {activity.uuid && userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
-                  <Image style={styles.participant_profile_image} key={index} source={photoUrl ? { uri: photoUrl } : undefined}/>
-                ))}
-              </ScrollView>
+                <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
+                <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
+                <Text style={styles.text_activity_date}>
+                  {new Date(activity.dateActivity).getDate()}.
+                  {new Date(activity.dateActivity).getMonth() + 1}.
+                  {new Date(activity.dateActivity).getFullYear()}
+                </Text>
+                <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
+                <ScrollView style={styles.scroll_profiles} horizontal>
+                  <View style={styles.plus_icon}>
+                    <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
+                  </View>
+                  {activity.uuid &&
+                    userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
+                      <TouchableOpacity key={index} onPress={() => { const userId = activity.participantsActivity?.[index]; if (userId) { handleGoToScreenUser(userId); }}}>
+                        <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined}/>
+                      </TouchableOpacity>
+                    ))}
+                </ScrollView>
             </View>
+            </TouchableOpacity>
           ))
         ) : (
           <View style={styles.container}>

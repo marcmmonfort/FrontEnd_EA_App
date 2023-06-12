@@ -6,11 +6,16 @@ const API_URL = "http://147.83.7.158:5432/";
 
 export class ActivityService {
 
-    // GET ACTIVITY BY ID.
-    // routeActivity.get("/activity/:uuid",checkJwt,activityCtrl.getActivityByIdCtrl);//OK
-
-    // GET LIST ACTIVITIES OF A LOCATION.
-    // http://147.83.7.158:5432/activities/bylocation/6485cc86c58a49de9a2d3836
+    static async getActivityById(uuid: string){
+        const token = await AuthHeaderService.authHeader();
+        try{
+            const response=await axios.get(API_URL + "activity/" + uuid,{headers:token});
+            return response;
+        } catch(error){
+            console.error('Error obtaining an activity by its ID: '+error);
+            throw error;
+        }
+    }
 
     static async getActivitiesOfALocation(uuid: string){
         const token = await AuthHeaderService.authHeader();
