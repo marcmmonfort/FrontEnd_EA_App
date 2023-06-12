@@ -216,8 +216,8 @@ export default function ActivitiesLocationList() {
       <View style={styles.container}>
         {activities.length > 0 ? (
           activities.map((activity) => (
-            <TouchableOpacity onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
-            <View style={styles.activity_container} key={activity.uuid}>
+            <TouchableOpacity key={activity.uuid} onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
+              <View style={styles.activity_container}>
                 <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
                 <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
                 <Text style={styles.text_activity_date}>
@@ -232,17 +232,22 @@ export default function ActivitiesLocationList() {
                   </View>
                   {activity.uuid &&
                     userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
-                      <TouchableOpacity key={index} onPress={() => { const userId = activity.participantsActivity?.[index]; if (userId) { handleGoToScreenUser(userId); }}}>
-                        <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined}/>
+                      <TouchableOpacity key={index} onPress={() => {
+                        const userId = activity.participantsActivity?.[index];
+                        if (userId) {
+                          handleGoToScreenUser(userId);
+                        }
+                      }}>
+                        <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined} />
                       </TouchableOpacity>
                     ))}
                 </ScrollView>
-            </View>
+              </View>
             </TouchableOpacity>
           ))
         ) : (
           <View style={styles.container}>
-            <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }}/>
+            <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }} />
             <Text style={styles.text_activity_none}>What a boring place!</Text>
           </View>
         )}
