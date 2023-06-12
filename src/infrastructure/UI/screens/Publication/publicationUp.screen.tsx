@@ -28,14 +28,7 @@ export default function PublicationUpScreenA() {
     });
   }, []);
 
-  const titleFont = Platform.select({
-    ios: 'Rafaella',
-    android: 'Rafaella',
-  });
-  const bodyFont = Platform.select({
-    ios: 'SFNS',
-    android: 'SFNS',
-  });
+ 
 
   const navigation = useNavigation();
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
@@ -147,7 +140,14 @@ export default function PublicationUpScreenA() {
     // Navegar hacia otra pantalla aquí
     navigation.navigate("ChatA" as never);
   };
-
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
   return (
     <View style={styles.container}>
       {loading ? (
@@ -171,7 +171,7 @@ export default function PublicationUpScreenA() {
   );
 }
 
-const styles = StyleSheet.create({
+/*const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-});
+});*/
 
   const styles = StyleSheet.create({
     container: {
@@ -222,15 +222,25 @@ const styles = StyleSheet.create({
     },
     bottomText: {
       color: 'white',
-      fontFamily: bodyFont,
+      //fontFamily: bodyFont,
       fontSize: 18,
       marginTop: 0,
       marginBottom: 4,
     },
+    bottomButton: {
+      position: "absolute",
+      bottom: 20,
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: "green",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });
  
 
-  return (
+  /*return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         {loading ? (
@@ -252,5 +262,4 @@ const styles = StyleSheet.create({
       </View>
     </ImageBackground>
     
-  );
-}
+  );*/
