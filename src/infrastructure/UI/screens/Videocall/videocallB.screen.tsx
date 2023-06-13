@@ -2,10 +2,12 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text} from 'react-native-paper';
 import {Button} from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput} from 'react-native-paper';
 
 import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+
+
 
 import InCallManager from 'react-native-incall-manager';
 import { RTCView, mediaDevices } from 'react-native-webrtc';
@@ -24,9 +26,9 @@ const navigation = useNavigation();
   const [remoteStream, setRemoteStream] = useState({toURL: () => null});
 
   const [conn, setConn] = useState(new WebSocket('ws://http://147.83.7.158:3000'));
-  const [yourConn, setYourConn] = useState(
-    //change the config as you need
-    new RTCPeerConnection({
+  function yourConn() {
+    console.log("ayo")
+    const peer = new RTCPeerConnection({
       iceServers: [
         {
           urls: "stun:147.83.7.158:3478",
@@ -37,15 +39,16 @@ const navigation = useNavigation();
           username: "coturn",
         },
       ],
-    }),
-  );
+    });
+    return peer;
+  } //Puede dar problemas
 
 
   const [callToUsername, setCallToUsername] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
-      AsyncStorage.getItem('userId').then(id => {
+      AsyncStorage.getItem('userId').then((id:any) => {
         console.log(id);
         if (id) {
           setUserId(id);
@@ -175,7 +178,7 @@ const navigation = useNavigation();
           setLocalStream(stream);
 
           // setup stream listening
-          stream.getTracks().forEach((track:any) => yourConn.addTrack(track, stream));
+          stream.getTracks().forEach((track:any) => yourConn().addTrack(track, stream));
         })
         .catch(error => {
           // Log error
@@ -185,7 +188,7 @@ const navigation = useNavigation();
     console.log("No devices")
   }
 
-    yourConn.ontrack = (event:any) => {
+    yourConn().ontrack = (event:any) => {
       console.log('On Track', event);
       if (event.track.kind === 'video') {
         setRemoteStream(event.streams[0]);
@@ -194,7 +197,7 @@ const navigation = useNavigation();
     
 
     // Setup ice handling
-    yourConn.onicecandidate = event => {
+    yourConn().onicecandidate = event => {
       if (event.candidate) {
         send({
           type: 'candidate',
@@ -221,8 +224,8 @@ const navigation = useNavigation();
     console.log('Caling to', callToUsername);
     // create an offer
 
-    yourConn.createOffer().then(offer => {
-      yourConn.setLocalDescription(offer).then(() => {
+    yourConn().createOffer().then(offer => {
+      yourConn().setLocalDescription(offer).then(() => {
         console.log('Sending Ofer');
         console.log(offer);
         send({
@@ -242,11 +245,11 @@ const navigation = useNavigation();
     connectedUser = name;
 
     try {
-      await yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+      await yourConn().setRemoteDescription(new RTCSessionDescription(offer));
 
-      const answer = await yourConn.createAnswer();
+      const answer = await yourConn().createAnswer();
 
-      await yourConn.setLocalDescription(answer);
+      await yourConn().setLocalDescription(answer);
       send({
         type: 'answer',
         answer: answer,
@@ -258,14 +261,14 @@ const navigation = useNavigation();
 
   //when we got an answer from a remote user
   const handleAnswer = (answer:any) => {
-    yourConn.setRemoteDescription(new RTCSessionDescription(answer));
+    yourConn().setRemoteDescription(new RTCSessionDescription(answer));
   };
 
   //when we got an ice candidate from a remote user
   const handleCandidate = (candidate:any) => {
     setCalling(false);
     console.log('Candidate ----------------->', candidate);
-    yourConn.addIceCandidate(new RTCIceCandidate(candidate));
+    yourConn().addIceCandidate(new RTCIceCandidate(candidate));
   };
 
   //hang up
@@ -281,7 +284,7 @@ const navigation = useNavigation();
     connectedUser = null;
     setRemoteStream({toURL: () => null});
 
-    yourConn.close();
+    yourConn().close();
     // yourConn.onicecandidate = null;
     // yourConn.onaddstream = null;
   };
@@ -289,7 +292,7 @@ const navigation = useNavigation();
   const onLogout = () => {
     // hangUp();
 
-    AsyncStorage.removeItem('userId').then(res => {
+    AsyncStorage.removeItem('userId').then((res:any) => {
       navigation.navigate('VideocallScreenA' as never);
     });
   };
@@ -300,11 +303,11 @@ const navigation = useNavigation();
       connectedUser = offer.name;
   
       try {
-        await yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+        await yourConn().setRemoteDescription(new RTCSessionDescription(offer));
   
-        const answer = await yourConn.createAnswer();
+        const answer = await yourConn().createAnswer();
   
-        await yourConn.setLocalDescription(answer);
+        await yourConn().setLocalDescription(answer);
   
         send({
           type: 'answer',

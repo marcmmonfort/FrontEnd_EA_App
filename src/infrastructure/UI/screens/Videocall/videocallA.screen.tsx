@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
 import {TextInput} from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button} from 'react-native-paper';
 
 export default function VideocallScreenA(props:any) {
