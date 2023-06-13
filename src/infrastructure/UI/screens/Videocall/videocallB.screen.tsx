@@ -11,11 +11,11 @@ import InCallManager from 'react-native-incall-manager';
 import { RTCView, mediaDevices } from 'react-native-webrtc';
 
 
-export default function CallScreen(props:any) {
+export default function VideocallScreenB(props:any) {
 const navigation = useNavigation();
   let name:any;
   let connectedUser:any;
-  const [offer, setOffer] = useState(null);
+  const [offer, setOffer] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [socketActive, setSocketActive] = useState(false);
   const [calling, setCalling] = useState(false);
@@ -23,20 +23,19 @@ const navigation = useNavigation();
   const [localStream, setLocalStream] = useState({toURL: () => null});
   const [remoteStream, setRemoteStream] = useState({toURL: () => null});
 
-  const [conn, setConn] = useState(new WebSocket('ws://http://147.83.7.158:8080'));
+  const [conn, setConn] = useState(new WebSocket('ws://http://147.83.7.158:3000'));
   const [yourConn, setYourConn] = useState(
     //change the config as you need
     new RTCPeerConnection({
       iceServers: [
         {
-            urls: "stun:147.83.7.158:3478",
-          },
-          {
-            urls: "147.83.7.158:3478",
-            credential: "oursecret",
-            username: "coturn",
-          },
-
+          urls: "stun:147.83.7.158:3478",
+        },
+        {
+          urls: "turn:147.83.7.158:3478",
+          credential: "oursecret",
+          username: "coturn",
+        },
       ],
     }),
   );
@@ -146,6 +145,7 @@ const navigation = useNavigation();
      */
 
     let isFront = false;
+    if(mediaDevices && mediaDevices.enumerateDevices){
     mediaDevices.enumerateDevices().then((sourceInfos:any) => {
       let videoSourceId;
       for (let i = 0; i < sourceInfos.length; i++) {
@@ -181,6 +181,9 @@ const navigation = useNavigation();
           // Log error
         });
     });
+  }else{
+    console.log("No devices")
+  }
 
     yourConn.ontrack = (event:any) => {
       console.log('On Track', event);
@@ -336,7 +339,7 @@ const navigation = useNavigation();
           label="Enter Friends Id"
           mode="outlined"
           style={{marginBottom: 7}}
-          onChangeText={text => setCallToUsername(text)}
+          onChangeText={text => setCallToUsername(text as any)}
         />
         <Button
           mode="contained"
@@ -352,14 +355,12 @@ const navigation = useNavigation();
       <View style={styles.videoContainer}>
         <View style={[styles.videos, styles.localVideos]}>
           <Text>Your Video</Text>
-          <RTCView streamURL={localStream.toURL()} style={styles.localVideo} />
+          <RTCView streamURL={localStream.toURL() || ''} style={styles.localVideo} />
         </View>
         <View style={[styles.videos, styles.remoteVideos]}>
           <Text>Friends Video</Text>
-          <RTCView
-            streamURL={remoteStream.toURL()}
-            style={styles.remoteVideo}
-          />
+          <RTCView streamURL={remoteStream.toURL() || ''} style={styles.remoteVideo} />
+
         </View>
       </View>
     </View>
@@ -404,5 +405,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     height: '100%',
     width: '100%',
+  },
+  btnContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 60,
   },
 });

@@ -15,9 +15,9 @@ import com.facebook.soloader.SoLoader;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
 import java.util.List;
 
@@ -35,7 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
         return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new RNFirebasePackage(),
-          new RNFirebaseAuthPackage()
+          new RNFirebaseAuthPackage(),
+          new ReactNativeFirebaseAppPackage()
   );
 }
 
