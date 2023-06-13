@@ -8,6 +8,10 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import * as Speech from 'expo-speech';
+import Filter from 'bad-words';
+
+
 
 // BEREAL
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
@@ -69,8 +73,30 @@ export default function ProfileScreen() {
         const userId = await SessionService.getCurrentUser();
         if (userId) {
           try {
-            await CRUDService.getUser(userId).then((response) => {
-              setCurrentUser(response?.data);
+            await CRUDService.getUser(userId).then(async (response) => {
+              if (response?.data && response.data.descriptionUser) {
+          
+                const customFilter = new Filter({regex: /\*|\.|$/gi});
+                customFilter.addWords('idiota', 'retrasado');
+      
+                const filteredDescription = customFilter.clean(response.data.descriptionUser);
+                console.log(filteredDescription);
+              
+                response.data.descriptionUser = filteredDescription;
+                setCurrentUser(response.data);
+              }
+              try{
+                await SessionService.getAudioDescription()
+                .then((isAudioDescription) => {
+                  if(isAudioDescription==='si'){
+                    speakCurrentUser(response?.data);
+                  }
+                });
+              
+              }catch{
+                console.log("NO SE OBTIENE BIEN EL GET AUDIO DESCRIPTION.");
+              }
+              
             });
           } catch (error) {
             console.error("Error retrieving user:", error);
@@ -107,6 +133,27 @@ export default function ProfileScreen() {
     }, [numPagePublication, recargar])
   );  
   
+  const speakCurrentUser = async (currentUser:UserEntity) => {
+    try {
+      if (currentUser) {
+        Speech.speak(`You're in the profile of ${currentUser.appUser}`, { language: 'en' });
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Pausa de 500 ms
+        if(currentUser.followersUser)
+        Speech.speak(`He has ${currentUser.followersUser.length.toString()} followers`, { language: 'en' });
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Pausa de 500 ms
+        if(currentUser.followedUser)
+        Speech.speak(`He is following ${currentUser.followedUser.length.toString()} users`, { language: 'en' });
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Pausa de 500 ms
+        Speech.speak(`His name is ${currentUser.nameUser}`, { language: 'en' });
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Pausa de 500 ms
+        Speech.speak(`His description is ${currentUser.descriptionUser}`, { language: 'en' });
+      }
+    } catch (error) {
+      console.error('Error al leer en voz alta:', error);
+    }
+  };
+  
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -306,7 +353,7 @@ const styles = StyleSheet.create({
                       <MaterialCommunityIcons color="black" name="pencil" size={18} />
                     </View>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {}} style={styles.buttonForChanges}>
+                  <TouchableOpacity onPress={() => {navigation.navigate("Settings" as never);}} style={styles.buttonForChanges}>
                     <View style={styles.insideButtonForChanges}>
                       <MaterialCommunityIcons color="black" name="cog" size={18} />
                     </View>

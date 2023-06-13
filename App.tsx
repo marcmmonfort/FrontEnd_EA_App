@@ -22,6 +22,7 @@ import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
 import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactivitieslocation.screen";
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
 import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
+import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
 
 const Stack = createStackNavigator();
 
@@ -115,6 +116,10 @@ export default function App() {
         <Stack.Screen
         name="Activity"
         component={ActivityInfo}
+        />   
+        <Stack.Screen
+        name="Settings"
+        component={SettingsPage}
         />        
         
       </Stack.Navigator>
