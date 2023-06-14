@@ -92,4 +92,26 @@ export class PublicationService {
     }
   }
 
+  static async getListLikes( uuid: string|undefined, numPage:string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.get(API_URL + "/likes/" + uuid + "/" + numPage, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error during load feed:', error);
+      throw error;
+    }
+  }
+
+  static async getPublication( uuid: string|undefined) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.get(API_URL + "/"+ uuid, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error during load feed:', error);
+      throw error;
+    }
+  }
+
 }

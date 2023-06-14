@@ -19,3 +19,14 @@ export interface Publication {
     createdAt:string;
     updatedAt:string;
 }
+
+export interface PublicationLikes {
+    uuid:string;
+    idUser:string;
+    likesPublication?:[UserEntity];
+    textPublication?:string;
+    photoPublication:[string];
+    commentsPublication?:[string];
+    createdAt:string;
+    updatedAt:string;
+}

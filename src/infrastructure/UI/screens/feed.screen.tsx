@@ -3,7 +3,7 @@ import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet, TextInput,
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { SessionService } from "../../services/user/session.service";
 import { PublicationService } from "../../services/publication/publication.service";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React from "react";
@@ -12,7 +12,6 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
-//import { useSpring } from '@react-spring/native';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -36,6 +35,7 @@ export default function FeedScreen() {
   const [numPublications, setNumPublications] = useState<number>(0);
   const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
   const [reloadPublication, setReloadPublication] = useState<string>('');
+  const isFocused = useIsFocused();
 
   // STORIES
   const [userList, setUserList] = useState<UserEntity[]>([]);
@@ -182,29 +182,46 @@ export default function FeedScreen() {
         }
       };
       console.log(recargar);
-      if(recargar == "Inicio" || recargar == "More Publications" ){
-        console.log(numPagePublication);
-        fetchData();
-      }else if(recargar == "New Comment" || recargar == "Delete Like" || recargar == "Update Like"){
-        console.log(reloadPublication);
-        PublicationService.onePublication(reloadPublication)
-        .then((response) => {
-          console.log(response.data);
-          const index = listPublications.findIndex((publication) => publication.uuid === reloadPublication);
-
-          if (index >= 0) {
-            listPublications.splice(index, 1, (response.data));
-            setListPublications([...listPublications]);
-          }
-
-        })
-        .catch(error => {
-          navigation.navigate('NotFoundScreen' as never);
-          console.log(error)
-        });
+      if(isFocused){
+        if(recargar == "Inicio" || recargar == "More Publications" ){
+          console.log(numPagePublication);
+          fetchData();
+        }else if(recargar == "New Comment" || recargar == "Delete Like" || recargar == "Update Like"){
+          console.log(reloadPublication);
+          PublicationService.onePublication(reloadPublication)
+          .then((response) => {
+            console.log(response.data);
+            const index = listPublications.findIndex((publication) => publication.uuid === reloadPublication);
+  
+            if (index >= 0) {
+              listPublications.splice(index, 1, (response.data));
+              setListPublications([...listPublications]);
+            }
+  
+          })
+          .catch(error => {
+            navigation.navigate('NotFoundScreen' as never);
+            console.log(error)
+          });
+        }
+      }else{
+        setCurrentUser(null);
+        setListPublications([]);
+        setNumPagePublication(1);
+        setCommentsVisibility({});
+        setPageComments({});
+        setCommentButton({});
+        setListCommentsPublication({});
+        setShowCommentForm({});
+        setCommentText({});
+        setRecargar('Inicio');
+        setNumPublications(0);
+        setHasLiked({});
+        setReloadPublication('');
       }
       
-    }, [recargar])
+      
+    }, [isFocused, recargar])
   );
   
   const handleGoToScreenUser = (uuid:string) => {
@@ -774,8 +791,11 @@ export default function FeedScreen() {
                 <View style={styles.heartMessageLayout}>
                   <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
-                    <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity  onPress={() => {navigation.navigate("UsersList" as never, { userId: publication.uuid, mode: "likes"} as never);}}>
+                     <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
+                  </TouchableOpacity>
+                  
                   <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
                     <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={28} color="#66fcf1" />
                   </TouchableOpacity>
