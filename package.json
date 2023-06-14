@@ -42,7 +42,6 @@
     "expo-status-bar": "^1.4.4",
     "expo-web-browser": "~12.1.1",
     "google-auth-library": "^8.8.0",
-    "expo-location": "~15.1.1",
     "expo-speech": "^11.1.1",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.4",
