@@ -29,7 +29,6 @@ export default function PublicationUpScreenA() {
   }, []);
 
  
-
   const navigation = useNavigation();
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
 
@@ -148,6 +147,89 @@ export default function PublicationUpScreenA() {
     ios: 'SFNS',
     android: 'SFNS',
   });
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    button: {
+      width: 56,
+      height: 56,
+      borderRadius: 40,
+      backgroundColor: "black",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 4,
+    },
+    iconsInside: {
+      color: '#66fcf1',
+    },
+    button_chat: {
+      width: 56,
+      height: 56,
+      borderRadius: 40,
+      backgroundColor: "#66fcf1",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 4,
+    },
+    iconsInside_chat: {
+      color: 'black',
+    },
+    bottomText: {
+      color: 'white',
+      fontFamily: bodyFont,
+      fontSize: 18,
+      marginTop: 0,
+      marginBottom: 4,
+    },
+    bottomButton: {
+      position: "absolute",
+      bottom: 20,
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: "green",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
+  return (
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        {loading ? (
+          <ActivityIndicator size="large" color="black" />
+        ) : (
+          <>  
+            <Text style={styles.bottomText}>Take a Picture</Text>
+            <TouchableOpacity style={styles.button} onPress={handleCameraPress}>
+              <Ionicons style={styles.iconsInside} name="camera" size={32} />
+            </TouchableOpacity>
+
+            <Text style={styles.bottomText}>Upload a Picture</Text>
+            <TouchableOpacity style={styles.button} onPress={handleGalleryPress}>
+              <Ionicons style={styles.iconsInside} name="image" size={30} />
+            </TouchableOpacity>
+
+            <Text style={styles.bottomText}>Start a Chat</Text>
+            <TouchableOpacity style={styles.button_chat} onPress={handleButtonPress}>
+              <Ionicons style={styles.iconsInside_chat} name="chatbubble-ellipses" size={30} />
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+    </ImageBackground>
+    
+  );
+  
+  /*
   return (
     <View style={styles.container}>
       {loading ? (
@@ -169,6 +251,8 @@ export default function PublicationUpScreenA() {
       </TouchableOpacity>
     </View>
   );
+  */
+
 }
 
 /*const styles = StyleSheet.create({
@@ -197,69 +281,6 @@ export default function PublicationUpScreenA() {
     alignItems: "center",
   },
 });*/
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    backgroundImage: {
-      flex: 1,
-      resizeMode: 'cover',
-    },
-    button: {
-      width: 56,
-      height: 56,
-      borderRadius: 40,
-      backgroundColor: "black",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 4,
-    },
-    iconsInside: {
-      color: '#66fcf1',
-    },
-    bottomText: {
-      color: 'white',
-      //fontFamily: bodyFont,
-      fontSize: 18,
-      marginTop: 0,
-      marginBottom: 4,
-    },
-    bottomButton: {
-      position: "absolute",
-      bottom: 20,
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: "green",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  });
  
 
-  /*return (
-    <ImageBackground source={require('../../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-      <View style={styles.container}>
-        {loading ? (
-          <ActivityIndicator size="large" color="black" />
-        ) : (
-          <>
-            
-            <Text style={styles.bottomText}>Take a Picture</Text>
-            <TouchableOpacity style={styles.button} onPress={handleCameraPress}>
-              <Ionicons style={styles.iconsInside} name="camera" size={32} />
-            </TouchableOpacity>
-
-            <Text style={styles.bottomText}>Upload a Picture</Text>
-            <TouchableOpacity style={styles.button} onPress={handleGalleryPress}>
-              <Ionicons style={styles.iconsInside} name="image" size={30} />
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-    </ImageBackground>
-    
-  );*/
+  

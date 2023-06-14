@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Text, View, StyleSheet, TextInput, Button } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button, ImageBackground } from "react-native";
 import { Socket, io } from "socket.io-client";
 import socketIOClient from "socket.io-client";
+import { useNavigation } from '@react-navigation/native';
 
 import { RouteProp, useRoute } from "@react-navigation/native";
 
@@ -17,8 +18,19 @@ const ChatB = () => {
   const sendChannel = useRef<RTCDataChannel | undefined>(); //Data channel
   const route = useRoute();
   const {roomID}: RouteParams = route.params || {};
-  console.log("Mi Room ID es: "+roomID)
+  console.log("Mi Room ID es: "+roomID);
+  const navigation = useNavigation();
   const [messages, setMessages] = useState([]); // Chats between the peers will be stored here
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+        headerTitle: 'Chat',
+        headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, 
+        headerTitleStyle: { color: '#66fcf1', fontSize: 30 }
+    });
+}, [navigation]);
+
+
   useEffect(() => {
     // Step 1: Connect with the Signal server
 
@@ -250,30 +262,38 @@ const ChatB = () => {
     }
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      alignContent: "center",
+    },
+  
+    textHeader: {
+      fontFamily: "sans-serif",
+      fontSize: 22,
+      alignSelf: "center",
+      marginTop: 20,
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+  });
+
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={(messages) => sendMessage(messages as never)}
-      user={{
-        _id: 1,
-      }}
-    />
+    <ImageBackground source={require('../../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => sendMessage(messages as never)}
+        user={{
+          _id: 1,
+        }}
+      />
+    </ImageBackground>
+
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
-  },
-
-  textHeader: {
-    fontFamily: "sans-serif",
-    fontSize: 22,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-});
 export default ChatB;

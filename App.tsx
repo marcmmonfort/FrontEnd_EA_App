@@ -111,13 +111,11 @@ export default function App() {
         />
         <Stack.Screen
           name="ChatA"
-          options={{ headerShown: false }}
           component={ChatA}
         />
         
       <Stack.Screen
           name="ChatB"
-          options={{ headerShown: false }}
           component={ChatB}
         />
         
