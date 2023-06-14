@@ -10,7 +10,7 @@ import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/n
 
 
 import InCallManager from 'react-native-incall-manager';
-import { RTCView, mediaDevices } from 'react-native-webrtc';
+//import { RTCView, mediaDevices } from 'react-native-webrtc';
 
 
 export default function VideocallScreenB(props:any) {
