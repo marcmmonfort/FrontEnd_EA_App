@@ -21,7 +21,6 @@ import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocal
 import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
-import messaging from '@react-native-firebase/messaging'
 import VideocallScreenB from "./src/infrastructure/UI/screens/Videocall/videocallB.screen";
 
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
@@ -30,6 +29,8 @@ import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
 import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactivitieslocation.screen";
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
 import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
+import videocallAg from "./src/infrastructure/UI/screens/Videocall/videocallAg.screen";
+import ChatbotScreen from "./src/infrastructure/UI/screens/Dialogflow/dialogflow";
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,7 @@ export default function App() {
           options={{ headerShown: false }}
           component={LoginScreen}
         />
+        
         
         <Stack.Screen
           name="ScreenRegisterA"
@@ -108,6 +110,7 @@ export default function App() {
           options={{ headerShown: false }}
           component={VideocallScreenB}
         />
+        
         <Stack.Screen
           name="ChatA"
           options={{ headerShown: false }}
@@ -119,6 +122,7 @@ export default function App() {
           options={{ headerShown: false }}
           component={ChatB}
         />
+         
         
         <Stack.Screen
           name="Register"
