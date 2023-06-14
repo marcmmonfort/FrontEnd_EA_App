@@ -49,7 +49,7 @@ const ChatB = () => {
         console.log("Waiting...")
         //console.log(socketRef.current);
 
-        socketRef.current.on("other user", (userID) => {
+        socketRef.current.on("other user", (userID:any) => {
           console.log('UserID: '+userID)
           callUser(userID);
           otherUser.current = userID;
@@ -63,7 +63,7 @@ const ChatB = () => {
 
     // Signals that both peers have joined the room
     if(socketRef.current){
-    socketRef.current.on("user joined", userID => {
+    socketRef.current.on("user joined", (userID:any) => {
       otherUser.current = userID;
     });
 

@@ -22,6 +22,7 @@ import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging'
+import VideocallScreenB from "./src/infrastructure/UI/screens/Videocall/videocallB.screen";
 
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
@@ -43,7 +44,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-     
+      <Stack.Screen
+          name="VideocallScreenA"
+          options={{ headerShown: false }}
+          component={VideocallScreenA}
+        />
+        <Stack.Screen
+          name="VideocallScreenB"
+          options={{ headerShown: false }}
+          component={VideocallScreenB}
+        />
       
         <Stack.Screen
           name="Splash"
@@ -97,21 +107,19 @@ export default function App() {
           component={HomeScreen}
         />
         
-         <Stack.Screen
+        
+        <Stack.Screen
           name="ChatA"
           options={{ headerShown: false }}
           component={ChatA}
         />
+        
       <Stack.Screen
           name="ChatB"
           options={{ headerShown: false }}
           component={ChatB}
         />
-        <Stack.Screen
-          name="VideocallScreenA"
-          options={{ headerShown: false }}
-          component={VideocallScreenA}
-        />
+        
         <Stack.Screen
           name="Register"
           options={{ headerShown: false }}

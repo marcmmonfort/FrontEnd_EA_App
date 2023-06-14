@@ -2,20 +2,22 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text} from 'react-native-paper';
 import {Button} from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput} from 'react-native-paper';
 
 import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 
+
+
 import InCallManager from 'react-native-incall-manager';
-import { RTCView, mediaDevices } from 'react-native-webrtc';
+//import { RTCView, mediaDevices } from 'react-native-webrtc';
 
 
-export default function CallScreen(props:any) {
+export default function VideocallScreenB(props:any) {
 const navigation = useNavigation();
   let name:any;
   let connectedUser:any;
-  const [offer, setOffer] = useState(null);
+  const [offer, setOffer] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [socketActive, setSocketActive] = useState(false);
   const [calling, setCalling] = useState(false);
@@ -23,30 +25,30 @@ const navigation = useNavigation();
   const [localStream, setLocalStream] = useState({toURL: () => null});
   const [remoteStream, setRemoteStream] = useState({toURL: () => null});
 
-  const [conn, setConn] = useState(new WebSocket('ws://http://147.83.7.158:8080'));
-  const [yourConn, setYourConn] = useState(
-    //change the config as you need
-    new RTCPeerConnection({
+  const [conn, setConn] = useState(new WebSocket('ws://http://147.83.7.158:3000'));
+  function yourConn() {
+    console.log("ayo")
+    const peer = new RTCPeerConnection({
       iceServers: [
         {
-            urls: "stun:147.83.7.158:3478",
-          },
-          {
-            urls: "147.83.7.158:3478",
-            credential: "oursecret",
-            username: "coturn",
-          },
-
+          urls: "stun:147.83.7.158:3478",
+        },
+        {
+          urls: "turn:147.83.7.158:3478",
+          credential: "oursecret",
+          username: "coturn",
+        },
       ],
-    }),
-  );
+    });
+    return peer;
+  } //Puede dar problemas
 
 
   const [callToUsername, setCallToUsername] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
-      AsyncStorage.getItem('userId').then(id => {
+      AsyncStorage.getItem('userId').then((id:any) => {
         console.log(id);
         if (id) {
           setUserId(id);
@@ -146,6 +148,7 @@ const navigation = useNavigation();
      */
 
     let isFront = false;
+    if(mediaDevices && mediaDevices.enumerateDevices){
     mediaDevices.enumerateDevices().then((sourceInfos:any) => {
       let videoSourceId;
       for (let i = 0; i < sourceInfos.length; i++) {
@@ -175,14 +178,17 @@ const navigation = useNavigation();
           setLocalStream(stream);
 
           // setup stream listening
-          stream.getTracks().forEach((track:any) => yourConn.addTrack(track, stream));
+          stream.getTracks().forEach((track:any) => yourConn().addTrack(track, stream));
         })
         .catch(error => {
           // Log error
         });
     });
+  }else{
+    console.log("No devices")
+  }
 
-    yourConn.ontrack = (event:any) => {
+    yourConn().ontrack = (event:any) => {
       console.log('On Track', event);
       if (event.track.kind === 'video') {
         setRemoteStream(event.streams[0]);
@@ -191,7 +197,7 @@ const navigation = useNavigation();
     
 
     // Setup ice handling
-    yourConn.onicecandidate = event => {
+    yourConn().onicecandidate = event => {
       if (event.candidate) {
         send({
           type: 'candidate',
@@ -218,8 +224,8 @@ const navigation = useNavigation();
     console.log('Caling to', callToUsername);
     // create an offer
 
-    yourConn.createOffer().then(offer => {
-      yourConn.setLocalDescription(offer).then(() => {
+    yourConn().createOffer().then(offer => {
+      yourConn().setLocalDescription(offer).then(() => {
         console.log('Sending Ofer');
         console.log(offer);
         send({
@@ -239,11 +245,11 @@ const navigation = useNavigation();
     connectedUser = name;
 
     try {
-      await yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+      await yourConn().setRemoteDescription(new RTCSessionDescription(offer));
 
-      const answer = await yourConn.createAnswer();
+      const answer = await yourConn().createAnswer();
 
-      await yourConn.setLocalDescription(answer);
+      await yourConn().setLocalDescription(answer);
       send({
         type: 'answer',
         answer: answer,
@@ -255,14 +261,14 @@ const navigation = useNavigation();
 
   //when we got an answer from a remote user
   const handleAnswer = (answer:any) => {
-    yourConn.setRemoteDescription(new RTCSessionDescription(answer));
+    yourConn().setRemoteDescription(new RTCSessionDescription(answer));
   };
 
   //when we got an ice candidate from a remote user
   const handleCandidate = (candidate:any) => {
     setCalling(false);
     console.log('Candidate ----------------->', candidate);
-    yourConn.addIceCandidate(new RTCIceCandidate(candidate));
+    yourConn().addIceCandidate(new RTCIceCandidate(candidate));
   };
 
   //hang up
@@ -278,7 +284,7 @@ const navigation = useNavigation();
     connectedUser = null;
     setRemoteStream({toURL: () => null});
 
-    yourConn.close();
+    yourConn().close();
     // yourConn.onicecandidate = null;
     // yourConn.onaddstream = null;
   };
@@ -286,7 +292,7 @@ const navigation = useNavigation();
   const onLogout = () => {
     // hangUp();
 
-    AsyncStorage.removeItem('userId').then(res => {
+    AsyncStorage.removeItem('userId').then((res:any) => {
       navigation.navigate('VideocallScreenA' as never);
     });
   };
@@ -297,11 +303,11 @@ const navigation = useNavigation();
       connectedUser = offer.name;
   
       try {
-        await yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+        await yourConn().setRemoteDescription(new RTCSessionDescription(offer));
   
-        const answer = await yourConn.createAnswer();
+        const answer = await yourConn().createAnswer();
   
-        await yourConn.setLocalDescription(answer);
+        await yourConn().setLocalDescription(answer);
   
         send({
           type: 'answer',
@@ -336,7 +342,7 @@ const navigation = useNavigation();
           label="Enter Friends Id"
           mode="outlined"
           style={{marginBottom: 7}}
-          onChangeText={text => setCallToUsername(text)}
+          onChangeText={text => setCallToUsername(text as any)}
         />
         <Button
           mode="contained"
@@ -352,14 +358,12 @@ const navigation = useNavigation();
       <View style={styles.videoContainer}>
         <View style={[styles.videos, styles.localVideos]}>
           <Text>Your Video</Text>
-          <RTCView streamURL={localStream.toURL()} style={styles.localVideo} />
+          <RTCView streamURL={localStream.toURL() || ''} style={styles.localVideo} />
         </View>
         <View style={[styles.videos, styles.remoteVideos]}>
           <Text>Friends Video</Text>
-          <RTCView
-            streamURL={remoteStream.toURL()}
-            style={styles.remoteVideo}
-          />
+          <RTCView streamURL={remoteStream.toURL() || ''} style={styles.remoteVideo} />
+
         </View>
       </View>
     </View>
@@ -404,5 +408,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     height: '100%',
     width: '100%',
+  },
+  btnContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 60,
   },
 });
