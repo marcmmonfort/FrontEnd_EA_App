@@ -4,6 +4,7 @@ import { ImageBackground } from "react-native";
 import { SessionService } from "../../services/user/session.service";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Button } from "react-native-paper";
 
 
 const SettingsPage = () => {
@@ -56,7 +57,6 @@ const SettingsPage = () => {
 
   return (
     <View style={styles.container}>
-        <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
         <View style={styles.settingsContainer}>
           <Text style={styles.title}>Audio Description</Text>
           <Text>Enable audio description</Text>
@@ -65,7 +65,6 @@ const SettingsPage = () => {
             onValueChange={handleToggleAudioDescription}
           />
         </View>
-      </ImageBackground>
     </View>
   );
 };
