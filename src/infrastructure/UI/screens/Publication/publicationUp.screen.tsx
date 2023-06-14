@@ -139,6 +139,7 @@ export default function PublicationUpScreenA() {
     // Navegar hacia otra pantalla aquí
     navigation.navigate("ChatA" as never);
   };
+
   const titleFont = Platform.select({
     ios: 'Rafaella',
     android: 'Rafaella',
@@ -249,6 +250,7 @@ export default function PublicationUpScreenA() {
       <TouchableOpacity style={styles.bottomButton} onPress={handleButtonPress}>
         <Ionicons name="arrow-forward" size={32} color="white" />
       </TouchableOpacity>
+
     </View>
   );
   */
