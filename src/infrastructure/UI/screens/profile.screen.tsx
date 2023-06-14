@@ -16,6 +16,7 @@ import Filter from 'bad-words';
 // BEREAL
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { PublicationService } from "../../services/publication/publication.service";
+import ShareComponent from "../components/search/search";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -339,6 +340,9 @@ const styles = StyleSheet.create({
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
+        <View>
+        <ShareComponent url={"http://147.83.7.158:5432/user/" + currentUser?.uuid} />
+        </View>
         <View style={styles.profileContour}>
           {currentUser && (
             <View style={styles.profileContainer}>
