@@ -8,6 +8,8 @@ import CalendarScreen from "../components/calendar/calendar";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
 import { useNavigation } from "@react-navigation/native";
+import { Card } from 'react-native-paper';
+
 
 
 function CalendarEventsScreen() {
