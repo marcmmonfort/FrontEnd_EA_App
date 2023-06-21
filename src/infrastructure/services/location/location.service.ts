@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthHeaderService } from "../user/authHeaders.service";
+import { LocationEntity } from "../../../domain/location/location.entity";
 
 const API_URL = "http://147.83.7.158:5432/location";
 
@@ -52,6 +53,18 @@ export class LocationService {
         console.error("Error when obtaining person:", error);
         throw error;
       }
+    }
+  }
+
+  static async createLocation(location: LocationEntity) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.post(API_URL + "/add", location, { headers: token });
+      console.log("try response " + response)
+      return response;
+    } catch (error) {
+      console.error('Error during the creation of the location: ', error);
+      throw error;
     }
   }
 }

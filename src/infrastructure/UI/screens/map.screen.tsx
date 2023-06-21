@@ -9,6 +9,7 @@ import * as Font from 'expo-font';
 import * as Location from 'expo-location';
 import { LocationService } from "../../../infrastructure/services/location/location.service";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -148,6 +149,7 @@ const MapScreen = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      justifyContent: 'center',
     },
     map: {
       width: '100%',
@@ -191,7 +193,28 @@ const MapScreen = () => {
       fontSize: 14,
       marginBottom: 0,
     },
-    selectedLocationItem: {},
+    add_location_button: {
+      position: 'absolute',
+      bottom: 0,
+      left: '40%',
+      right: '40%',
+      zIndex: 1,
+      padding: 0,
+      alignContent: 'center',
+    },
+    plus_icon_location: {
+      width: '100%',
+      height: 26,
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      alignItems: "center",
+      borderRadius: 12,
+      flexDirection: "row",
+      textAlign: 'center',
+      marginBottom: 10,
+    },
+    selectedLocationItem: {}
   });
 
   return (
@@ -250,6 +273,13 @@ const MapScreen = () => {
             </TouchableOpacity>
           ))}
         </View>
+      </View>
+      <View style={styles.add_location_button}>
+        <TouchableOpacity onPress={() => {navigation.navigate("NewLocation" as never)}}>
+          <View style={styles.plus_icon_location}>
+            <MaterialCommunityIcons color="yellow" name="plus" size={22} />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

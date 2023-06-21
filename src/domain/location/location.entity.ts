@@ -1,5 +1,5 @@
 export interface LocationEntity{
-    uuid:string;
+    uuid?:string;
     nameLocation:string;
     latLocation:string;
     lonLocation:string;

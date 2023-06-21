@@ -230,7 +230,7 @@ export default function CreateActivityScreen() {
         } else {
             Alert.alert("Warning", "Complete all the field to create the activity!");
         }
-      };
+    };
 
     const handleShowDatePicker = () => {
         setShowDatePicker(true);
