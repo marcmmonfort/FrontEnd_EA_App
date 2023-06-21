@@ -12,7 +12,7 @@ const ButtonGradientBirthdate = ({ onPress, containerStyle, buttonStyle, textSty
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>Birthdate</Text>
+        <Text style={[styles.text, textStyle]}>Date</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

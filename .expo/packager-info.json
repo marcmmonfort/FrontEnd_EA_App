@@ -1,7 +1,7 @@
 {
-  "expoServerNgrokUrl": "https://q4-cap.oscarr-bd.my-project.exp.direct",
-  "packagerNgrokUrl": "https://q4-cap.oscarr-bd.my-project.exp.direct",
-  "ngrokPid": 7812,
+  "expoServerNgrokUrl": "https://q4-cap.anonymous.frontend-ea-app.exp.direct",
+  "packagerNgrokUrl": "https://q4-cap.anonymous.frontend-ea-app.exp.direct",
+  "ngrokPid": 234460,
   "expoServerPort": 19000,
   "packagerPort": 19000,
   "packagerPid": null,

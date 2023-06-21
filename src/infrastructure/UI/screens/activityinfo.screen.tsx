@@ -97,7 +97,7 @@ export default function ActivityInfo() {
             flex: 1,
             backgroundColor: "transparent",
             alignItems: "center",
-            marginTop: 200,
+            marginTop: 20,
             justifyContent: "center", 
         },
         inside_container: {
@@ -230,7 +230,7 @@ export default function ActivityInfo() {
                     <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
                   </View>
                   <ScrollView horizontal>
-                    {listPublicationsActivity.map((publication, index) => (
+                    {listPublicationsActivity.reverse().map((publication, index) => (
                       <View key={index} style={styles.post_complete}>
                         <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
                         <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>

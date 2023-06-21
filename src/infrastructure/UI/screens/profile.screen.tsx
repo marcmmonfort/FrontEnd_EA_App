@@ -11,8 +11,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import * as Speech from 'expo-speech';
 import Filter from 'bad-words';
 
-
-
 // BEREAL
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { PublicationService } from "../../services/publication/publication.service";
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 38,
+    marginTop: 32,
   },
   titleContainer: {
     marginBottom: 20,
@@ -334,71 +332,78 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginLeft: 0,
     flex: 1,
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  share_style: {
+    marginTop: -60,
   },
 });
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-      <View style={styles.container}>
-        <View>
-        <ShareComponent url={"http://147.83.7.158:5432/user/" + currentUser?.uuid} />
-        </View>
-        <View style={styles.profileContour}>
-          {currentUser && (
-            <View style={styles.profileContainer}>
-              <View style={styles.profile}>
-                <View style={styles.usernameAndVerified}>
-                  <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
-                  <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
-                </View>
-                <View style={styles.profileUserButtons}>
-                  <TouchableOpacity onPress={() => {navigation.navigate("Edit" as never);}} style={styles.buttonForChanges}>
-                    <View style={styles.insideButtonForChanges}>
-                      <MaterialCommunityIcons color="black" name="pencil" size={18} />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {navigation.navigate("Settings" as never);}} style={styles.buttonForChanges}>
-                    <View style={styles.insideButtonForChanges}>
-                      <MaterialCommunityIcons color="black" name="cog" size={18} />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.profileImage}>
-                  <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
-                </View>
-                <View style={styles.profileStats}>
-                  <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
-                    <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
-                    <Text style={styles.textFoll}>Followers</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
-                    <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
-                    <Text style={styles.textFoll}>Following</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.profileBio}>
-                  <Text style={styles.titleNameDescription}>Name</Text>
-                  <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
-                  <Text style={styles.titleNameDescription}>Description</Text>
-                  <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
-                </View>
-              </View>
-              <TouchableOpacity style={styles.buttonLogOut} onPress={logOutButtonFunction}>
-                <MaterialCommunityIcons color="#3897f0" name="logout" size={24} />
-              </TouchableOpacity>
-              <ScrollView style={styles.scrow_style} horizontal>
-                {listOwnPublications.map((publication, index) => (
-                  <View key={index} style={styles.post_complete}>
-                    <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
-                    <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>
-                    <Text style={styles.text_post}>{publication.textPublication}</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.profileContour}>
+            {currentUser && (
+              <View style={styles.profileContainer}>
+                <View style={styles.profile}>
+                  <View style={styles.usernameAndVerified}>
+                    <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
+                    <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
                   </View>
-                ))}
-              </ScrollView>
-            </View>
-          )}
+                  <View style={styles.profileUserButtons}>
+                    <TouchableOpacity onPress={() => {navigation.navigate("Edit" as never);}} style={styles.buttonForChanges}>
+                      <View style={styles.insideButtonForChanges}>
+                        <MaterialCommunityIcons color="black" name="pencil" size={18} />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {navigation.navigate("Settings" as never);}} style={styles.buttonForChanges}>
+                      <View style={styles.insideButtonForChanges}>
+                        <MaterialCommunityIcons color="black" name="cog" size={18} />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.profileImage}>
+                    <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
+                  </View>
+                  <View style={styles.profileStats}>
+                    <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
+                      <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
+                      <Text style={styles.textFoll}>Followers</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
+                      <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
+                      <Text style={styles.textFoll}>Following</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.profileBio}>
+                    <Text style={styles.titleNameDescription}>Name</Text>
+                    <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
+                    <Text style={styles.titleNameDescription}>Description</Text>
+                    <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
+                  </View>
+                </View>
+                <View style={styles.share_style}>
+                  <ShareComponent url={"http://147.83.7.158:5432/user/" + currentUser?.uuid} />
+                </View>
+                <TouchableOpacity style={styles.buttonLogOut} onPress={logOutButtonFunction}>
+                  <MaterialCommunityIcons color="#3897f0" name="logout" size={24} />
+                </TouchableOpacity>
+                <ScrollView style={styles.scrow_style} horizontal>
+                  {listOwnPublications.reverse().map((publication, index) => (
+                    <View key={index} style={styles.post_complete}>
+                      <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                      <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>
+                      <Text style={styles.text_post}>{publication.textPublication}</Text>
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
 
   );

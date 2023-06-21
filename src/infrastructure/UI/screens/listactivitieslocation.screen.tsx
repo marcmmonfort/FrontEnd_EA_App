@@ -87,6 +87,15 @@ export default function ActivitiesLocationList() {
         alignItems: "center",
         justifyContent: "center",
     },
+    container_nothing: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: "transparent",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 20,
+        marginBottom: 10,
+    },
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',
@@ -132,12 +141,14 @@ export default function ActivitiesLocationList() {
       color: 'white',
       fontFamily: bodyFont,
       fontSize: 16,
+      marginRight: 4,
+      marginLeft: 4,
     },
     shock_icon: {
       width: 36,
       height: 36,
       marginBottom: 6,
-      marginTop: -20,
+      marginTop: 0,
     },
     participant_profile_image: {
       width: 46,
@@ -155,6 +166,16 @@ export default function ActivitiesLocationList() {
       borderRadius: 40,
       marginRight: 10,
     },
+    plus_icon_activity: {
+      width: 160,
+      height: 46,
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      alignItems: "center",
+      borderRadius: 40,
+      flexDirection: "row",
+    },
     scroll_profiles: {
       paddingLeft: 0,
       width: "100%",
@@ -168,7 +189,15 @@ export default function ActivitiesLocationList() {
       width: '100%',
       paddingRight: 10,
       paddingLeft: 10,
-    }
+    },
+    add_activity_container: {
+      flex: 1,
+      width: '100%',
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 0,
+    },
     });
 
     const getUserProfilePhoto = async (userId: string) => {
@@ -224,44 +253,54 @@ export default function ActivitiesLocationList() {
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
-        <ScrollView style={styles.scroll_vertical}>
+      <ScrollView style={styles.scroll_vertical}>
         {activities.length > 0 ? (
           activities.map((activity) => (
-            <TouchableOpacity key={activity.uuid} onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
-              <View style={styles.activity_container}>
-                <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
-                <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
-                <Text style={styles.text_activity_date}>
-                  {new Date(activity.dateActivity).getDate()}.
-                  {new Date(activity.dateActivity).getMonth() + 1}.
-                  {new Date(activity.dateActivity).getFullYear()}
-                </Text>
-                <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
-                <ScrollView style={styles.scroll_profiles} horizontal>
-                  <View style={styles.plus_icon}>
-                    <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
-                  </View>
-                  {activity.uuid &&
-                    userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
-                      <TouchableOpacity key={index} onPress={() => {
-                        const userId = activity.participantsActivity?.[index];
-                        if (userId) {
-                          handleGoToScreenUser(userId);
-                        }
-                      }}>
-                        <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined} />
-                      </TouchableOpacity>
-                    ))}
-                </ScrollView>
-              </View>
-            </TouchableOpacity>
+              <TouchableOpacity key={activity.uuid} onPress={() => activity.uuid && handleGoToActivity(activity.uuid)}>
+                <View style={styles.activity_container}>
+                  <Text style={styles.text_activity_name}>{activity.nameActivity}</Text>
+                  <Text style={styles.text_activity_description}>{activity.descriptionActivity}</Text>
+                  <Text style={styles.text_activity_date}>
+                    {new Date(activity.dateActivity).getDate()}.
+                    {new Date(activity.dateActivity).getMonth() + 1}.
+                    {new Date(activity.dateActivity).getFullYear()}
+                  </Text>
+                  <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
+                  <ScrollView style={styles.scroll_profiles} horizontal>
+                    <View style={styles.plus_icon}>
+                      <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
+                    </View>
+                    {activity.uuid &&
+                      userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
+                        <TouchableOpacity key={index} onPress={() => {
+                          const userId = activity.participantsActivity?.[index];
+                          if (userId) {
+                            handleGoToScreenUser(userId);
+                          }
+                        }}>
+                          <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined} />
+                        </TouchableOpacity>
+                      ))}
+                  </ScrollView>
+                </View>
+              </TouchableOpacity>
+            
           ))
         ) : (
-          <View style={styles.container}>
+          <View style={styles.container_nothing}>
             <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }} />
             <Text style={styles.text_activity_none}>What a boring place!</Text>
           </View>
         )}
+        <View style={styles.add_activity_container}>
+          <TouchableOpacity onPress={() => {navigation.navigate("CreateActivity" as never, {uuid} as never)}}>
+            <View style={styles.plus_icon_activity}>
+              <MaterialCommunityIcons color="yellow" name="flash" size={20} />
+              <Text style={styles.text_activity_none}>New Activity</Text>
+              <MaterialCommunityIcons color="yellow" name="flash" size={20} />
+            </View>
+          </TouchableOpacity>
+        </View>
         </ScrollView>
       </View>
     </ImageBackground>

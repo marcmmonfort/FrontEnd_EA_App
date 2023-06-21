@@ -149,7 +149,6 @@ export default function ScreenRegisterD() {
       fontWeight:'bold',
       backgroundColor: "#66fcf1",
       borderWidth: 1,
-      borderColor: "white",
       borderRadius: 14,
       marginTop: 20,
       marginBottom: 0,
@@ -175,6 +174,12 @@ export default function ScreenRegisterD() {
     requiredText: {
       color: 'yellow',
       marginTop: 20,
+      fontFamily: bodyFont,
+    },
+    birthdate_text: {
+      color: 'white',
+      marginTop: 20,
+      marginBottom: -16,
       fontFamily: bodyFont,
     },
     textInput: {
@@ -253,6 +258,7 @@ export default function ScreenRegisterD() {
         <Text style={styles.registerTitle}>Register</Text>
         <Text style={styles.stepTitle}>Step 4</Text>
         <View style={styles.formContainer}>
+          <Text style={styles.birthdate_text}>BirthDate</Text>
           <View style={styles.buttonContainerB}>
             <ButtonGradientBirthdate onPress={handleShowDatePicker} />
           </View>
