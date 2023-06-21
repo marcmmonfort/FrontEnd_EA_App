@@ -30,6 +30,7 @@ import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactiviti
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
 import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
 import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
+import VideocallAg from "./src/infrastructure/UI/screens/Videocall/videocallAg.screen";
 
 const Stack = createStackNavigator();
 
@@ -45,7 +46,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
       
-      
+
+      <Stack.Screen
+          name="VideocallAg"
+          options={{ headerShown: false }}
+          component={VideocallAg}
+        /> 
         <Stack.Screen
           name="Splash"
           options={{ headerShown: false }}
