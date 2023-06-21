@@ -3,7 +3,7 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRef } from "react";
 import { Platform } from "react-native";
@@ -140,58 +140,97 @@ export default function CreateActivityScreen() {
         },
         map: {
             width: 300,
-            height: 300,
+            height: 200,
+            borderRadius: 12,
         },
         map_container: {
             alignContent: 'center',
             justifyContent: 'center',
             alignItems: 'center',
             width: 300,
-            height: 300,
+            height: 200,
             display: 'flex',
             marginTop: 20,
             borderRadius: 20,
         },
+        plus_icon_activity: {
+            width: 160,
+            height: 46,
+            justifyContent: "center",
+            alignContent: "center",
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            alignItems: "center",
+            borderRadius: 40,
+            marginTop: 20,
+            flexDirection: "row",
+        },
+        text_activity_none: {
+            color: 'white',
+            fontFamily: bodyFont,
+            fontSize: 16,
+            marginRight: 4,
+            marginLeft: 4,
+        },
+        start_text: {
+            color: 'white',
+            fontFamily: bodyFont,
+            fontSize: 16,
+            marginTop: 18,
+            marginBottom: -16,
+            marginRight: 20,
+            width: 140,
+            textAlign: 'center',
+        },
+        end_text: {
+            color: 'white',
+            fontFamily: bodyFont,
+            fontSize: 16,
+            marginTop: 18,
+            marginBottom: -16,
+            width: 140,
+            textAlign: 'center',
+        },
     });
 
     const createNewActivity = async () => {
-        try {
+        const startTime = new Date(`2000-01-01T${startHour}:00`);
+        const endTime = new Date(`2000-01-01T${endHour}:00`);
+
+        const userId = await SessionService.getCurrentUser();
+
+        console.log("---> CREATE ACTIVITY: " + userId);
+        console.log("---> CREATE ACTIVITY: " + endTime);
+        console.log("---> CREATE ACTIVITY: " + startTime);
+
+        console.log("FIELDS: (1) " + userId +  " (2) " + nameActivity +  " (3) " + dateActivity +  " (4) " + startHour +  " (5) " + endHour +  " (6) " + uuid +  " (7) " + descriptionActivity +  " (8) " + privacyActivity +  " (9) " + roleActivity);
+
+        if (userId && nameActivity && dateActivity && startHour && endHour && uuid && descriptionActivity && privacyActivity && roleActivity && (endTime > startTime)) {
             const newActivity = {
-                nameActivity: 'Nombre de la actividad',
-                creatorActivity: 'Creador de la actividad',
-                participantsActivity: ['Participante 1', 'Participante 2'],
-                publicationActivity: ['Publicación 1', 'Publicación 2'],
-                dateActivity: 'Fecha de la actividad',
-                hoursActivity: ['Hora 1', 'Hora 2'],
-                idLocation: 'ID de la ubicación',
-                descriptionActivity: 'Descripción de la actividad',
-                privacyActivity: true,
-                roleActivity: 'verificado' as const, // Asigna uno de los valores permitidos: 'common', 'verificado' o 'empresa'
+                nameActivity: nameActivity,
+                creatorActivity: userId,
+                participantsActivity: [userId],
+                dateActivity: dateActivity,
+                hoursActivity: [startHour, endHour],
+                idLocation: uuid,
+                descriptionActivity: descriptionActivity,
+                privacyActivity: JSON.parse(privacyActivity),
+                roleActivity: roleActivity as 'common' | 'verificado' | 'empresa',
               };
-      
+
             const response = await ActivityService.createActivity(newActivity);
-      
+
             if (response) {
-                navigation.navigate('ActivitiesLocation' as never);
+                navigation.navigate('HomeScreen' as never);
             } else {
                 console.error('Error creating a new activity!');
             }
 
-        } catch (error) {
-            console.error('Error creating a new activity: ', error);
+        } else if (endTime <= startTime) {
+            Alert.alert("Warning", "The ending time must be later than the starting time!");
+        } else {
+            Alert.alert("Warning", "Complete all the field to create the activity!");
         }
       };
-
-    /*
-    nameActivity: string; ---> TEXT INPUT
-    creatorActivity: string;
-    dateActivity: string;
-    hoursActivity: string[];
-    idLocation?: string; ---> LO SACAMOS DEL uuid QUE SE NOS PASA.
-    descriptionActivity?: string; ---> TEXT INPUT
-    privacyActivity: boolean; ---> PICKER
-    roleActivity: "verificado" | "common" | "empresa"; ---> PICKER
-    */
 
     const handleShowDatePicker = () => {
         setShowDatePicker(true);
@@ -201,7 +240,7 @@ export default function CreateActivityScreen() {
         setShowDatePicker(false);
         if (selectedDate) {
           setSelectedDate(selectedDate);
-          setBirthdateUser(selectedDate.toISOString());
+          setDateActivity(selectedDate.toISOString());
         }
     };
 
@@ -218,6 +257,8 @@ export default function CreateActivityScreen() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [birthdateUser, setBirthdateUser] = useState("");
     const mapRef = useRef<MapView>(null);
+    const fireIcon = require('../../../../assets/location_fire.png');
+    const [location, setLocation] = useState<LocationEntity>();
 
     useEffect(() => {
         const getCurrentLocation = async () => {
@@ -226,6 +267,7 @@ export default function CreateActivityScreen() {
                     const response = await LocationService.getLocation(uuid.toString());
                     if (response){
                         const activityLocation = response.data as LocationEntity;
+                        setLocation(activityLocation);
                         const latitude = parseFloat(activityLocation.latLocation);
                         const longitude = parseFloat(activityLocation.lonLocation);
                         const region = {
@@ -252,23 +294,16 @@ export default function CreateActivityScreen() {
                 <Text style={styles.title}>New Acitivity</Text>
                 <StyledTextInputs style={styles.input} placeholder="Name of the Activity" value={nameActivity} onChangeText={setNameActivity}/>
                 <StyledTextInputs style={styles.input} placeholder="Description" value={descriptionActivity} onChangeText={setDescriptionActivity}/>
-                <View style={styles.picker_row}>
-                    <Picker selectedValue={roleActivity} style={styles.picker_left} itemStyle={styles.pickerItem} onValueChange={(roleActivity) => setRoleActivity(roleActivity)}>
-                        <Picker.Item label="Verified" value="verificado" />
-                        <Picker.Item label="Common" value="common" />
-                        <Picker.Item label="Business" value="empresa" />
-                    </Picker>
-                    <Picker selectedValue={privacyActivity} style={styles.picker_right} itemStyle={styles.pickerItem} onValueChange={(privacyActivity) => setPrivacyActivity(privacyActivity)}>
-                        <Picker.Item label="Private" value="true" />
-                        <Picker.Item label="Public" value="false" />
-                    </Picker>
-                </View>
                 <View style={styles.buttonContainerB}>
                     <ButtonGradientBirthdate onPress={handleShowDatePicker}/>
                 </View>
                 {showDatePicker && (
                     <DateTimePicker value={selectedDate} mode="date" display="default" style={styles.dateTimePicker} onChange={handleDateChange}/>
                 )}
+                <View style={styles.picker_row}>
+                    <Text style={styles.start_text}>Starting Time</Text>
+                    <Text style={styles.end_text}>Ending Time</Text>
+                </View>
                 <View style={styles.picker_row}>
                     <Picker selectedValue={startHour} style={styles.picker_left} itemStyle={styles.pickerItem} onValueChange={(startHour) => setStartHour(startHour)}>
                         <Picker.Item label="00:00" value="00:00" />
@@ -373,8 +408,36 @@ export default function CreateActivityScreen() {
                 </View>
                 <View style={styles.map_container}>
                     <MapView style={styles.map} ref={mapRef}>
+                    {location && (
+                        <Marker
+                            coordinate={{
+                            latitude: parseFloat(location.latLocation),
+                            longitude: parseFloat(location.lonLocation),
+                            }}
+                            image={fireIcon}
+                            style={{ width: 40, height: 40 }}
+                        />
+                        )}
                     </MapView>
                 </View>
+                <View style={styles.picker_row}>
+                    <Picker selectedValue={roleActivity} style={styles.picker_left} itemStyle={styles.pickerItem} onValueChange={(roleActivity) => setRoleActivity(roleActivity)}>
+                        <Picker.Item label="Verified" value="verificado" />
+                        <Picker.Item label="Common" value="common" />
+                        <Picker.Item label="Business" value="empresa" />
+                    </Picker>
+                    <Picker selectedValue={privacyActivity} style={styles.picker_right} itemStyle={styles.pickerItem} onValueChange={(privacyActivity) => setPrivacyActivity(privacyActivity)}>
+                        <Picker.Item label="Private" value="true" />
+                        <Picker.Item label="Public" value="false" />
+                    </Picker>
+                </View>
+                <TouchableOpacity onPress={() => createNewActivity()}>
+                    <View style={styles.plus_icon_activity}>
+                        <MaterialCommunityIcons color="yellow" name="flash" size={20} />
+                        <Text style={styles.text_activity_none}>Create Activity</Text>
+                        <MaterialCommunityIcons color="yellow" name="flash" size={20} />
+                    </View>
+                </TouchableOpacity>
             </View>
         </ScrollView>
         </ImageBackground>
