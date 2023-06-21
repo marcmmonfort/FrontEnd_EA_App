@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 import { Agenda, AgendaEntry, Calendar } from "react-native-calendars";
-import { format, parseISO } from 'date-fns';
+import { endOfWeek, format, isWithinInterval, parseISO, startOfWeek } from 'date-fns';
 import { Card } from "react-native-paper";
 import ActivityDetailsModal from "../activityDetails/activityModal";
 import { Activity } from "../../../../domain/activity/activity.entity";
+import { RefreshControl } from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -19,74 +20,90 @@ interface CustomAgendaSchedule {
 
 const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [items, setItems] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    loadItems();
+  }, []);
 
   const handleDayPress = (date: { dateString: string }) => {
-    const clickedActivity = activities.find(
-      (activity) => format(parseISO(activity.dateActivity.toDateString()), 'yyyy-MM-dd') === date.dateString
-    );
-    if (clickedActivity) {
-      setSelectedActivity(clickedActivity);
-    } else {
-      setSelectedActivity(null);
-    }
+    console.log("handleDayPress");
+    const selectedDate = date.dateString;
+    console.log("selectedDate", selectedDate);
+    const activitiesOfWeek = activities.filter((activity) => {
+      const formattedDate = format(new Date(activity.dateActivity), 'yyyy-MM-dd');
+      const selectedWeekStart = startOfWeek(new Date(selectedDate));
+      const selectedWeekEnd = endOfWeek(new Date(selectedDate));
+      const activityDate = new Date(formattedDate);
+      console.log("selectedWeekEnd", selectedWeekEnd);
+      return isWithinInterval(activityDate, { start: selectedWeekStart, end: selectedWeekEnd });
+    });
+  
+    setSelectedActivity(activitiesOfWeek.length > 0 ? activitiesOfWeek[0] : null);
+  };
+  
+  
+  const loadItems = () => {
+    setTimeout(() => {
+      const newItems: { [key: string]: AgendaEntry[] } = {};
+      
+      activities.forEach((activity) => {
+        const formattedDate = format(new Date(activity.dateActivity), 'yyyy-MM-dd');
+        
+        if (!newItems[formattedDate]) {
+          newItems[formattedDate] = [];
+        }
+        
+        newItems[formattedDate].push({
+          name: activity.nameActivity,
+          height: 0,
+          day: formattedDate,
+        });
+      });
+      
+      setItems(newItems);
+      setIsLoading(false);
+    }, 1000);
   };
   
 
-  const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-    const item: Activity | undefined = activities.find(
-      (activity) => format(activity.dateActivity, 'yyyy-MM-dd') === reservation.day
-    );
-  
-    if (item) {
-      console.log("item found");
+
+  const renderItem = (item) => {
+    console.log("renderItem", items);
+   
       return (
-        <TouchableOpacity style={styles.item} onPress={() => setSelectedActivity(item)}>
+        <TouchableOpacity style={styles.item} onPress={() => setSelectedActivity(activities[0])}>
           <Card>
             <Card.Content>
               <View>
-                <Text>{item.nameActivity}</Text>
+                <Text>{item.name}</Text>
               </View>
             </Card.Content>
           </Card>
         </TouchableOpacity>
       );
     }
-    console.log("item found");
-    return <View style={styles.item}>No hay actividades</View>;
-  };
   
-
-  const convertedAgendaItems = activities.reduce((items, activity) => {
-    const formattedDate = format(parseISO(activity.dateActivity.toDateString()), 'yyyy-MM-dd');
-
-    console.log(formattedDate);
-    if (items[formattedDate]) {
-      items[formattedDate].push({
-        name: activity.nameActivity,
-        height: 0,
-        day: formattedDate,
-      });
-    } else {
-      items[formattedDate] = [{
-        name: activity.nameActivity,
-        height: 0,
-        day: formattedDate,
-      }];
-    }
-
-    return items;
-  }, {} as CustomAgendaSchedule);
-
   return (
     <View style={styles.container}>
-      <Agenda
-        items={convertedAgendaItems}
-        renderItem={renderItem}
-        onDayPress={handleDayPress}
-        showClosingKnob={true}
-        refreshing={false}
-        style={styles.agenda}
-      />
+      {isLoading ? ( // Verificar isLoading
+        <Text>Cargando...</Text> // Mostrar indicador de carga o mensaje
+      ) : (
+        <Agenda
+          items={items}
+          loadItemsForMonth={loadItems}
+          renderItem={renderItem}
+          //selected={'2023-06-20'}
+          showOnlySelectedDayItems={true}
+          refreshControl={<RefreshControl refreshing={false} />} 
+          showClosingKnob={true}
+          refreshing={false}
+          //onDayPress={handleDayPress}
+          style={styles.agenda}
+        />
+      )}
+      
 
       {selectedActivity && (
         <ActivityDetailsModal
@@ -116,5 +133,5 @@ const styles = StyleSheet.create({
     marginTop: 17,
   },
 });
-
+ 
 export default CalendarScreen;
