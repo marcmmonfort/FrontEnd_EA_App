@@ -3,7 +3,7 @@ import { AuthHeaderService } from "../user/authHeaders.service";
 import { CommentEntity } from "../../../domain/comment/comment.entity";
 
 
-const  API_URL = "http://147.83.7.158:5432/comment";
+const  API_URL = "https://api.lplan.es/comment";
 
 export class CommentService {
   

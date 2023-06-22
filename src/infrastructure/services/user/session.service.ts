@@ -2,7 +2,7 @@ import axios from "axios";
 import { AuthEntity, UserAuthEntity } from "../../../domain/user/user.entity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://147.83.7.158:5432/";
+const API_URL = "ttps://api.lplan.es/";
 
 export class SessionService {
   static getVoiceControl() {
