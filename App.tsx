@@ -19,7 +19,9 @@ import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/pu
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
 import CalendarEventsScreen from "./src/infrastructure/UI/screens/calendarevents.screen";
+import CreateActivity from "./src/infrastructure/UI/screens/createActivity.screen";
 import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
+
 
 const Stack = createStackNavigator();
 
@@ -101,6 +103,10 @@ export default function App() {
         <Stack.Screen
         name="CalendarEventsScreen"
         component={CalendarEventsScreen}
+          />
+        <Stack.Screen
+        name="CreateActivity"
+        component={CreateActivity}
           />
         <Stack.Screen
         name="NotFoundScreen"

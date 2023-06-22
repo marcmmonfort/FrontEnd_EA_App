@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthHeaderService } from "../user/authHeaders.service";
 
-const API_URL = "http://147.83.7.158:5432/location";
+const API_URL = "https://api.lplan.es/location";
 
 export class LocationService {
   static async getLocations() {
@@ -10,7 +10,7 @@ export class LocationService {
     if (token) {
       try {
         const response = await axios.get(
-          "http://147.83.7.158:5432/locations/all",
+          "https://api.lplan.es/locations/all",
           {
             headers: token,
           }

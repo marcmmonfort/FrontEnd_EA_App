@@ -282,7 +282,7 @@ export default function UserScreen() {
                 </View>
                 <View style={styles.profileImage}>
                     <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
-                  </View>
+                </View>
                 <View style={styles.profileStats}>
                   <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
                     <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>

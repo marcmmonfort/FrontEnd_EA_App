@@ -4,7 +4,7 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import { ActivityEntity } from "../../../domain/activity/activity.entity";
 
 
-const  API_URL = "http://147.83.7.158:5432/activity";
+const  API_URL = "https://api.lplan.es/activity";
 
 export class ActivityService {
   
