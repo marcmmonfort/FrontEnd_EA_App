@@ -94,7 +94,6 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
           items={items}
           loadItemsForMonth={loadItems}
           renderItem={renderItem}
-          //selected={'2023-06-20'}
           showOnlySelectedDayItems={true}
           refreshControl={<RefreshControl refreshing={false} />} 
           showClosingKnob={true}

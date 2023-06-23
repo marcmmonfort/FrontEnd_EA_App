@@ -117,123 +117,119 @@ function CalendarEventsScreen() {
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <SafeAreaView style={styles.container}>
-
-      <View style={styles.container}>
         <View style={styles.buttonsCalendar}>
           <TouchableOpacity
             style={selectedTimetable === 'My Timetable' ? styles.activeButton : styles.button}
             onPress={() => { handleTimetableChange('My Timetable'); setSelectedUser(null); }}
           >
-            <Text>{'Own'}</Text>
+            <Text>Own</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={selectedTimetable === 'Timetable Feed' ? styles.activeButton : styles.button}
             onPress={() => { handleTimetableChange('Timetable Feed'); setSelectedUser(null); }}
           >
-            <Text>{'Friends'}</Text>
+            <Text>Friends</Text>
           </TouchableOpacity>
         </View>
-
-      <View style={styles.buttonsCalendar}>
-        {selectedTimetable === 'My Timetable' && (
-          <TouchableOpacity onPress={() => {navigation.navigate("CreateActivity" as never,);}}>
-            <MaterialCommunityIcons style={{ marginLeft: 4 }} name="plus" size={28} color="#66fcf1" />
-          </TouchableOpacity>
-        )}
-        {currentUser && currentUser.followedUser && selectedTimetable === "Timetable Feed" && currentPage > 1  &&(
-              <TouchableOpacity style={styles.nextPlanButton} onPress={() => {handlePageChange(-1); setSelectedUser(null);} }>{("Previous")}</TouchableOpacity>
-          )}
-          {currentUser && currentUser.followedUser && selectedTimetable === "Timetable Feed" && currentUser.followedUser?.length > currentPage &&(
-              <TouchableOpacity style={styles.nextPlanButton} onPress={() => {handlePageChange(1); setSelectedUser(null);} }>{("Next")}</TouchableOpacity>
-          )}
-        
-      </View>
-
-      {selectedTimetable === 'My Timetable' && currentUser && (
-        <View style={styles.userCalendarContainer}>
-          <TouchableOpacity  onPress={() => {navigation.navigate("Profile" as never);}}>
-            <View style={styles.userCalendarContainer}>
-              <View style={styles.user_profileImg}>
-                <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
+  
+        {selectedTimetable === 'My Timetable' && currentUser &&(
+          <View style={styles.userCalendarContainer}>
+            <TouchableOpacity onPress={() => { navigation.navigate("Profile" as never); }}>
+              <View style={styles.userCalendarContainer}>
+                <Image source={{ uri: currentUser.photoUser }} style={styles.image} />
+                <View style={styles.user_info}>
+                  <Text style={styles.user_ns}>{currentUser.nameUser} {currentUser.surnameUser}</Text>
+                  <Text style={styles.user_un}>@{currentUser.appUser}</Text>
+                </View>
               </View>
-              <View style={styles.user_info}>
-                <Text style={styles.user_ns}>{currentUser.nameUser} {currentUser.surnameUser}</Text>
-                <Text style={styles.user_un}>@{currentUser.appUser}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+  
+        {selectedTimetable === 'Timetable Feed' && otherUser && (
+          <>
+            <View>
+              <SearchBar onSearch={handleSearchWrapper} />
+              <View>
+                {userList && userList.length > 0 ? (
+                  <FlatList style={styles.searchedUsersContainer}
+                    data={userList}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity style={styles.searchedUserContainer} onPress={() => handleGoToScreenUser(item.uuid)}>
+                        <View style={styles.pictureAndUser}>
+                          <Image
+                            source={{ uri: item.photoUser }}
+                            style={styles.postProfileImg}
+                            resizeMode="cover"
+                          />
+                          <View>
+                            <Text style={styles.searchedUsername}>@{item.appUser}</Text>
+                            <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
+                            <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item) => item.uuid.toString()}
+                  />
+                ) : (
+                  <Text style={styles.notFound}>Usuario no encontrado</Text>
+                )}
               </View>
             </View>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {selectedTimetable === 'Timetable Feed' && otherUser && (
-        <><View>
-            <SearchBar onSearch={handleSearchWrapper} />
-          <View>
-          {userList && userList.length > 0 ? (
-            <FlatList style={styles.searchedUsersContainer}
-              data={userList}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.searchedUserContainer} onPress={() => handleGoToScreenUser(item.uuid)}>
-                  <View style={styles.pictureAndUser}>
-                    <Image
-                        source={{ uri: item.photoUser }}
-                        style={styles.postProfileImg}
-                        resizeMode="cover"
-                      />
-                    <View>
-                      <Text style={styles.searchedUsername}>@{item.appUser}</Text>
-                      <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
-                      <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
+  
+            <View style={styles.userCalendarContainer}>
+              {selectedUser ? (
+                <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
+                  <View style={styles.userCalendarContainer}>
+                    <Image source={{ uri: selectedUser.photoUser }} style={styles.image} />
+                    <View style={styles.userLink}>
+                      <Text style={styles.user_ns}>{selectedUser.nameUser} {selectedUser.surnameUser}</Text>
+                      <Text style={styles.user_un}>@{selectedUser.appUser}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
+                  <View style={styles.userCalendarContainer}>
+                    <Image source={{ uri: otherUser.photoUser }} style={styles.image} />
+                    <View style={styles.user_info}>
+                      <Text style={styles.user_ns}>{otherUser.nameUser} {otherUser.surnameUser}</Text>
+                      <Text style={styles.user_un}>@{otherUser.appUser}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               )}
-              keyExtractor={(item) => item.uuid.toString()}
-            />
-          ) : (
-            <Text style={styles.notFound}>User Not Found</Text>
+            </View>
+          </>
+        )}
+
+        <View style={styles.buttonsCalendar}>
+          {selectedTimetable === 'My Timetable' && (
+            <TouchableOpacity onPress={() => { navigation.navigate("CreateActivity" as never); }}>
+              <MaterialCommunityIcons style={{ marginLeft: 4 }} name="plus" size={28} color="#66fcf1" />
+            </TouchableOpacity>
+          )}
+          {currentUser && currentUser.followedUser && selectedTimetable === "Timetable Feed" && currentPage > 1 && (
+            <TouchableOpacity style={styles.nextPlanButton} onPress={() => { handlePageChange(-1); setSelectedUser(null); }}>
+              <Text>{("Previous")}</Text>
+            </TouchableOpacity>
+          )}
+          {currentUser && currentUser.followedUser && selectedTimetable === "Timetable Feed" && currentUser.followedUser?.length > currentPage && (
+            <TouchableOpacity style={styles.nextPlanButton} onPress={() => { handlePageChange(1); setSelectedUser(null); }}>
+              <Text>{("Next")}</Text>
+            </TouchableOpacity>
           )}
         </View>
-          </View>
 
-          <View style={styles.userCalendarContainer}>
-            {selectedUser ? (
-              <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
-                <View style={styles.userCalendarContainer}>
-                    <Image source={{ uri: selectedUser.photoUser }} style={styles.image} />
-                  
-                  <View style={styles.userLink}>
-                    <Text style={styles.user_ns}>{selectedUser.nameUser} {selectedUser.surnameUser}</Text>
-                    <Text style={styles.user_un}>@{selectedUser.appUser}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
-                <View style={styles.userCalendarContainer}>
-                  <Image source={{ uri: otherUser.photoUser }} style={styles.image} />
-                
-                  <View style={styles.user_info}>
-                    <Text style={styles.user_ns}>{otherUser.nameUser} {otherUser.surnameUser}</Text>
-                    <Text style={styles.user_un}>@{otherUser.appUser}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          </View>
-        </>
-      )}
-
-
-    </View>
-
-
-
-
-        <CalendarScreen activities={listActivities} uuid={uuid}/>
+        <CalendarScreen activities={listActivities} uuid={uuid} />
+  
+        
+  
       </SafeAreaView>
     </ImageBackground>
   );
+  
 };
 
 
