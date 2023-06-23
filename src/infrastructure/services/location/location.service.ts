@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthHeaderService } from "../user/authHeaders.service";
 
-const API_URL = "https://api.lplan.es/location";
+const API_URL = "https://api.lplan.es:443/location";
 
 export class LocationService {
   static async getLocations() {
