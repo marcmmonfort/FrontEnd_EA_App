@@ -56,6 +56,7 @@ export default function ActivityInfo() {
 
     const obtainActivity = async () => {
         if (uuid){
+          console.log("uuid Activity:", uuid);
             try {
                 const response = await ActivityService.getActivityById(uuid);
                 if (response) {

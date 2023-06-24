@@ -6,6 +6,7 @@ import { Card } from "react-native-paper";
 import ActivityDetailsModal from "../activityDetails/activityModal";
 import { Activity } from "../../../../domain/activity/activity.entity";
 import { RefreshControl } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -22,58 +23,76 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [items, setItems] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
   
   useEffect(() => {
     loadItems();
   }, []);
-
-  const handleDayPress = (date: { dateString: string }) => {
-    console.log("handleDayPress");
-    const selectedDate = date.dateString;
-    console.log("selectedDate", selectedDate);
-    const activitiesOfWeek = activities.filter((activity) => {
-      const formattedDate = format(new Date(activity.dateActivity), 'yyyy-MM-dd');
-      const selectedWeekStart = startOfWeek(new Date(selectedDate));
-      const selectedWeekEnd = endOfWeek(new Date(selectedDate));
-      const activityDate = new Date(formattedDate);
-      console.log("selectedWeekEnd", selectedWeekEnd);
-      return isWithinInterval(activityDate, { start: selectedWeekStart, end: selectedWeekEnd });
-    });
   
-    setSelectedActivity(activitiesOfWeek.length > 0 ? activitiesOfWeek[0] : null);
+
+  const sortActivitiesByStartTime = (activities: Activity[]) => {
+    return activities.sort((a, b) => {
+      const startTimeA = a.hoursActivity[0].split(":");
+      const startTimeB = b.hoursActivity[0].split(":");
+  
+      const hourA = parseInt(startTimeA[0]);
+      const hourB = parseInt(startTimeB[0]);
+  
+      if (hourA !== hourB) {
+        return hourA - hourB;
+      }
+  
+      const minuteA = parseInt(startTimeA[1]);
+      const minuteB = parseInt(startTimeB[1]);
+  
+      return minuteA - minuteB;
+    });
   };
   
   
   const loadItems = () => {
     setTimeout(() => {
       const newItems: { [key: string]: AgendaEntry[] } = {};
+
+      const sortedActivities = sortActivitiesByStartTime(activities);
+      console.log(sortedActivities);
       
-      activities.forEach((activity) => {
+      sortedActivities.forEach((activity) => {
         const formattedDate = format(new Date(activity.dateActivity), 'yyyy-MM-dd');
         
         if (!newItems[formattedDate]) {
           newItems[formattedDate] = [];
         }
+        const name = activity.nameActivity + "\n" + activity.hoursActivity[0].toString() + " - " + activity.hoursActivity[1].toString();
         
         newItems[formattedDate].push({
-          name: activity.nameActivity,
+          name: name,
           height: 0,
           day: formattedDate,
         });
       });
       
+
       setItems(newItems);
       setIsLoading(false);
     }, 1000);
   };
   
+  const handleActivityPress = (uuid: string) => {
+    console.log("activity id", uuid);
+    navigation.navigate("Activity" as never, {uuid} as never)
+  };
 
 
-  const renderItem = (item) => {
-    console.log("renderItem", items);
-   
+  const renderItem = (item: AgendaEntry) => {
+
+    const nameParts = item.name.split("\n");
+    const activityName = nameParts[0];
+    const matchingActivity = activities.find(activity => activity.nameActivity === activityName);
+
+    
       return (
-        <TouchableOpacity style={styles.item} onPress={() => setSelectedActivity(activities[0])}>
+        <TouchableOpacity style={styles.item} onPress={() => handleActivityPress(matchingActivity.uuid)}>
           <Card>
             <Card.Content>
               <View>
@@ -83,33 +102,45 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
           </Card>
         </TouchableOpacity>
       );
-    }
+  }
   
   return (
     <View style={styles.container}>
       {isLoading ? ( // Verificar isLoading
-        <Text>Cargando...</Text> // Mostrar indicador de carga o mensaje
+        <Text>Loading...</Text> // Mostrar indicador de carga o mensaje
       ) : (
-        <Agenda
-          items={items}
-          loadItemsForMonth={loadItems}
-          renderItem={renderItem}
-          showOnlySelectedDayItems={true}
-          refreshControl={<RefreshControl refreshing={false} />} 
-          showClosingKnob={true}
-          refreshing={false}
-          //onDayPress={handleDayPress}
-          style={styles.agenda}
-        />
+        <React.Fragment>
+          {items ? (
+            <View style={styles.container}>
+              <Agenda
+                items={items}
+                loadItemsForMonth={loadItems}
+                renderItem={renderItem}
+                showOnlySelectedDayItems={true}
+                refreshControl={<RefreshControl refreshing={false} />}
+                showClosingKnob={true}
+                refreshing={false}
+                renderEmptyData={() => (
+                  <View style={styles.emptyDataContainer}>
+                    <Text>No activities...</Text>
+                  </View>
+                )}
+                style={styles.agenda}
+              />
+ 
+              {selectedActivity && (
+                <ActivityDetailsModal
+                  activity={selectedActivity}
+                  onClose={() => setSelectedActivity(null)}
+                />
+              )}
+            </View>
+          ) : (
+            <Text>No hay actividades</Text>
+          )}
+        </React.Fragment>
       )}
       
-
-      {selectedActivity && (
-        <ActivityDetailsModal
-          activity={selectedActivity}
-          onClose={() => setSelectedActivity(null)}
-        />
-      )}
     </View>
   );
 };
@@ -130,6 +161,11 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 10,
     marginTop: 17,
+  },
+  emptyDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
  
