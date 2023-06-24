@@ -252,7 +252,14 @@ const ChatB = () => {
       console.log("Enviando mensaje");
       const { text } = messages[0];
       console.log('Texto'+text)
-      sendChannel.current?.send(text);
+      if (sendChannel.current) {
+        sendChannel.current.onopen = () => {
+          // Channel is open, you can send data here
+          sendChannel.current?.send(text);
+        };
+      }
+      
+      
       setMessages(
         (previousMessages) =>
           GiftedChat.append(previousMessages, messages) as unknown as never
