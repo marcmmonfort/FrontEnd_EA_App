@@ -1,8 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { AppRegistry, StyleSheet, Text, View } from "react-native";
 import LoginScreen from "./src/infrastructure/UI/screens/login.screen";
 import RegisterScreen from "./src/infrastructure/UI/screens/Register/register.screen";
 import HomeScreen from "./src/infrastructure/UI/screens/home.screen";
@@ -16,20 +15,42 @@ import ProfileScreen from "./src/infrastructure/UI/screens/profile.screen";
 import EditUserScreen from "./src/infrastructure/UI/screens/edit.user.screen";
 import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
+import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
+import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
+import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
+import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
+import React, { useEffect } from 'react';
+import { Alert } from 'react-native';
+import VideocallScreenB from "./src/infrastructure/UI/screens/Videocall/videocallB.screen";
+
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
 import CalendarEventsScreen from "./src/infrastructure/UI/screens/calendarevents.screen";
 import CreateActivity from "./src/infrastructure/UI/screens/createActivity.screen";
 import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
+import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactivitieslocation.screen";
+import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
+import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
+import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
+import CreateActivityScreen from "./src/infrastructure/UI/screens/createactivity.screen";
+import NewLocationScreen from "./src/infrastructure/UI/screens/newlocation";
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  /*useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);*/
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
+      
+      
         <Stack.Screen
           name="Splash"
           options={{ headerShown: false }}
@@ -40,10 +61,17 @@ export default function App() {
           options={{ headerShown: false }}
           component={LoginScreen}
         />
+        
+        
         <Stack.Screen
           name="ScreenRegisterA"
           options={{ headerShown: false }}
           component={ScreenRegisterA}
+        />
+        <Stack.Screen
+          name="GoogleLogin" // Agrega el nuevo Screen para el inicio de sesión con Google
+          options={{ headerShown: false }}
+          component={GoogleLogin}
         />
         <Stack.Screen
           name="ScreenRegisterB"
@@ -75,6 +103,29 @@ export default function App() {
           options={{ title: "LPlan", headerShown: false }}
           component={HomeScreen}
         />
+        
+        <Stack.Screen
+          name="VideocallScreenA"
+          options={{ headerShown: false }}
+          component={VideocallScreenA}
+        />
+        <Stack.Screen
+          name="VideocallScreenB"
+          options={{ headerShown: false }}
+          component={VideocallScreenB}
+        />
+        
+        <Stack.Screen
+          name="ChatA"
+          component={ChatA}
+        />
+        
+      <Stack.Screen
+          name="ChatB"
+          component={ChatB}
+        />
+         
+        
         <Stack.Screen
           name="Register"
           options={{ headerShown: false }}
@@ -87,19 +138,23 @@ export default function App() {
         <Stack.Screen
           name="ScreenPublicationUpB"
           component={ScreenPublicationUpB}
-          />
+        />
+        <Stack.Screen
+          name="ScreenPublicationUpC"
+          component={ScreenPublicationUpC}
+        />
         <Stack.Screen
             name="Edit"
             component={EditUserScreen}
-            />
+        />
         <Stack.Screen
           name="UserScreen"
           component={UserScreen}
-          />
+        />
         <Stack.Screen
           name="UsersList"
           component={UsersList}
-          />
+        />
         <Stack.Screen
         name="CalendarEventsScreen"
         component={CalendarEventsScreen}
@@ -112,7 +167,27 @@ export default function App() {
         name="NotFoundScreen"
         component={NotFoundScreen}
         />
-        
+        <Stack.Screen
+        name="ActivitiesLocation"
+        component={ActivitiesLocationList}
+        />
+        <Stack.Screen
+        name="CreateActivity"
+        component={CreateActivityScreen}
+        />
+        <Stack.Screen
+        name="Activity"
+        component={ActivityInfo}
+        />   
+        <Stack.Screen
+        name="Settings"
+        component={SettingsPage}
+        /> 
+
+        <Stack.Screen
+        name="NewLocation"
+        component={NewLocationScreen}
+        />            
         
       </Stack.Navigator>
     </NavigationContainer>

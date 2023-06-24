@@ -117,7 +117,6 @@ export default function ScreenRegisterE() {
       fontWeight:'bold',
       backgroundColor: "#66fcf1",
       borderWidth: 1,
-      borderColor: "white",
       borderRadius: 14,
       marginTop: 20,
       marginBottom: 0,

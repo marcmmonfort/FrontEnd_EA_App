@@ -2,9 +2,12 @@ import axios from "axios";
 import { AuthEntity, UserAuthEntity } from "../../../domain/user/user.entity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "https://api.lplan.es/";
+const API_URL = "https://api.lplan.es:443/";
 
 export class SessionService {
+  static getVoiceControl() {
+      throw new Error("Method not implemented.");
+  }
   static async login(auth: AuthEntity) {
     try {
       const response = await axios.post(API_URL + "user/loginfrontend", auth);
@@ -63,5 +66,28 @@ export class SessionService {
       AsyncStorage.removeItem("userId");
       AsyncStorage.removeItem("token");
     } catch (error) {}
+  }
+
+  static async getAudioDescription() {
+    try {
+      const AudioDescription = await AsyncStorage.getItem('voiceRecognitionEnabled');
+  
+      if (AudioDescription) {
+        return AudioDescription;
+      }
+      else(console.log("UserId not found"));
+    } catch (error) {
+      console.error("Error al obtener el usuario actual:", error);
+    }
+  }
+
+  
+
+  static setAudioDescription(isAudioDescription: string) {
+    try {
+      AsyncStorage.setItem("voiceRecognitionEnabled", isAudioDescription);
+    } catch (error) {
+      console.error("Error saving userId to AsyncStorage:", error);
+    }
   }
 }

@@ -107,7 +107,7 @@ export default function SplashScreen() {
                 } else {
                   // El token es válido, redirigir al usuario a la pantalla principal
                   console.log("El token es válido");
-                  navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);
+                  navigation.navigate('LoginScreen' as never, { screen: 'ProfileScreen' } as never);
                 }
                 
                 // navigation.navigate('HomeScreen' as never, { screen: 'ProfileScreen' } as never);

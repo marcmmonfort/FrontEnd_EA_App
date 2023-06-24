@@ -182,19 +182,14 @@ export default function LoginScreen() {
 
 /*
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import Svg, { Defs, Path, Pattern, Use, Image } from "react-native-svg";
-import MainContainer from "../components/containers/Main";
-import Title from "../components/texts/Title";
-import SubTitle from "../components/texts/Subtitle";
-import StyledTextInputs from "../components/inputs/StyledTextInputs";
-import ButtonGradient from "../components/buttons/ButtonGradient";
-import { AuthEntity } from "../../../domain/user/user.entity";
-import { SessionService } from "../../services/user/session.service";
-import NormalText from "../components/texts/NormalText";
-import { Platform, StatusBar, TouchableOpacity, StyleSheet } from "react-native";
-import Register from "../components/texts/Register";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useEffect, useState } from "react";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { Button, View, Text, Linking } from "react-native";
+import { Platform, StyleSheet, StyleSheet } from "react-native";
+import { makeRedirectUri } from "expo-auth-session";
+
+WebBrowser.maybeCompleteAuthSession();
 import * as Font from 'expo-font';
 
 async function loadFonts() {
@@ -204,16 +199,7 @@ async function loadFonts() {
 }
 
 export default function LoginScreen() {
-  useEffect(() => {
-    loadFonts();
-  }, []);
-
   const navigation = useNavigation();
-
-  const customFont = Platform.select({
-    ios: 'Rafaella',
-    android: 'Rafaella-Regular',
-  });
 
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
@@ -228,6 +214,20 @@ export default function LoginScreen() {
   });
 
   return (
+    <View style={styles.container}>
+      {userInfo === null ? (
+        <Button
+          title="Sign in with Google"
+          disabled={!request}
+          onPress={() => {
+            promptAsync();
+          }}
+        />
+      ) : (
+        <Text style={styles.text}>{userInfo.name}</Text>
+      )}
+      
+    </View>
     <MainContainer>
       <Title style={styles.text_normal}>Lplan</Title>
       <SubTitle>Let's Go!</SubTitle>
@@ -295,5 +295,18 @@ export default function LoginScreen() {
     </MainContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});
 
 */

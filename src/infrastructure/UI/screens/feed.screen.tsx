@@ -13,7 +13,6 @@ import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
 
-
 async function loadFonts() {
   await Font.loadAsync({
     'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
@@ -239,9 +238,7 @@ export default function FeedScreen() {
   const getComments = (idPublication: string) => {
     console.log("Ver comentarios");
     console.log("idPublication: " + idPublication);
-    console.log(
-      "commentsVisibility[PublicationId]=" + commentsVisibility[idPublication]
-    );
+    console.log("commentsVisibility[PublicationId]=" + commentsVisibility[idPublication]);
     console.log("pageComments[PublicationId]=" + pageComments[idPublication]);
     setCommentsVisibility((prevVisibility) => {
       const updatedVisibility = {
@@ -448,7 +445,11 @@ export default function FeedScreen() {
     }
   };  
 
-  
+  /*const heartAnimation = useSpring({
+    from: { opacity: 0, y: 0 },
+    to: { opacity: hasLiked ? 1 : 0, y: hasLiked ? -100 : 0 },
+  });*/
+
   const styles = StyleSheet.create({
     feed: {
       flexDirection: 'column',

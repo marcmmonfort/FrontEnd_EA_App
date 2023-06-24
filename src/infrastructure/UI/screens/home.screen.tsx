@@ -30,10 +30,10 @@ export default function HomeScreen() {
           <Fontisto name="camera" size={18} color='#66fcf1' />
           ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
         }} />
-      <Tab.Screen name="Calendar" component={CalendarEventsScreen} options={{ tabBarIcon: ({ color, size }) => (
-          <Fontisto name="calendar" size={18} color='#66fcf1' />
-          ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
-        }} />
+      <Tab.Screen name="Calendar" component={MapScreen} options={{ tabBarIcon: ({ color, size }) => (
+        <Fontisto name="calendar" size={18} color='#66fcf1' />
+        ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
+      }} />
       <Tab.Screen name="Locations" component={MapScreen} options={{ tabBarIcon: ({ color, size }) => (
         <Fontisto name="map" size={18} color='#66fcf1' />
         ), headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 },
