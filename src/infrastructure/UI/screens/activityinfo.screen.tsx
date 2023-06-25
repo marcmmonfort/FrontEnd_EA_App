@@ -35,11 +35,15 @@ interface RouteParams {
 export default function ActivityInfo() {
     const navigation = useNavigation();
     const [fontsLoaded, setFontsLoaded] = useState(false);
-    const [activity, setActivity] = useState<ActivityEntity>();
     const route = useRoute();
     const {
         uuid
       }: RouteParams = route.params || {};
+
+    const [activity, setActivity] = useState<ActivityEntity>();
+    const [participants, setParticipants] = useState<string[]>();
+    const [myId, setMyId] = useState<string>();
+    const [participating, setParticipating] = useState<boolean>();
 
     const titleFont = Platform.select({
         ios: 'Rafaella',
@@ -54,6 +58,22 @@ export default function ActivityInfo() {
     const [numPublicationsActivity, setNumPublicationsActivity] = useState<number>(0);
     const [recargar, setRecargar] = useState<string>('');
 
+    useFocusEffect(
+      React.useCallback(() => {
+        const getUser = async () => {
+          const userId = await SessionService.getCurrentUser();
+          if (userId) {
+            try {
+              setMyId(userId);
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }
+        };
+        getUser();
+      }, [])
+    );
+
     const obtainActivity = async () => {
         if (uuid){
             try {
@@ -62,6 +82,20 @@ export default function ActivityInfo() {
                   const activity = response.data as ActivityEntity;
                   console.log("ACTIVITY CARGAA EN INFO: ", activity);
                   setActivity(activity);
+                  setParticipants(activity.participantsActivity);
+
+                  const userId = await SessionService.getCurrentUser();
+                  if (activity && activity.participantsActivity && userId) {
+                    const index = activity.participantsActivity?.indexOf(userId);
+                    if (index !== undefined && index !== -1) {
+                      // PARTICIPO
+                      setParticipating(true);
+                    } else {
+                      // NO PARTICIPO
+                      setParticipating(false);
+                    }
+                  }
+
                 } else {
                   console.error('Error fetching activities: Response is undefined');
                 }
@@ -69,6 +103,19 @@ export default function ActivityInfo() {
             console.error('Error fetching activities:', error);
             }
         }
+    };
+
+    const setParticipationState = async () => {
+      if (activity && participants && myId) {
+        const index = activity.participantsActivity?.indexOf(myId);
+        if (index !== undefined && index !== -1) {
+          // PARTICIPO
+          setParticipating(true);
+        } else {
+          // NO PARTICIPO
+          setParticipating(false);
+        }
+      }
     };
 
     useEffect(() => {
@@ -212,6 +259,21 @@ export default function ActivityInfo() {
         }
     };
 
+    const handleJoinLeaveActivity = async () => {
+      if (activity && participants && myId) {
+        const index = activity.participantsActivity?.indexOf(myId);
+        if (index !== undefined && index !== -1) {
+          // Actualizar para quitar mi ID de la lista.
+          activity.participantsActivity?.splice(index, 1);
+        } else {
+          // Actualizar para poner mi ID en la lista
+          activity.participantsActivity?.push(myId);
+        }
+        await ActivityService.updateActivity(activity.uuid!, activity);
+        navigation.navigate('HomeScreen' as never);
+      }
+    };
+
     return (
         <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
           <View style={styles.container}>
@@ -226,9 +288,9 @@ export default function ActivityInfo() {
                     {new Date(activity.dateActivity).getFullYear()}
                   </Text>
                   <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
-                  <View style={styles.plus_icon}>
-                    <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
-                  </View>
+                  <TouchableOpacity style={styles.plus_icon} onPress={handleJoinLeaveActivity}>
+                    <MaterialCommunityIcons color="#66fcf1" name={participating ? "minus" : "plus"} size={20} />
+                  </TouchableOpacity>
                   <ScrollView horizontal>
                     {listPublicationsActivity.reverse().map((publication, index) => (
                       <View key={index} style={styles.post_complete}>

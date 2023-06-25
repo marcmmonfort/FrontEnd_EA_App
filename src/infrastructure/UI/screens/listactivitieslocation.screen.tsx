@@ -267,9 +267,6 @@ export default function ActivitiesLocationList() {
                   </Text>
                   <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
                   <ScrollView style={styles.scroll_profiles} horizontal>
-                    <View style={styles.plus_icon}>
-                      <MaterialCommunityIcons color="#66fcf1" name="plus" size={20} />
-                    </View>
                     {activity.uuid &&
                       userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
                         <TouchableOpacity key={index} onPress={() => {
