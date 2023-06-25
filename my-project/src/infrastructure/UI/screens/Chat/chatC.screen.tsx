@@ -45,7 +45,7 @@ const ChatC = ({ route }:{route:RouteParams}) => {
     // This will initiate the call
     console.log("[INFO] Initiated a call")
     peerRef.current = Peer(userID);
-    sendChannel.current = peerRef.current.createDataChannel("sendChannel");
+    sendChannel.current = peerRef.current.createDataChannel("sendChannel", {reliable:true});
     
     // listen to incoming messages
     sendChannel.current.onmessage = handleReceiveMessage;
