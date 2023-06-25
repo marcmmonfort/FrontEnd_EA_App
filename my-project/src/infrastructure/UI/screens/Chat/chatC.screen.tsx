@@ -41,15 +41,7 @@ const ChatC = ({ route }:{route:RouteParams}) => {
 
   }, []);
 
-  function callUser(userID:any){
-    // This will initiate the call
-    console.log("[INFO] Initiated a call")
-    peerRef.current = Peer(userID);
-    sendChannel.current = peerRef.current.createDataChannel("sendChannel", {reliable:true});
-    
-    // listen to incoming messages
-    sendChannel.current.onmessage = handleReceiveMessage;
-  }
+ 
 
   function Peer(userID:any) {
     const peer = new RTCPeerConnection({
@@ -69,21 +61,28 @@ const ChatC = ({ route }:{route:RouteParams}) => {
 
     return peer;
   }
+  function callUser(userID:any){
+    // This will initiate the call
+    console.log("[INFO] Initiated a call")
+    peerRef.current = Peer(userID);
+    sendChannel.current = peerRef.current.createDataChannel("sendChannel", {reliable:true});
+    
+    // listen to incoming messages
+    sendChannel.current.onmessage = handleReceiveMessage;
+  }
 
-  function handleNegotiationNeededEvent(userID:any){
-    // Make Offer
-    peerRef.current.createOffer().then((offer:any) => {
-       return peerRef.current.setLocalDescription(offer);
-    })
-    .then(() => {
-      const payload = {
-        target: userID,
-        caller: socketRef.current.id,
-        sdp: peerRef.current.localDescription,
-      };
-      socketRef.current.emit("offer", payload);
-    })
-    .catch((err:any) => console.log("Error handling negotiation needed event", err));
+  function handleNegotiationNeededEvent(userID: any) {
+    peerRef.current.createOffer()
+      .then((offer: any) => peerRef.current.setLocalDescription(offer))
+      .then(() => {
+        const payload = {
+          target: userID,
+          caller: socketRef.current.id,
+          sdp: peerRef.current.localDescription,
+        };
+        socketRef.current.emit("offer", payload);
+      })
+      .catch((err: any) => console.log("Error handling negotiation needed event", err));
   }
 
   function handleOffer(incoming:any,userID:any) {
@@ -97,19 +96,17 @@ const ChatC = ({ route }:{route:RouteParams}) => {
     }
 
     const desc = new RTCSessionDescription(incoming.sdp);
-    peerRef.current.setRemoteDescription(desc).then(() => {
-    }).then(() => {
-      return peerRef.current.createAnswer();
-    }).then((answer:any) => {
-      return peerRef.current.setLocalDescription(answer);
-    }).then(() => {
-      const payload = {
-        target: incoming.caller,
-        caller: socketRef.current.id,
-        sdp: peerRef.current.localDescription
-      }
-      socketRef.current.emit("answer", payload);
-    })
+    peerRef.current.setRemoteDescription(desc)
+      .then(() => peerRef.current.createAnswer())
+      .then((answer: any) => peerRef.current.setLocalDescription(answer))
+      .then(() => {
+        const payload = {
+          target: incoming.caller,
+          caller: socketRef.current.id,
+          sdp: peerRef.current.localDescription
+        }
+        socketRef.current.emit("answer", payload);
+      });
   }
 
   function handleAnswer(message:any){
@@ -137,6 +134,7 @@ const ChatC = ({ route }:{route:RouteParams}) => {
         const payload = {
             target: otherUser.current,
             candidate: e.candidate,
+            
         }
         socketRef.current.emit("ice-candidate", payload);
     }
@@ -149,11 +147,16 @@ function handleNewICECandidateMsg(incoming:any) {
         .catch((e:any) => console.log(e));
   }
 
-  function sendMessage(messages = []){
+  function sendMessage(messages = []) {
     console.log(messages);
-    //sendChannel.current.send(messages[0].text);
-    sendChannel.current.send(messages[0]);
-    setMessages((previousMessages:any) => GiftedChat.append(previousMessages, messages))
+    if (sendChannel.current) {
+      sendChannel.current.onopen = () => {
+        //sendChannel.current.send(messages[0].text);
+        sendChannel.current.send(messages[0]);
+
+      };
+    }
+    setMessages((previousMessages:any) => GiftedChat.append(previousMessages, messages));
   }
   /*function sendMessage(messages = []) {
     if (messages.length > 0) {
