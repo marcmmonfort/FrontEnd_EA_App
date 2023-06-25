@@ -7,6 +7,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ImageBackgro
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from 'react-native-gesture-handler';
 import { NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import * as Font from 'expo-font';
 import { PublicationService } from "../../services/publication/publication.service";
@@ -31,6 +32,7 @@ export default function UsersList() {
   const [currentPublication, setcurrentPublication] = useState<PublicationLikes | null>(null);
   const [userList, setUserList] = useState([]);
   const [numPage, setNumPage] = useState(1);
+  const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
   const navigation = useNavigation();
 
   const isFollowersMode = mode === "followers";
@@ -164,7 +166,31 @@ export default function UsersList() {
       handleLoadMore();
     }
   };
+
+  interface UserProfileProps {
+    user: {
+      appUser: string;
+      roleUser: string;
+    };
+  }  
   
+  const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+    let icon = null;
+  
+    if (user.roleUser === "business") {
+      icon = <MaterialCommunityIcons name="store" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "admin") {
+      icon = <MaterialCommunityIcons name="cog" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "verified") {
+      icon = <MaterialCommunityIcons name="shield-check" size={18} color="#3897f0" />;
+    } else {
+      icon = <MaterialCommunityIcons name="account" size={18} color="#3897f0" />;
+    }
+  
+    return (
+      <Text style={styles.searchedUsername}>@{user.appUser} {icon}</Text>
+    );
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -299,7 +325,7 @@ export default function UsersList() {
                 />
               )}
               <View style={styles.userInfo}>
-                <Text style={styles.searchedUsername}>@{user.appUser}</Text>
+                <UserProfile user={user}></UserProfile>
                 <Text style={styles.searchedNameSurname}>
                   {user.nameUser} {user.surnameUser}
                 </Text>

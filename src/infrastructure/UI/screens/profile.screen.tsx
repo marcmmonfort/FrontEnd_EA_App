@@ -31,6 +31,7 @@ export default function ProfileScreen() {
   const [auxPhotoUser, setAux] = useState("");
   const [loading, setLoading] = useState(false);
   const [cam, setCam] = useState(false);
+  const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const navigation = useNavigation();
 
@@ -85,6 +86,43 @@ export default function ProfileScreen() {
               
                 response.data.descriptionUser = filteredDescription;
                 setCurrentUser(response.data);
+                if (response.data.roleUser === 'business') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="store"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else if (response.data.roleUser === 'admin') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="cog"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else if (response.data.roleUser === 'verified') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="check-circle"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="account"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                }
               }
               try{
                 await SessionService.getAudioDescription()
@@ -341,7 +379,7 @@ const styles = StyleSheet.create({
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View>
-        <ShareComponent url={"http://147.83.7.158:5432/user/" + currentUser?.uuid} />
+        <ShareComponent url={"https://www.lplan.es:443/shared/profile/" + currentUser?.uuid} />
         </View>
         <View style={styles.profileContour}>
           {currentUser && (
@@ -349,7 +387,7 @@ const styles = StyleSheet.create({
               <View style={styles.profile}>
                 <View style={styles.usernameAndVerified}>
                   <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
-                  <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
+                  {icon && <View>{icon}</View>}
                 </View>
                 <View style={styles.profileUserButtons}>
                   <TouchableOpacity onPress={() => {navigation.navigate("Edit" as never);}} style={styles.buttonForChanges}>

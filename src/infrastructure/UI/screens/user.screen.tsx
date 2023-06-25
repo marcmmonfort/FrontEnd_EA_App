@@ -28,6 +28,7 @@ export default function UserScreen() {
   const uuid = routeParams?.uuid;
   const navigation = useNavigation();
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -57,6 +58,43 @@ export default function UserScreen() {
             console.log("Punto 1:", response);
             console.log(response?.data);
             setCurrentUser(response?.data);
+            if (response?.data.roleUser === 'business') {
+              setIcon(
+                <MaterialCommunityIcons
+                  style={styles.iconVerified}
+                  name="store"
+                  size={18}
+                  color="#3897f0"
+                />
+              );
+            } else if (response?.data.roleUser === 'admin') {
+              setIcon(
+                <MaterialCommunityIcons
+                  style={styles.iconVerified}
+                  name="cog"
+                  size={18}
+                  color="#3897f0"
+                />
+              );
+            } else if (response?.data.roleUser === 'verified') {
+              setIcon(
+                <MaterialCommunityIcons
+                  style={styles.iconVerified}
+                  name="check-circle"
+                  size={18}
+                  color="#3897f0"
+                />
+              );
+            } else {
+              setIcon(
+                <MaterialCommunityIcons
+                  style={styles.iconVerified}
+                  name="account"
+                  size={18}
+                  color="#3897f0"
+                />
+              );
+            }
           } catch (error) {
             console.log("Encontre el id pero no va")
           }
@@ -278,7 +316,7 @@ export default function UserScreen() {
               <View style={styles.profile}>
                 <View style={styles.usernameAndVerified}>
                   <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
-                  <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
+                  {icon && <View>{icon}</View>}
                 </View>
                 <View style={styles.profileImage}>
                     <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>

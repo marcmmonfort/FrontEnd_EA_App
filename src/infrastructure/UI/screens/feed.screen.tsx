@@ -450,6 +450,31 @@ export default function FeedScreen() {
     }
   };  
 
+  interface UserProfileProps {
+    user: {
+      appUser: string;
+      roleUser: string;
+    };
+  }  
+  
+  const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+    let icon = null;
+  
+    if (user.roleUser === "business") {
+      icon = <MaterialCommunityIcons name="store" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "admin") {
+      icon = <MaterialCommunityIcons name="cog" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "verified") {
+      icon = <MaterialCommunityIcons name="shield-check" size={18} color="#3897f0" />;
+    } else {
+      icon = <MaterialCommunityIcons name="account" size={18} color="#3897f0" />;
+    }
+  
+    return (
+      <Text style={styles.postUsernameHeader}>{user.appUser} {icon}</Text>
+    );
+  };
+
   /*const heartAnimation = useSpring({
     from: { opacity: 0, y: 0 },
     to: { opacity: hasLiked ? 1 : 0, y: hasLiked ? -100 : 0 },
@@ -744,7 +769,8 @@ export default function FeedScreen() {
       marginRight: 16,
     },
   });
-  
+
+
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.headerContainer}>
@@ -765,137 +791,139 @@ export default function FeedScreen() {
         </TouchableOpacity>
       </View>
       <View style={styles.limitedContainer}>
-        <FlatList
-          data={listPublications}
-          keyExtractor={(publication) => publication.uuid}
-          renderItem={({ item: publication }) => (
-            <View style={styles.post} key={publication.uuid}>
-              <TouchableOpacity onPress={() => handleGoToScreenUser(publication.idUser.uuid)} style={styles.userLink}>
-                <View style={styles.postHeader}>
-                  <Image
-                    source={{ uri: publication.idUser.photoUser }}
-                    style={styles.postProfileImg}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.postInfo}>
-                    <Text style={styles.postUsernameHeader}>{publication.idUser.appUser}</Text>
-                    <Text style={styles.postTimestampHeader}>{new Date(publication.createdAt).toLocaleString()}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              <View style={styles.postBody}>
-                {publication.photoPublication.map((photo) => (
-                  <Image
-                    key={photo}
-                    source={{ uri: photo }}
-                    style={styles.postImage}
-                    resizeMode="cover"
-                  />
-                ))}
-              </View>
-              <View style={styles.heartMessageLayout}>
-                <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
-                  <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { navigation.navigate("UsersList" as never, { userId: publication.uuid, mode: "likes" } as never); }}>
-                  <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
-                  <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={28} color="#66fcf1" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.postText}>{publication.textPublication}</Text>
-              <View style={styles.commentContainer}>
-                <TouchableOpacity
-                  style={styles.showHide}
-                  onPress={() => {
-                    getComments(publication.uuid.toString());
-                  }}
-                >
-                  <Text style={styles.showHideText}>
-                    {commentsVisibility[publication.uuid]}{" "}
-                    {commentButton[publication.uuid]}{" "}
-                    <Text style={styles.showHideTextNumber}>
-                      {publication.commentsPublication?.length}
-                    </Text>
-                  </Text>
-                </TouchableOpacity>
-                {showCommentForm[publication.uuid] && (
-                  <View>
-                    <StyledTextInputs
-                      style={styles.input}
-                      placeholder="Write a Comment"
-                      value={commentText[publication.uuid]}
-                      onChangeText={(event: string) => handleInputChange(event, publication.uuid.toString())}
+        <View style={styles.feed}>
+          <FlatList
+            data={listPublications}
+            keyExtractor={(publication) => publication.uuid}
+            renderItem={({ item: publication }) => (
+              <View style={styles.post} key={publication.uuid}>
+                <TouchableOpacity onPress={() => handleGoToScreenUser(publication.idUser.uuid)} style={styles.userLink}>
+                  <View style={styles.postHeader}>
+                    <Image
+                      source={{ uri: publication.idUser.photoUser }}
+                      style={styles.postProfileImg}
+                      resizeMode="cover"
                     />
-                    <TouchableOpacity style={styles.buttonSendComment} onPress={(event) => handleSubmit(event, publication.uuid.toString())}>
-                      <View style={styles.sendLayout}>
-                        <Text style={styles.textButtonSend}>Send</Text>
-                        <MaterialCommunityIcons style={styles.ButtonSend} name="send" size={20} />
-                      </View>
-                    </TouchableOpacity>
+                    <View style={styles.postInfo}>
+                      <UserProfile user={publication.idUser}></UserProfile>
+                      <Text style={styles.postTimestampHeader}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.postBody}>
+                  {publication.photoPublication.map((photo) => (
+                    <Image
+                      key={photo}
+                      source={{ uri: photo }}
+                      style={styles.postImage}
+                      resizeMode="cover"
+                    />
+                  ))}
+                </View>
+                <View style={styles.heartMessageLayout}>
+                  <TouchableOpacity onPress={() => { handleLike(publication.uuid.toString()); }}>
+                    <MaterialCommunityIcons name="heart" size={28} color="#fb3958" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { navigation.navigate("UsersList" as never, { userId: publication.uuid, mode: "likes" } as never); }}>
+                    <Text style={styles.numberOfLikesPost}>{publication.likesPublication?.length}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { handleToggleCommentForm(publication.uuid.toString()); }}>
+                    <MaterialCommunityIcons style={{ marginLeft: 4 }} name="comment" size={28} color="#66fcf1" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.postText}>{publication.textPublication}</Text>
+                <View style={styles.commentContainer}>
+                  <TouchableOpacity
+                    style={styles.showHide}
+                    onPress={() => {
+                      getComments(publication.uuid.toString());
+                    }}
+                  >
+                    <Text style={styles.showHideText}>
+                      {commentsVisibility[publication.uuid]}{" "}
+                      {commentButton[publication.uuid]}{" "}
+                      <Text style={styles.showHideTextNumber}>
+                        {publication.commentsPublication?.length}
+                      </Text>
+                    </Text>
+                  </TouchableOpacity>
+                  {showCommentForm[publication.uuid] && (
+                    <View>
+                      <StyledTextInputs
+                        style={styles.input}
+                        placeholder="Write a Comment"
+                        value={commentText[publication.uuid]}
+                        onChangeText={(event: string) => handleInputChange(event, publication.uuid.toString())}
+                      />
+                      <TouchableOpacity style={styles.buttonSendComment} onPress={(event) => handleSubmit(event, publication.uuid.toString())}>
+                        <View style={styles.sendLayout}>
+                          <Text style={styles.textButtonSend}>Send</Text>
+                          <MaterialCommunityIcons style={styles.ButtonSend} name="send" size={20} />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+                {commentsVisibility[publication.uuid] && (
+                  <View>
+                    {listCommentsPublication[publication.uuid].map((comment) => (
+                      <TouchableOpacity
+                        key={comment.uuid}
+                        onPress={() => handleGoToScreenUser(comment.idUserComment.uuid)}
+                        style={styles.commentContainer}
+                      >
+                        <View style={styles.userComment}>
+                          {comment.idUserComment.photoUser ? (
+                            <Image
+                              source={{ uri: comment.idUserComment.photoUser }}
+                              style={styles.commentProfileImg}
+                            />
+                          ) : (
+                            <Image
+                              source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
+                              style={styles.commentProfileImg}
+                            />
+                          )}
+                          <View style={styles.userInfo}>
+                            <Text style={styles.userName}>@{comment.idUserComment.appUser}</Text>
+                            <Text style={styles.commentText}>{comment.textComment}</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+
+                    {publication.commentsPublication &&
+                      publication.commentsPublication.length >
+                        (pageComments[publication?.uuid] ?? 0) * 2 ? (
+                          <TouchableOpacity
+                            style={styles.showMoreCommentsButton}
+                            onPress={() => {
+                              showMoreComments(publication.uuid);
+                            }}
+                          >
+                            <MaterialCommunityIcons style={styles.showMoreCommentsButtonIcon} name="plus" size={16} />
+                          </TouchableOpacity>
+                        ) : (
+                          <Text></Text>
+                        )}
                   </View>
                 )}
               </View>
-              {commentsVisibility[publication.uuid] && (
-                <View>
-                  {listCommentsPublication[publication.uuid].map((comment) => (
-                    <TouchableOpacity
-                      key={comment.uuid}
-                      onPress={() => handleGoToScreenUser(comment.idUserComment.uuid)}
-                      style={styles.commentContainer}
-                    >
-                      <View style={styles.userComment}>
-                        {comment.idUserComment.photoUser ? (
-                          <Image
-                            source={{ uri: comment.idUserComment.photoUser }}
-                            style={styles.commentProfileImg}
-                          />
-                        ) : (
-                          <Image
-                            source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
-                            style={styles.commentProfileImg}
-                          />
-                        )}
-                        <View style={styles.userInfo}>
-                          <Text style={styles.userName}>@{comment.idUserComment.appUser}</Text>
-                          <Text style={styles.commentText}>{comment.textComment}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-
-                  {publication.commentsPublication &&
-                    publication.commentsPublication.length >
-                      (pageComments[publication?.uuid] ?? 0) * 2 ? (
-                        <TouchableOpacity
-                          style={styles.showMoreCommentsButton}
-                          onPress={() => {
-                            showMoreComments(publication.uuid);
-                          }}
-                        >
-                          <MaterialCommunityIcons style={styles.showMoreCommentsButtonIcon} name="plus" size={16} />
-                        </TouchableOpacity>
-                      ) : (
-                        <Text></Text>
-                      )}
-                </View>
-              )}
-            </View>
-          )}
-          ListFooterComponent={() => (
-            <View>
-              {numPublications > numPagePublication * 3 && (
-                <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                  <Text style={styles.loadMoreButtonText}>Load More</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.1}
-        />
-
+            )}
+            ListFooterComponent={() => (
+              <View>
+                {numPublications > numPagePublication * 3 && (
+                  <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                    <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
     </ImageBackground>
   );

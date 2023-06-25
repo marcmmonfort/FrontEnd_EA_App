@@ -15,9 +15,15 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Se necesita acceso al micrófono para el reconocimiento de voz."
+      },
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

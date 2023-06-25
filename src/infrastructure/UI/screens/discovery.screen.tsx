@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserEntity } from "../../../domain/user/user.entity";
 import SearchBar from "../components/searchbar/searchbar";
 import * as Font from 'expo-font';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -99,6 +100,31 @@ export default function DiscoveryScreen() {
     navigation.navigate("UserScreen" as never, {uuid} as never);
   };
 
+  interface UserProfileProps {
+    user: {
+      appUser: string;
+      roleUser: string;
+    };
+  }  
+  
+  const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+    let icon = null;
+  
+    if (user.roleUser === "business") {
+      icon = <MaterialCommunityIcons name="store" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "admin") {
+      icon = <MaterialCommunityIcons name="cog" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "verified") {
+      icon = <MaterialCommunityIcons name="shield-check" size={18} color="#3897f0" />;
+    } else {
+      icon = <MaterialCommunityIcons name="account" size={18} color="#3897f0" />;
+    }
+  
+    return (
+      <Text style={styles.searchedUsername}>@{user.appUser} {icon}</Text>
+    );
+  };
+
   const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
@@ -170,7 +196,7 @@ export default function DiscoveryScreen() {
                         resizeMode="cover"
                       />
                     <View>
-                      <Text style={styles.searchedUsername}>@{item.appUser}</Text>
+                    <UserProfile user={item}></UserProfile>
                       <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
                       <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
                     </View>
