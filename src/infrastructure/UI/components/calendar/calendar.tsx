@@ -27,7 +27,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   
   useEffect(() => {
     loadItems();
-  }, []);
+  }, [activities]);
   
 
   const sortActivitiesByStartTime = (activities: Activity[]) => {

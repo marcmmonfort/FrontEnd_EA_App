@@ -24,6 +24,8 @@ function CalendarEventsScreen() {
   const [userList, setUserList] = useState<UserEntity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
+  const [isSearchVisible, setSearchVisible] = useState(false);
+
   
 
   useEffect(() => {
@@ -63,6 +65,7 @@ function CalendarEventsScreen() {
             const user = response.data;
             setOtherUser(user);
             console.log("Other Activities set", user.uuid);
+            console.log("user*****",user);
           }          
         }        
         
@@ -71,6 +74,7 @@ function CalendarEventsScreen() {
       }
     }
     fetchData();
+    console.log("otherUser", otherUser)
   }, [selectedTimetable, currentPage, recargar, selectedUser]);
   
   const handleTimetableChange = (timetable: string) => {
@@ -129,75 +133,91 @@ function CalendarEventsScreen() {
             <Text>Friends</Text>
           </TouchableOpacity>
         </View>
-  
-        {selectedTimetable === 'My Timetable' && currentUser &&(
-          <View style={styles.userCalendarContainer}>
-            <TouchableOpacity onPress={() => { navigation.navigate("Profile" as never); }}>
+        
+            {selectedTimetable === 'My Timetable' && currentUser &&(
               <View style={styles.userCalendarContainer}>
-                <Image source={{ uri: currentUser.photoUser }} style={styles.image} />
-                <View style={styles.user_info}>
-                  <Text style={styles.user_ns}>{currentUser.nameUser} {currentUser.surnameUser}</Text>
-                  <Text style={styles.user_un}>@{currentUser.appUser}</Text>
+              <TouchableOpacity onPress={() => { navigation.navigate("Profile" as never); }} style={styles.userLink}>
+                <View style={styles.userCalendarContainer}>
+                  <Image source={{ uri: currentUser.photoUser }} style={styles.image} />
+                  <View style={styles.userLink}>
+                    <Text style={styles.searchedDescription}>{currentUser.nameUser} {currentUser.surnameUser}</Text>
+                    <Text style={styles.searchedUsername}>@{currentUser.appUser}</Text>
+                  </View>
                 </View>
+              </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
-        )}
-  
+            )}
+        
         {selectedTimetable === 'Timetable Feed' && otherUser && (
           <>
             <View>
-              <SearchBar onSearch={handleSearchWrapper} />
-              <View>
-                {userList && userList.length > 0 ? (
-                  <FlatList style={styles.searchedUsersContainer}
-                    data={userList}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity style={styles.searchedUserContainer} onPress={() => handleGoToScreenUser(item.uuid)}>
-                        <View style={styles.pictureAndUser}>
-                          <Image
-                            source={{ uri: item.photoUser }}
-                            style={styles.postProfileImg}
-                            resizeMode="cover"
-                          />
-                          <View>
-                            <Text style={styles.searchedUsername}>@{item.appUser}</Text>
-                            <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
-                            <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
+            <TouchableOpacity
+              style={styles.searchIconContainer}
+              onPress={() => setSearchVisible(!isSearchVisible)}
+            >
+              <MaterialCommunityIcons style={{ marginLeft: 4 }} name="calendar-search" size={28} color="#66fcf1" />
+            </TouchableOpacity>
+            {isSearchVisible && (
+              <>
+                <SearchBar onSearch={handleSearchWrapper} />
+                <View>
+                  {userList && userList.length > 0 ? (
+                    <FlatList
+                      style={styles.searchedUsersContainer}
+                      data={userList}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                        style={styles.userLink}
+                          onPress={() => {setSelectedUser(item); setSearchVisible(false)}}
+                        >
+                          <View style={styles.pictureAndUser}>
+                            <Image
+                              source={{ uri: item.photoUser }}
+                              style={styles.postProfileImg}
+                              resizeMode="cover"
+                            />
+                            <View>
+                              <Text style={styles.searchedUsername}>@{item.appUser}</Text>
+                              <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
+                              <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
+                            </View>
                           </View>
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item.uuid.toString()}
-                  />
-                ) : (
-                  <Text style={styles.notFound}>Usuario no encontrado</Text>
-                )}
-              </View>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={(item) => item.uuid.toString()}
+                    />
+                  ) : (
+                    <Text style={styles.notFound}>Usuario no encontrado</Text>
+                  )}
+                </View>
+              </>
+            )}
+              
+              
             </View>
   
             <View style={styles.userCalendarContainer}>
-              {selectedUser ? (
-                <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
-                  <View style={styles.userCalendarContainer}>
-                    <Image source={{ uri: selectedUser.photoUser }} style={styles.image} />
-                    <View style={styles.userLink}>
-                      <Text style={styles.user_ns}>{selectedUser.nameUser} {selectedUser.surnameUser}</Text>
-                      <Text style={styles.user_un}>@{selectedUser.appUser}</Text>
-                    </View>
+            {selectedUser !== null ? (
+              <TouchableOpacity onPress={() => handleGoToScreenUser(selectedUser.uuid)} style={styles.userLink}>
+                <View style={styles.userCalendarContainer}>
+                  <Image source={{ uri: selectedUser.photoUser }} style={styles.image} />
+                  <View style={styles.userLink}>
+                    <Text style={styles.searchedDescription}>{selectedUser.nameUser} {selectedUser.surnameUser}</Text>
+                    <Text style={styles.searchedUsername}>@{selectedUser.appUser}</Text>
                   </View>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
-                  <View style={styles.userCalendarContainer}>
-                    <Image source={{ uri: otherUser.photoUser }} style={styles.image} />
-                    <View style={styles.user_info}>
-                      <Text style={styles.user_ns}>{otherUser.nameUser} {otherUser.surnameUser}</Text>
-                      <Text style={styles.user_un}>@{otherUser.appUser}</Text>
-                    </View>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => handleGoToScreenUser(otherUser.uuid)} style={styles.userLink}>
+                <View style={styles.userCalendarContainer}>
+                  <Image source={{ uri: otherUser.photoUser }} style={styles.image} />
+                  <View style={styles.userLink}>
+                    <Text style={styles.searchedDescription}>{otherUser.nameUser} {otherUser.surnameUser}</Text>
+                    <Text style={styles.searchedUsername}>@{otherUser.appUser}</Text>
                   </View>
-                </TouchableOpacity>
-              )}
+                </View>
+              </TouchableOpacity>
+            )}
             </View>
           </>
         )}
@@ -221,8 +241,6 @@ function CalendarEventsScreen() {
         </View>
 
         <CalendarScreen activities={listActivities} uuid={uuid} />
-  
-        
   
       </SafeAreaView>
     </ImageBackground>
@@ -272,7 +290,7 @@ const styles = StyleSheet.create({
   },
   nextPlanButton: {
     //fontFamily: 'SFNS',
-    marginTop: 6,
+    marginTop: 0,
     paddingVertical: 6,
     backgroundColor: 'transparent',
     borderWidth: 0,
@@ -293,8 +311,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 0,
-    height: 50,
+    height: 30,
     borderRadius: 40,
+    paddingHorizontal: 10,
+    marginTop:10,
   },
   user_profileImg: {
     width: 20,
@@ -317,8 +337,9 @@ const styles = StyleSheet.create({
     marginTop:0,
   },
   userLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 0,
   },
   searchedUsername: {
     color: 'yellow',
@@ -364,14 +385,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   user_ns: {
-    //fontFamily: 'SFNS',
+    fontFamily: 'SFNS',
     color: 'black',
     fontSize: 16,
     marginTop: 0,
     marginBottom: 0,
   },
   user_un: {
-    //fontFamily: 'SFNS',
+    fontFamily: 'SFNS',
     color: 'black',
     fontSize: 14,
     marginTop: 0,
@@ -386,13 +407,19 @@ const styles = StyleSheet.create({
   },
   user_info: {
     flex: 1,
-    fontSize: 18,
-    textAlign: 'left',
-    color: 'black',
-    fontFamily: 'SFNS',
-    marginTop: 0,
     marginLeft: 8,
-    marginBottom: 2,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  searchIconContainer: {
+    marginRight: 10,
+    marginBottom: 0,
+    marginTop:10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
