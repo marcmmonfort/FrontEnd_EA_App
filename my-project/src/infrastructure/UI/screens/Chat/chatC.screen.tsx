@@ -151,7 +151,8 @@ function handleNewICECandidateMsg(incoming:any) {
 
   function sendMessage(messages = []){
     console.log(messages);
-    sendChannel.current.send(messages[0].text);
+    //sendChannel.current.send(messages[0].text);
+    sendChannel.current.send(messages[0]);
     setMessages((previousMessages:any) => GiftedChat.append(previousMessages, messages))
   }
   /*function sendMessage(messages = []) {
