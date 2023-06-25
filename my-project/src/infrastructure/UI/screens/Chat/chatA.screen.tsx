@@ -32,7 +32,7 @@ export default function ChatA() {
     const handleSubmit = () => {
         if (roomID !== '') {
         	// Enter the room
-            navigation.navigate('ChatB' as never,{roomID} as never);
+            navigation.navigate('ChatC' as never,{roomID} as never);
         }
     }
 
@@ -43,7 +43,7 @@ export default function ChatA() {
     	setRoomId(room);
         console.log('La rom puesta es:  '+roomID)
         
-        navigation.navigate('ChatB' as never, {roomID: room} as never);
+        navigation.navigate('ChatC' as never, {roomID: room} as never);
     }
 
     const styles = StyleSheet.create({

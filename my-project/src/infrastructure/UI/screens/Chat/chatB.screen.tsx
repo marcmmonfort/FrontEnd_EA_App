@@ -13,7 +13,7 @@ const ChatB = () => {
   const peerRef = useRef<any>();
   let socketRef = useRef<Socket | undefined>();
   const otherUser = useRef<any>();
-  const sendChannel = useRef<RTCDataChannel | undefined>(); //Data channel
+  const sendChannel = useRef<any>(); //Data channel
   const route = useRoute();
   const {roomID}: RouteParams = route.params || {};
   console.log("Mi Room ID es: "+roomID);
@@ -95,7 +95,7 @@ const ChatB = () => {
         peerRef.current = Peer(userID);
         console.log("peer:  "+peerRef.current)
         sendChannel.current = peerRef.current.createDataChannel("sendChannel");
-        if (sendChannel.current)
+        //if (sendChannel.current)
           // listen to incoming messages from other peer
           sendChannel.current.onmessage = handleReceiveMessage;
       
@@ -152,6 +152,7 @@ const ChatB = () => {
     peerRef.current = Peer(incoming.caller); //Revisar
     peerRef.current.ondatachannel = (event: any) => {
       sendChannel.current = event.channel;
+      console.log("sendChannel: "+sendChannel.current);
       if (sendChannel.current) {
         sendChannel.current.onmessage = handleReceiveMessage;
       }

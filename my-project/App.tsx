@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
-import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
+import ChatC from "./src/infrastructure/UI/screens/Chat/chatC.screen";
 
 const Stack = createStackNavigator();
 
@@ -17,9 +17,9 @@ export default function App() {
           component={ChatA}
         />
         <Stack.Screen
-          name="ChatB"
+          name="ChatC"
           options={{ headerShown: false }}
-          component={ChatB}
+          component={ChatC}
         />
       </Stack.Navigator>
     </NavigationContainer>
