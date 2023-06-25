@@ -6,14 +6,14 @@ export class ActivityValue implements ActivityEntity{
     creatorActivity: string;
     participantsActivity?: [string];
     publicationActivity?: [string];
-    dateActivity: Date;
+    dateActivity: string;
     hoursActivity: [string];
     idLocation?: string;
     descriptionActivity?: string;
     privacyActivity: boolean;
     roleActivity: "verificado" | "common" | "empresa" ;
 
-    constructor({uuid,nameActivity,creatorActivity,participantsActivity,publicationActivity,dateActivity,hoursActivity,idLocation,descriptionActivity,privacyActivity,roleActivity}:{uuid:string,nameActivity:string,creatorActivity:string,participantsActivity:[string],publicationActivity:[string],dateActivity:Date,hoursActivity:[string],idLocation:string,descriptionActivity:string,privacyActivity:boolean,roleActivity:"verificado" | "common" | "empresa"}){
+    constructor({uuid,nameActivity,creatorActivity,participantsActivity,publicationActivity,dateActivity,hoursActivity,idLocation,descriptionActivity,privacyActivity,roleActivity}:{uuid:string,nameActivity:string,creatorActivity:string,participantsActivity:[string],publicationActivity:[string],dateActivity:string,hoursActivity:[string],idLocation:string,descriptionActivity:string,privacyActivity:boolean,roleActivity:"verificado" | "common" | "empresa"}){
         this.uuid=uuid;
         this.nameActivity=nameActivity;
         this.creatorActivity=creatorActivity;
