@@ -25,13 +25,15 @@ import VideocallScreenB from "./src/infrastructure/UI/screens/Videocall/videocal
 
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
+import CalendarEventsScreen from "./src/infrastructure/UI/screens/calendarevents.screen";
 import NotFoundScreen from "./src/infrastructure/UI/screens/notFound.screen";
 import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactivitieslocation.screen";
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
 import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
 import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
-import CreateActivityScreen from "./src/infrastructure/UI/screens/createactivity.screen";
+import CreateActivityScreen from "./src/infrastructure/UI/screens/createActivity.screen";
 import NewLocationScreen from "./src/infrastructure/UI/screens/newlocation";
+
 
 const Stack = createStackNavigator();
 
@@ -152,6 +154,14 @@ export default function App() {
           name="UsersList"
           component={UsersList}
         />
+        <Stack.Screen
+        name="CalendarEventsScreen"
+        component={CalendarEventsScreen}
+          />
+        <Stack.Screen
+        name="CreateActivityScreen"
+        component={CreateActivityScreen}
+          />
         <Stack.Screen
         name="NotFoundScreen"
         component={NotFoundScreen}
