@@ -31,7 +31,7 @@ import ActivitiesLocationList from "./src/infrastructure/UI/screens/listactiviti
 import ActivityInfo from "./src/infrastructure/UI/screens/activityinfo.screen";
 import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/publicationUpC.screen";
 import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
-import CreateActivityScreen from "./src/infrastructure/UI/screens/createActivity.screen";
+import CreateActivityScreen from "./src/infrastructure/UI/screens/createactivity.screen";
 import NewLocationScreen from "./src/infrastructure/UI/screens/newlocation";
 
 
