@@ -76,11 +76,7 @@ export default function App() {
           options={{ headerShown: false }}
           component={ScreenRegisterB}
         />
-        <Stack.Screen
-          name="VideocallAg"
-          options={{ headerShown: false }}
-          component={VideocallAg}
-        />
+       
         <Stack.Screen
           name="ScreenRegisterC"
           options={{ headerShown: false }}
