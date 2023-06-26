@@ -17,6 +17,7 @@ import Filter from 'bad-words';
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { PublicationService } from "../../services/publication/publication.service";
 import ShareComponent from "../components/search/search";
+import QRCodeGenerator from "../components/qr/qrGenerator";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -41,6 +42,8 @@ export default function ProfileScreen() {
   const [numOwnPublications, setNumOwnPublications] = useState<number>(0);
   const [recargar, setRecargar] = useState<string>('');
   const [currentPublicationIndex, setCurrentPublicationIndex] = useState(1);
+  const [qrVisible, setqrVisible] = useState<boolean>(false);
+  
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -190,6 +193,10 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error('Error al leer en voz alta:', error);
     }
+  };
+  
+  const setQrVisible = () => {
+    setqrVisible(!qrVisible);
   };
   
 
@@ -373,13 +380,33 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     flex: 1,
   },
+  buttonQR: {
+    backgroundColor: "#66fcf1",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginTop: 10,
+    alignSelf: "center",
+  },
+  buttonTextQR: {
+    color: "#000",
+    fontSize: 16,
+    fontFamily: bodyFont,
+  },
 });
+
+const attribute1 = "hola";
+const attribute2 = "hola";
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View>
         <ShareComponent url={"https://www.lplan.es:443/shared/profile/" + currentUser?.uuid} />
+        <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
+          <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
+        </TouchableOpacity>
+        {qrVisible && <QRCodeGenerator attribute1={attribute1} attribute2={attribute2} />}
         </View>
         <View style={styles.profileContour}>
           {currentUser && (

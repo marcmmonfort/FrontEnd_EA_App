@@ -9,6 +9,7 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import SearchBar from "../components/searchbar/searchbar";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import QRCodeScanner from "../components/qr/qrLector";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -23,6 +24,7 @@ export default function DiscoveryScreen() {
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
   const [userList, setUserList] = useState<UserEntity[] | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [qrVisible, setqrVisible] = useState<boolean>(false);
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -125,6 +127,10 @@ export default function DiscoveryScreen() {
     );
   };
 
+  const setQrVisible = () => {
+    setqrVisible(!qrVisible);
+  };
+
   const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
@@ -153,7 +159,7 @@ export default function DiscoveryScreen() {
     },
     searchedUserContainer: {
       marginBottom: 20,
-    },
+    },    
     searchedUsersContainer: {
       marginLeft: 20,
       marginTop: -10,
@@ -173,17 +179,34 @@ export default function DiscoveryScreen() {
       color: 'white',
       fontFamily: bodyFont,
       fontSize: 16,
-      marginTop: -10,
+      marginTop: 20,
       marginBottom: 0,
       textAlign: "center",
-    }
+    },    
+    buttonQR: {
+      backgroundColor: "#66fcf1",
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 20,
+      marginTop: 10,
+      alignSelf: "center",
+    },
+    buttonTextQR: {
+      color: "#000",
+      fontSize: 16,
+      fontFamily: bodyFont,
+    },
   });
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <View>
         <SearchBar onSearch={handleSearchWrapper} />
+        <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
+          <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
+        </TouchableOpacity>
         <View>
+          {qrVisible&&(<QRCodeScanner></QRCodeScanner>)}
           {userList && userList.length > 0 ? (
             <FlatList style={styles.searchedUsersContainer}
               data={userList}
