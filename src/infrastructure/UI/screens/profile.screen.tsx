@@ -15,6 +15,7 @@ import Filter from 'bad-words';
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { PublicationService } from "../../services/publication/publication.service";
 import ShareComponent from "../components/search/search";
+import { LinearGradient } from "expo-linear-gradient";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -341,7 +342,12 @@ const styles = StyleSheet.create({
 });
   
   return (
-    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <LinearGradient
+        colors={['#000000', '#00ff00', '#000000']}
+        style={{ flex: 1 }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.profileContour}>
@@ -404,8 +410,7 @@ const styles = StyleSheet.create({
           </View>
         </View>
       </ScrollView>
-    </ImageBackground>
-
+      </LinearGradient>
   );
 }
 
