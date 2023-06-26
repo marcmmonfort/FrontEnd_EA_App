@@ -158,24 +158,7 @@ function handleNewICECandidateMsg(incoming:any) {
     }
     setMessages((previousMessages:any) => GiftedChat.append(previousMessages, messages));
   }
-  /*function sendMessage(messages = []) {
-    if (messages.length > 0) {
-      console.log("Enviando mensaje");
-      const { text } = messages[0];
-      console.log('Texto'+text)
-      if (sendChannel.current) {
-        sendChannel.current.onopen = () => {
-          // Channel is open, you can send data here
-          sendChannel.current?.send(text);
-        };
-      }
-      
-      setMessages(
-        (previousMessages:any) =>
-          GiftedChat.append(previousMessages, messages) as unknown as never
-      );
-    }
-  }*/
+  
 
   return (
     <GiftedChat
