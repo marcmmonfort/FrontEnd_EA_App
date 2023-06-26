@@ -15,10 +15,10 @@ import InactiveCall from './../../components/videocall/InactiveCall'
 const appId = 'e6456627f2ca4665abd3008f313c7c80';
 const channel = 'Zoom Teme Ante Nosotros';
 const token =
-  '007eJxTYNgfNTU5SbnHcNnT+GSZp8ohQgY70tSrXqX8Paz6QK8/VEaBIdXMxNTMzMg8zSg50cTMzDQxKcXYwMAizdjQONk82cLg/KvOlIZARgaxC96sjAwQCOKzMvgU5CTmMTAAAP9LHnk=';
+  '007eJxTYNhrbrrNY3223py8EzHWCTu7Wn8KH16U1ueQrz95fbqIRogCQ6qZiamZmZF5mlFyoomZmWliUoqxgYFFmrGhcbJ5soXBtcSZKQ2BjAxcP54zMjJAIIgvzhCVn5+rEJKam6rgmFeSquCXX5xfUpRfzMAAAIpqJXc=';
 const localUid = 0;
 
-export default function videocallAg() {
+export default function VideocallAg() {
   useKeepAwake();
 
   const agoraEngineRef = useRef<IRtcEngine>(); // Instancia de Agora

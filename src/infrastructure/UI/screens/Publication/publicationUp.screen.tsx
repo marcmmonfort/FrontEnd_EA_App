@@ -137,7 +137,7 @@ export default function PublicationUpScreenA() {
   };
   const handleButtonPress = () => {
     // Navegar hacia otra pantalla aquí
-    navigation.navigate("ChatA" as never);
+    navigation.navigate("VideocallAg" as never);
   };
 
   const titleFont = Platform.select({

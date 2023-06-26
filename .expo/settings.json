@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": "q4-cap",
   "https": false,
-  "scheme": null,
-  "devClient": false
+  "scheme": "com.ea.lplan",
+  "devClient": true
 }
