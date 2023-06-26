@@ -17,11 +17,9 @@ import SplashScreen from "./src/infrastructure/UI/screens/splash.screen";
 import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/publicationUpB.screen";
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
-import VideocallScreenA from "./src/infrastructure/UI/screens/Videocall/videocallA.screen";
 import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
-import VideocallScreenB from "./src/infrastructure/UI/screens/Videocall/videocallB.screen";
 
 import UserScreen from "./src/infrastructure/UI/screens/user.screen";
 import UsersList from "./src/infrastructure/UI/screens/users.list.screen";
@@ -33,6 +31,7 @@ import ScreenPublicationUpC from "./src/infrastructure/UI/screens/Publication/pu
 import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
 import CreateActivityScreen from "./src/infrastructure/UI/screens/createactivity.screen";
 import NewLocationScreen from "./src/infrastructure/UI/screens/newlocation";
+import VideocallAg from "./src/infrastructure/UI/screens/Videocall/videocallAg.screen";
 
 
 const Stack = createStackNavigator();
@@ -78,6 +77,11 @@ export default function App() {
           component={ScreenRegisterB}
         />
         <Stack.Screen
+          name="VideocallAg"
+          options={{ headerShown: false }}
+          component={VideocallAg}
+        />
+        <Stack.Screen
           name="ScreenRegisterC"
           options={{ headerShown: false }}
           component={ScreenRegisterC}
@@ -103,16 +107,7 @@ export default function App() {
           component={HomeScreen}
         />
         
-        <Stack.Screen
-          name="VideocallScreenA"
-          options={{ headerShown: false }}
-          component={VideocallScreenA}
-        />
-        <Stack.Screen
-          name="VideocallScreenB"
-          options={{ headerShown: false }}
-          component={VideocallScreenB}
-        />
+
         
         <Stack.Screen
           name="ChatA"
