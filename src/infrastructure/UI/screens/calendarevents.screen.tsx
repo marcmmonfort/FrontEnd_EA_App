@@ -7,7 +7,7 @@ import { SessionService } from "../../services/user/session.service";
 import CalendarScreen from "../components/calendar/calendar";
 import { UserEntity } from "../../../domain/user/user.entity";
 import { CRUDService } from "../../services/user/CRUD.service";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SearchBar from "../components/searchbar/searchbar";
 
@@ -22,9 +22,9 @@ function CalendarEventsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [recargar, setRecargar] = useState(false);
   const [userList, setUserList] = useState<UserEntity[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
   const [isSearchVisible, setSearchVisible] = useState(false);
+  const isFocused = useIsFocused();
 
   
 
@@ -76,6 +76,12 @@ function CalendarEventsScreen() {
     fetchData();
     console.log("otherUser", otherUser)
   }, [selectedTimetable, currentPage, recargar, selectedUser]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setRecargar((prevState) => !prevState);
+    }, [])
+  );
   
   const handleTimetableChange = (timetable: string) => {
     setSelectedTimetable(timetable);
@@ -113,7 +119,7 @@ function CalendarEventsScreen() {
 
   const handleGoToScreenUser = (uuid:string) => {
     navigation.navigate("UserScreen" as never, {uuid} as never);
-    setRecargar(false);
+    setRecargar((prevState) => !prevState);
   };
 
   return (
@@ -240,7 +246,7 @@ function CalendarEventsScreen() {
           )}
         </View>
 
-        <CalendarScreen activities={listActivities} uuid={uuid} />
+        <CalendarScreen activities={listActivities} uuid={uuid}/>
   
       </SafeAreaView>
     </ImageBackground>

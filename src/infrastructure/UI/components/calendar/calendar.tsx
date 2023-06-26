@@ -80,19 +80,31 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   
   const handleActivityPress = (uuid: string) => {
     console.log("activity id", uuid);
-    navigation.navigate("Activity" as never, {uuid} as never)
+    navigation.navigate("Activity" as never, {uuid} as never);
   };
 
+  const getActivityColor = (roleActivity: string) => {
+    if (roleActivity === "verificado") {
+      return "green"; // Color para el rol "verificado"
+    } else if (roleActivity === "common") {
+      return "blue"; // Color para el rol "common"
+    } else if (roleActivity === "empresa") {
+      return "orange"; // Color para el rol "empresa"
+    } else {
+      return "gray"; // Color predeterminado para otros roles no especificados
+    }
+  };
 
   const renderItem = (item: AgendaEntry) => {
 
     const nameParts = item.name.split("\n");
     const activityName = nameParts[0];
     const matchingActivity = activities.find(activity => activity.nameActivity === activityName);
-
+    if (matchingActivity) {
+      const color = getActivityColor(matchingActivity.roleActivity);
     
       return (
-        <TouchableOpacity style={styles.item} onPress={() => handleActivityPress(matchingActivity.uuid)}>
+        <TouchableOpacity style={[styles.item, { backgroundColor: color }]} onPress={() => handleActivityPress(matchingActivity.uuid)}>
           <Card>
             <Card.Content>
               <View>
@@ -102,7 +114,9 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
           </Card>
         </TouchableOpacity>
       );
+    }
   }
+  
   
   return (
     <View style={styles.container}>

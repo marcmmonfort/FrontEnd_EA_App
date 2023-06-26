@@ -28,3 +28,17 @@ export interface Activity{
     roleActivity: string ;
 }
 
+export interface ActivityShare {
+	uuid?: string;
+	nameActivity: string;
+	creatorActivity: UserEntity;
+	participantsActivity: string[];
+	publicationActivity?: string[];
+	dateActivity: Date;
+	hoursActivity: string[];
+	idLocation?: string;
+	descriptionActivity?: string;
+	privacyActivity: boolean;
+	roleActivity: string;
+}
+

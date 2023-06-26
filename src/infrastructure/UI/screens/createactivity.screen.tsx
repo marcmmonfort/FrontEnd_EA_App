@@ -204,7 +204,7 @@ export default function CreateActivityScreen() {
 
         console.log("FIELDS: (1) " + userId +  " (2) " + nameActivity +  " (3) " + dateActivity +  " (4) " + startHour +  " (5) " + endHour +  " (6) " + uuid +  " (7) " + descriptionActivity +  " (8) " + privacyActivity +  " (9) " + roleActivity);
 
-        if (userId && nameActivity && dateActivity && startHour && endHour && uuid && descriptionActivity && privacyActivity && roleActivity && (endTime > startTime)) {
+        if (userId && nameActivity && dateActivity && startHour && endHour && descriptionActivity && privacyActivity && roleActivity && (endTime > startTime)) {
             const newActivity = {
                 nameActivity: nameActivity,
                 creatorActivity: userId,

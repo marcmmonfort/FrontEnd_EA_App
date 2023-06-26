@@ -16,7 +16,7 @@ import * as Font from 'expo-font';
 import * as Location from 'expo-location';
 import { LocationService } from "../../../infrastructure/services/location/location.service";
 import { ActivityService } from "../../../infrastructure/services/activity/activity.service";
-import { ActivityEntity } from "../../../domain/activity/activity.entity";
+import { ActivityEntity, ActivityShare } from "../../../domain/activity/activity.entity";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Publication, PublicationEntity } from "../../../domain/publication/publication.entity";
 import { PublicationService } from "../../services/publication/publication.service";
@@ -40,7 +40,7 @@ export default function ActivityInfo() {
         uuid
       }: RouteParams = route.params || {};
 
-    const [activity, setActivity] = useState<ActivityEntity>();
+    const [activity, setActivity] = useState<ActivityShare>();
     const [participants, setParticipants] = useState<string[]>();
     const [myId, setMyId] = useState<string>();
     const [participating, setParticipating] = useState<boolean>();
@@ -57,6 +57,8 @@ export default function ActivityInfo() {
     const [listPublicationsActivity, setListPublicationsActivity] = useState<Publication[]>([]);
     const [numPublicationsActivity, setNumPublicationsActivity] = useState<number>(0);
     const [recargar, setRecargar] = useState<string>('');
+    const [isCreatorOfActivity, setIsCreatorOfActivity] = useState<boolean>(false);
+    const [userProfilePhotos, setUserProfilePhotos] = useState<Map<string, string[]>>(new Map());
 
     useFocusEffect(
       React.useCallback(() => {
@@ -80,7 +82,7 @@ export default function ActivityInfo() {
             try {
                 const response = await ActivityService.getActivityById(uuid);
                 if (response) {
-                  const activity = response.data as ActivityEntity;
+                  const activity = response.data as ActivityShare;
                   console.log("ACTIVITY CARGAA EN INFO: ", activity);
                   setActivity(activity);
                   setParticipants(activity.participantsActivity);
@@ -96,6 +98,16 @@ export default function ActivityInfo() {
                       setParticipating(false);
                     }
                   }
+                  console.log("creatorActivity", activity.creatorActivity.uuid);
+                  console.log("userId", userId);
+                  if(activity.creatorActivity.uuid === userId){
+                    console.log("creé la actividad");
+                    setIsCreatorOfActivity(true);
+                  }
+                  else{
+                    console.log("no creé la actividad");
+                    setIsCreatorOfActivity(false);
+                  }
 
                 } else {
                   console.error('Error fetching activities: Response is undefined');
@@ -104,19 +116,6 @@ export default function ActivityInfo() {
             console.error('Error fetching activities:', error);
             }
         }
-    };
-
-    const setParticipationState = async () => {
-      if (activity && participants && myId) {
-        const index = activity.participantsActivity?.indexOf(myId);
-        if (index !== undefined && index !== -1) {
-          // PARTICIPO
-          setParticipating(true);
-        } else {
-          // NO PARTICIPO
-          setParticipating(false);
-        }
-      }
     };
 
     useEffect(() => {
@@ -131,6 +130,44 @@ export default function ActivityInfo() {
         getPublicationsForActivity();
     }
     }, [activity]);
+
+    useEffect(() => {
+      const fetchUserProfilePhotos = async () => {
+        const photos = new Map<string, string[]>();
+    
+        if (activity && activity.participantsActivity && activity.uuid) {
+          const photosForActivity = await Promise.all(
+            activity.participantsActivity.map((userId) => getUserProfilePhoto(userId))
+          );
+    
+          const cleanedPhotosForActivity = photosForActivity.filter((photo) => photo !== null) as string[];
+    
+          photos.set(activity.uuid, cleanedPhotosForActivity);
+        }
+    
+        setUserProfilePhotos(photos);
+      };
+    
+      fetchUserProfilePhotos();
+    }, [activity]);
+    
+    const getUserProfilePhoto = async (userId: string) => {
+      try {
+          const response = await CRUDService.getUser(userId);
+          if (response) {
+              const user = response.data as UserEntity;
+              return user.photoUser;
+          } else {
+              console.error('Error fetching user:', userId);
+              return null;
+          }
+      } catch (error) {
+          console.error('Error fetching user:', error);
+          return null;
+      }
+    };
+
+
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -188,6 +225,9 @@ export default function ActivityInfo() {
             marginTop: 2,
             marginBottom: 2,
         },
+        scroll_profiles_content: {
+          justifyContent: 'center',
+        },        
         plus_icon: {
             width: 46,
             height: 46,
@@ -243,6 +283,12 @@ export default function ActivityInfo() {
             alignItems: "center",
             justifyContent: "flex-start", // Alinear el contenido en la parte superior
           },
+          participant_profile_image: {
+            width: 46,
+            height: 46,
+            borderRadius: 40,
+            marginRight: 10,
+          },
     });
 
     const getPublicationsForActivity = async () => {
@@ -260,6 +306,7 @@ export default function ActivityInfo() {
         }
     };
 
+
     const handleJoinLeaveActivity = async () => {
       if (activity && participants && myId) {
         const index = activity.participantsActivity?.indexOf(myId);
@@ -273,6 +320,10 @@ export default function ActivityInfo() {
         await ActivityService.updateActivity(activity.uuid!, activity);
         navigation.navigate('HomeScreen' as never);
       }
+    };
+
+    const handleGoToScreenUser = (uuid:string) => {
+      navigation.navigate("UserScreen" as never, {uuid} as never);
     };
 
     return (
@@ -289,9 +340,27 @@ export default function ActivityInfo() {
                     {new Date(activity.dateActivity).getFullYear()}
                   </Text>
                   <Text style={styles.text_activity_time}>{activity.hoursActivity[0]} - {activity.hoursActivity[1]}</Text>
-                  <TouchableOpacity style={styles.plus_icon} onPress={handleJoinLeaveActivity}>
+                  {!isCreatorOfActivity && (
+                    <TouchableOpacity style={styles.plus_icon} onPress={handleJoinLeaveActivity}>
                     <MaterialCommunityIcons color="#66fcf1" name={participating ? "minus" : "plus"} size={20} />
                   </TouchableOpacity>
+                  )}
+                  <Text style={styles.text_activity_description}>
+                    Participants
+                  </Text>
+                  <ScrollView style={styles.scroll_profiles} horizontal contentContainerStyle={styles.scroll_profiles_content}>
+                    {activity.uuid &&
+                      userProfilePhotos.get(activity.uuid)?.map((photoUrl, index) => (
+                        <TouchableOpacity key={index} onPress={() => {
+                          const userId = activity.participantsActivity?.[index];
+                          if (userId) {
+                            handleGoToScreenUser(userId);
+                          }
+                        }}>
+                          <Image style={styles.participant_profile_image} source={photoUrl ? { uri: photoUrl } : undefined} />
+                        </TouchableOpacity>
+                      ))}
+                  </ScrollView>
                   <ScrollView horizontal>
                     {listPublicationsActivity.reverse().map((publication, index) => (
                       <View key={index} style={styles.post_complete}>
