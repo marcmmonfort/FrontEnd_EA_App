@@ -162,8 +162,8 @@ export default function DiscoveryScreen() {
     },    
     searchedUsersContainer: {
       marginLeft: 20,
-      marginTop: -10,
-      height: '100%',
+      marginTop: 0,
+      height: 128,
     },
     postProfileImg: {
       width: 50,
@@ -188,7 +188,8 @@ export default function DiscoveryScreen() {
       paddingVertical: 8,
       paddingHorizontal: 16,
       borderRadius: 20,
-      marginTop: 10,
+      marginTop: -10,
+      marginBottom: 10,
       alignSelf: "center",
     },
     buttonTextQR: {
@@ -196,17 +197,24 @@ export default function DiscoveryScreen() {
       fontSize: 16,
       fontFamily: bodyFont,
     },
+    qrcontainer: {
+      alignItems: 'center',
+      flex: 1,
+    },
+    searchresultscontainer: {
+      marginLeft: 0,
+      marginTop: 10,
+      alignItems: 'flex-start',
+    },
   });
-  
+
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-      <View>
-        <SearchBar onSearch={handleSearchWrapper} />
-        <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
-          <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
-        </TouchableOpacity>
-        <View>
-          {qrVisible&&(<QRCodeScanner></QRCodeScanner>)}
+      <SearchBar onSearch={handleSearchWrapper} />
+      <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
+        <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
+      </TouchableOpacity>
+      <View style={styles.searchresultscontainer}>
           {userList && userList.length > 0 ? (
             <FlatList style={styles.searchedUsersContainer}
               data={userList}
@@ -232,7 +240,10 @@ export default function DiscoveryScreen() {
             <Text style={styles.notFound}>User Not Found</Text>
           )}
         </View>
-      </View>
+        {qrVisible&&(<View style={styles.qrcontainer}>
+          <QRCodeScanner></QRCodeScanner>
+        </View>)}
+
     </ImageBackground>
   );
 }

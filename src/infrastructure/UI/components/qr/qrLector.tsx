@@ -37,7 +37,7 @@ export default function App() {
         type={BarCodeScanner.Constants.Type.back}
       />
       <View style={styles.scannerOverlay} />
-      <Text>Btn abierto</Text>
+      <Text></Text>
       {scanned && <Button title={'Presiona para escanear de nuevo'} onPress={() => setScanned(false)} />}
     </View>
   );
@@ -45,16 +45,17 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 0,
+    width: 260,
+    height: 260,
   },
   scannerOverlay: {
     position: 'absolute',
-    top: '30%', // Ajusta la posición vertical del área de escaneo
+    top: 30,
     alignSelf: 'center',
-    width: '70%', // Ajusta el ancho del área de escaneo
-    aspectRatio: 1, // Hace que el área de escaneo sea un cuadrado
+    width: 200,
+    aspectRatio: 1,
     borderWidth: 2,
     borderColor: 'red',
     opacity: 0.5,
