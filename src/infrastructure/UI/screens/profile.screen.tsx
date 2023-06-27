@@ -395,8 +395,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const attribute1 = "hola";
-const attribute2 = "hola";
+  const attribute1 = "user";
+  const attribute2 = currentUser ? currentUser.uuid : 'valor predeterminado';
+
+
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
@@ -406,7 +408,7 @@ const attribute2 = "hola";
         <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
           <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
         </TouchableOpacity>
-        {qrVisible && <QRCodeGenerator attribute1={attribute1} attribute2={attribute2} />}
+        {qrVisible&& <QRCodeGenerator attribute1={attribute1} attribute2={attribute2} />}
         </View>
         <View style={styles.profileContour}>
           {currentUser && (

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useNavigation } from '@react-navigation/native';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [scanned, setScanned] = useState(false);
   const [permissionResponse, requestPermission] = BarCodeScanner.usePermissions();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -17,8 +19,16 @@ export default function App() {
   }, []);
 
   console.log(permissionResponse);
-  const handleBarCodeScanned = () => {
+  const handleBarCodeScanned = (scanningResult: any) => {
     setScanned(true);
+    const scannedData = scanningResult.data;
+    const attribute1 = scannedData.split('\n')[0].split(': ')[1];
+    const attribute2 = scannedData.split('\n')[1].split(': ')[1];
+    console.log('Valores escaneados:', attribute1, attribute2);
+    if(attribute1 === "user"){
+      navigation.navigate("UserScreen" as never, {attribute2} as never);
+    }
+    
   };
 
   if (hasPermission === null) {
