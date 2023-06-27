@@ -114,4 +114,15 @@ export class PublicationService {
     }
   }
 
+  static async getAllPublicationByUser( uuid: string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      const response = await axios.get(API_URL + "/ownPosts/"+ uuid, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error during load feed:', error);
+      throw error;
+    }
+  }
+
 }

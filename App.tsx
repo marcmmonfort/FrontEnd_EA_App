@@ -18,6 +18,7 @@ import ScreenPublicationUpB from "./src/infrastructure/UI/screens/Publication/pu
 import ChatA from "./src/infrastructure/UI/screens/Chat/chatA.screen";
 import ChatB from "./src/infrastructure/UI/screens/Chat/chatB.screen";
 import GoogleLogin from "./src/infrastructure/UI/screens/login.screen";
+import UserStats from "./src/infrastructure/UI/screens/stats.screen";
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
 
@@ -177,7 +178,12 @@ export default function App() {
         <Stack.Screen
         name="NewLocation"
         component={NewLocationScreen}
-        />            
+        />
+        
+        <Stack.Screen
+        name="UserStats"
+        component={UserStats}
+        />          
         
       </Stack.Navigator>
     </NavigationContainer>

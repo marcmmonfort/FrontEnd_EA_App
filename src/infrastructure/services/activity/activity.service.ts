@@ -94,4 +94,69 @@ export class ActivityService {
       throw error;
     }
   }
+
+  static async getAllActivitiesParticipatedByUser(uuid: string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      console.log(uuid);
+      const response = await axios.get(API_URL + "activity/all/" + uuid, { headers: token });
+      console.log("try response " + response)
+      return response;
+    } catch (error) {
+      console.error('Error during loading comments:', error);
+      throw error;
+    }
+  }
+
+  static async getAllActivitiesCreatedByUser(uuid: string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      console.log(uuid);
+      const response = await axios.get(API_URL + "activity/all/created/" + uuid, { headers: token });
+      console.log("try response " + response)
+      return response;
+    } catch (error) {
+      console.error('Error during loading comments:', error);
+      throw error;
+    }
+  }
+
+  static async getActivitiesLastMonthByUser(uuid: string, date:string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      console.log(uuid);
+      const response = await axios.get(API_URL + "activity/mymonth/" + uuid +"/" + date, { headers: token });
+      console.log("try response " + response)
+      return response;
+    } catch (error) {
+      console.error('Error during loading comments:', error);
+      throw error;
+    }
+  }
+
+  static async getActivitiesLast6Weeks(uuid: string) {
+    const token = await AuthHeaderService.authHeader();
+    try {
+      console.log(uuid);
+      const response = await axios.get(API_URL + "activity/last6weeks/" + uuid, { headers: token });
+      console.log("try response last 6" + response)
+      return response;
+    } catch (error) {
+      console.error('Error during loading comments:', error);
+      throw error;
+    }
+  }
+
+  static async getActivitiesByMonthAndYear(myUserId: string, month: string, year: string){
+    const token = await AuthHeaderService.authHeader();
+    try {
+      console.log(myUserId);
+      const response = await axios.get(API_URL + "activity/monthyear/" + myUserId + "/" + month + "/" + year, { headers: token });
+      return response;
+    } catch (error) {
+      console.error('Error during loading comments:', error);
+      throw error;
+    }
+  }
+
 }

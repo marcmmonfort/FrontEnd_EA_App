@@ -370,6 +370,11 @@ const styles = StyleSheet.create({
                         <MaterialCommunityIcons color="black" name="cog" size={18} />
                       </View>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {navigation.navigate("UserStats" as never);}} style={styles.buttonForChanges}>
+                      <View style={styles.insideButtonForChanges}>
+                        <MaterialCommunityIcons color="black" name="chart-line" size={18} />
+                      </View>
+                    </TouchableOpacity>
                   </View>
                   <View style={styles.profileImage}>
                     <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
