@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import Voice from '@react-native-community/voice';
 import { GoogleSignin } from 'react-native-google-signin';
+import { useTranslation } from 'react-i18next';
 
 /*const dialogflowConfig = {
   clientId: '10555416937782666461',
@@ -15,6 +16,7 @@ Dialogflow_V2.setConfiguration('dialogflow@eaproject-389519.iam.gserviceaccount.
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [inputText, setInputText] = useState<string>('');
+  const {t}=useTranslation();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -93,11 +95,11 @@ const ChatbotScreen = () => {
           placeholder="Escribe tu mensaje..."
         />
         <TouchableOpacity onPress={handleSendMessage} style={{ padding: 8, backgroundColor: 'blue' }}>
-          <Text style={{ color: 'white' }}>Enviar</Text>
+          <Text style={{ color: 'white' }}>{t("Send")}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={handleVoiceStart} style={{ marginTop: 16, padding: 8, backgroundColor: 'green' }}>
-        <Text style={{ color: 'white' }}>Hablar</Text>
+        <Text style={{ color: 'white' }}>{t("Talk")}</Text>
       </TouchableOpacity>
     </View>
   );

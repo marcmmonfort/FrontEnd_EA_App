@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
 
 export default function NotFoundScreen() {
   const [animation] = useState(new Animated.ValueXY({ x: 0, y: 0 }));
-
+  const {t} = useTranslation()
   const handlePressIn = () => {
     Animated.spring(animation, {
       toValue: {
@@ -23,7 +24,7 @@ export default function NotFoundScreen() {
 
   return (
     <View style={styles.tabContainer}>
-      <Text style={styles.tabTitle}>Page Not Found</Text>
+      <Text style={styles.tabTitle}>{t("PNF")}</Text>
       <TouchableOpacity
         style={styles.tabButton}
         onPressIn={handlePressIn}

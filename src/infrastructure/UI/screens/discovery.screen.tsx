@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserEntity } from "../../../domain/user/user.entity";
 import SearchBar from "../components/searchbar/searchbar";
 import * as Font from 'expo-font';
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -22,6 +23,7 @@ export default function DiscoveryScreen() {
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
   const [userList, setUserList] = useState<UserEntity[] | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -180,7 +182,7 @@ export default function DiscoveryScreen() {
               keyExtractor={(item) => item.uuid.toString()}
             />
           ) : (
-            <Text style={styles.notFound}>User Not Found</Text>
+            <Text style={styles.notFound}>{t("UNF")}</Text>
           )}
         </View>
       </View>

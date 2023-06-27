@@ -12,6 +12,7 @@ import SubTitle from "../../components/texts/Subtitle";
 import * as Font from 'expo-font';
 import MainContainer from "../../components/containers/Main";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -28,6 +29,7 @@ interface RouteParams {
   passwordUser?: string;
 }
 export default function ScreenRegisterC() {
+  const {t}=useTranslation();
   const route = useRoute();
   const {
     appUser,
@@ -300,9 +302,9 @@ export default function ScreenRegisterC() {
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.registerTitle}>Register</Text>
-        <Text style={styles.stepTitle}>Step 3</Text>
-        <Text style={styles.stepSubtitle}>Upload a Profile Picture</Text>
+        <Text style={styles.registerTitle}>{t("Register")}</Text>
+        <Text style={styles.stepTitle}>{t("Step")} 3</Text>
+        <Text style={styles.stepSubtitle}>{t("Upload a Picture P")}</Text>
         {loading ? (
           <ActivityIndicator size="large" color="blue" />
           ) : (

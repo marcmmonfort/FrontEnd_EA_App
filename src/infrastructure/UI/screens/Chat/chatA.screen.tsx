@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Text, View, Button, TextInput, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const BLUE = "#007AFF";
 const BLACK = "#000000";
@@ -9,6 +10,7 @@ const LENGTH = 6; // Length of the Room ID
 export default function ChatA() {
     const navigation = useNavigation();
     const [roomID, setRoomId] = useState('');
+    const {t} = useTranslation();
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -109,7 +111,7 @@ export default function ChatA() {
                         onPress={handleCreateSubmit}
                         title="Create Room"
                     />
-                    <Text style={styles.textStyle}>Don't have a Room ID? Create One :)</Text>
+                    <Text style={styles.textStyle}> {t("Don't have a Room ID? Create One")} :)</Text>
                 </View>
             </View>
         </ImageBackground>

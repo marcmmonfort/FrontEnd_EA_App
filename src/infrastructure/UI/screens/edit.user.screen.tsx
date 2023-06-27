@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
+import { useTranslation } from 'react-i18next';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -27,6 +28,7 @@ export default function EditUserScreen() {
   const [auxPhotoUser, setAux] = useState("");
   const [loading, setLoading] = useState(false);
   const [cam, setCam] = useState(false);
+  const { t } = useTranslation();
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const [userData, setUserData] = useState({
     uuid: '',
@@ -230,17 +232,17 @@ export default function EditUserScreen() {
             <MaterialCommunityIcons color="white" name="image-edit" size={24} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.titleText}>Username</Text>
+        <Text style={styles.titleText}>{t("Username")}</Text>
         <StyledTextInputs style={[styles.input, { color: '#fb3958' }]} placeholder="Username" value={userData.appUser} editable={false} onChangeText={(value: string) => handleChange('appUser', value)}/>
-        <Text style={styles.titleText}>Name</Text>
+        <Text style={styles.titleText}>{t("Name")}</Text>
         <StyledTextInputs style={styles.input} placeholder="Name" value={userData.nameUser} onChangeText={(value: string) => handleChange('nameUser', value)}/>
-        <Text style={styles.titleText}>Surname</Text>
+        <Text style={styles.titleText}>{t("Surname")}</Text>
         <StyledTextInputs style={styles.input} placeholder="Surname" value={userData.surnameUser} onChangeText={(value: string) => handleChange('surnameUser', value)}/>
-        <Text style={styles.titleText}>Email</Text>
+        <Text style={styles.titleText}>{t("Email")}</Text>
         <StyledTextInputs style={[styles.input, { color: '#fb3958' }]} placeholder="Email" value={userData.mailUser} editable={false} onChangeText={(value: string) => handleChange('mailUser', value)}/>
-        <Text style={styles.titleText}>Description</Text>
+        <Text style={styles.titleText}>{t("Description")}</Text>
         <StyledTextInputs style={styles.input} placeholder="Description" value={userData.descriptionUser} onChangeText={(value: string) => handleChange('descriptionUser', value)}/>
-        <Text style={styles.titleText}>Save</Text>
+        <Text style={styles.titleText}>{t("Save")}</Text>
         <TouchableOpacity style={styles.buttonForSaving} onPress={handleSubmit}>
           <MaterialCommunityIcons color="#3897f0" name="content-save" size={24} />
         </TouchableOpacity>

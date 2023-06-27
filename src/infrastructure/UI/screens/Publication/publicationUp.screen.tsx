@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Button } from "react-native-paper";
 import * as Font from 'expo-font';
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -19,6 +20,7 @@ export default function PublicationUpScreenA() {
   const [auxPhotoPublication, setAux] = useState("");
   const [loading, setLoading] = useState(false);
   const [cam, setCam] = useState(false);
+  const {t}=useTranslation();
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -209,17 +211,17 @@ export default function PublicationUpScreenA() {
           <ActivityIndicator size="large" color="black" />
         ) : (
           <>  
-            <Text style={styles.bottomText}>Take a Picture</Text>
+            <Text style={styles.bottomText}>{t("Take a Picture")}</Text>
             <TouchableOpacity style={styles.button} onPress={handleCameraPress}>
               <Ionicons style={styles.iconsInside} name="camera" size={32} />
             </TouchableOpacity>
 
-            <Text style={styles.bottomText}>Upload a Picture</Text>
+            <Text style={styles.bottomText}>{t("Subir una foto")}</Text>
             <TouchableOpacity style={styles.button} onPress={handleGalleryPress}>
               <Ionicons style={styles.iconsInside} name="image" size={30} />
             </TouchableOpacity>
 
-            <Text style={styles.bottomText}>Start a Chat</Text>
+            <Text style={styles.bottomText}>{t("Start a Chat")}</Text>
             <TouchableOpacity style={styles.button_chat} onPress={handleButtonPress}>
               <Ionicons style={styles.iconsInside_chat} name="chatbubble-ellipses" size={30} />
             </TouchableOpacity>

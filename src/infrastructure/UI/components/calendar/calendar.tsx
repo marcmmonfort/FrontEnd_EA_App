@@ -7,6 +7,7 @@ import ActivityDetailsModal from "../activityDetails/activityModal";
 import { Activity } from "../../../../domain/activity/activity.entity";
 import { RefreshControl } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -24,6 +25,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   const [items, setItems] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
+  const {t} =useTranslation(); 
   
   useEffect(() => {
     loadItems();
@@ -96,6 +98,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   };
 
   const renderItem = (item: AgendaEntry) => {
+       
 
     const nameParts = item.name.split("\n");
     const activityName = nameParts[0];
@@ -121,7 +124,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
   return (
     <View style={styles.container}>
       {isLoading ? ( // Verificar isLoading
-        <Text>Loading...</Text> // Mostrar indicador de carga o mensaje
+        <Text>{t("Loading...")}</Text> // Mostrar indicador de carga o mensaje
       ) : (
         <React.Fragment>
           {items ? (
@@ -136,7 +139,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
                 refreshing={false}
                 renderEmptyData={() => (
                   <View style={styles.emptyDataContainer}>
-                    <Text>No activities...</Text>
+                    <Text>{t("No_Activities")}</Text>
                   </View>
                 )}
                 style={styles.agenda}
@@ -150,7 +153,7 @@ const CalendarScreen = ({ activities, uuid }: CalendarProps) => {
               )}
             </View>
           ) : (
-            <Text>No hay actividades</Text>
+            <Text>{t("No_Activities")}</Text>
           )}
         </React.Fragment>
       )}

@@ -1,25 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ActivityDetailsModalProps } from './Types';
+import { useTranslation } from 'react-i18next';
 
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
   activity,
   onClose,
 }) => {
+  const {t}=useTranslation();
   return (
     <View style={styles.modal}>
       <View style={styles.modalContent}>
-        <Text style={styles.heading}>Detalles de la actividad</Text>
-        <Text>Nombre: {activity.nameActivity}</Text>
-        <Text>Fecha: {activity.dateActivity.toLocaleDateString()}</Text>
-        <Text>Descripción: {activity.descriptionActivity}</Text>
-        <Text>Creador: {activity.creatorActivity}</Text>
+        <Text style={styles.heading}>{t("Activity details")}</Text>
+        <Text>{t("Name")}: {activity.nameActivity}</Text>
+        <Text>{t("Date")}: {activity.dateActivity.toLocaleDateString()}</Text>
+        <Text>{t("Description")}: {activity.descriptionActivity}</Text>
+        <Text>{t("Creator")}: {activity.creatorActivity}</Text>
         <Text>
-          Participantes: {activity.participantsActivity?.join(', ')}
+          {t("Participants")}: {activity.participantsActivity?.join(', ')}
         </Text>
         <TouchableOpacity style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>Cerrar</Text>
+          <Text style={styles.buttonText}>{t("Close")}</Text>
         </TouchableOpacity>
       </View>
     </View>

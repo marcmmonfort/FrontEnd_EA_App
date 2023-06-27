@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 const SettingsPage = () => {
   const [audioDescriptionEnabled, setAudioDescriptionEnabled] = useState(false);
   const navigation = useNavigation();
+  const {t, i18n } = useTranslation();
 
   //const [voiceControlEnabled, setVoiceControlEnabled] = useState(false);
 
@@ -37,7 +38,7 @@ const SettingsPage = () => {
   }, []);
 
   const LanguageSelector = () => {
-    const {t, i18n } = useTranslation();
+    
     const [currentLanguage, setLanguage] = useState(i18n.language);
 
     const changeLanguage = (language:string) => {
@@ -47,16 +48,16 @@ const SettingsPage = () => {
     return (
       <View>
         <Pressable onPress={() => changeLanguage('en')}>
-          <Text>{t("English")}English</Text>
+          <Text>{t("English")}</Text>
         </Pressable>
         <Pressable onPress={() => changeLanguage('es')}>
-          <Text>{t("Spanish")}Español</Text>
+          <Text>{t("Spanish")}</Text>
         </Pressable>
         <Pressable onPress={() => changeLanguage('de')}>
-          <Text>{t("German")}Deutsch</Text>
+          <Text>{t("German")}</Text>
         </Pressable>
         <Pressable onPress={() => changeLanguage('pt')}>
-          <Text>{t("Portuguese")}Português</Text>
+          <Text>{t("Portuguese")}</Text>
         </Pressable>
       </View>
     );
@@ -86,10 +87,10 @@ const SettingsPage = () => {
   return (
     <View style={styles.container}>
         <View style={styles.settingsContainer}>
-          <Text style={styles.title}> Language detector</Text>
+          <Text style={styles.title}> {t("Language selector")}</Text>
           <LanguageSelector/>
-          <Text style={styles.title}>Audio Description</Text>
-          <Text>Enable audio description</Text>
+          <Text style={styles.title}>{t("Audio Description")}</Text>
+          <Text>{t("Enable audio description")}</Text>
           <Switch
             value={audioDescriptionEnabled}
             onValueChange={handleToggleAudioDescription}

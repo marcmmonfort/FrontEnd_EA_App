@@ -4,9 +4,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
 
 import * as Font from 'expo-font';
+import { useTranslation } from 'react-i18next';
 
 const Button_Type_1 = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const {t}=useTranslation();
 
   useEffect(() => {
     async function loadFonts() {
@@ -60,7 +62,7 @@ const Button_Type_1 = ({ onPress, containerStyle, buttonStyle, textStyle }: Butt
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient colors={['#66fcf1', '#66fcf1']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.button, buttonStyle]}>
-        <Text style={[styles.text, textStyle]}>LogIn</Text>
+        <Text style={[styles.text, textStyle]}>{t("Log_in")}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

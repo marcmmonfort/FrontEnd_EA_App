@@ -2,8 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
+import { useTranslation } from 'react-i18next';
 
 const Button_Type_3 = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
+  const {t} = useTranslation();
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient
@@ -12,7 +14,7 @@ const Button_Type_3 = ({ onPress, containerStyle, buttonStyle, textStyle }: Butt
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>BACK</Text>
+        <Text style={[styles.text, textStyle]}>{t("Back")}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

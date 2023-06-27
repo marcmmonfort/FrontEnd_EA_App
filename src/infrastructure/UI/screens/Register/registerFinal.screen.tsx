@@ -5,6 +5,7 @@ import { SessionService } from "../../../services/user/session.service";
 import { UserAuthEntity } from "../../../../domain/user/user.entity";
 import * as Font from 'expo-font';
 import MainContainer from "../../components/containers/Main";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -33,6 +34,7 @@ export default function ScreenRegisterFinal({
 }: {
   navigation: any;
 }) {
+  const {t} = useTranslation();
   const route = useRoute();
   const {
     appUser,
@@ -201,26 +203,26 @@ export default function ScreenRegisterFinal({
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
         <View style={styles.finalHeader}>
-          <Text style={styles.registerTitle}>Register</Text>
-          <Text style={styles.stepTitle}>Final Step</Text>
+          <Text style={styles.registerTitle}>{t("Register")}</Text>
+          <Text style={styles.stepTitle}>{t("Final")} {t("Step")}</Text>
         </View>
         <Image source={{ uri: imageUrl }} style={styles.profileImage} />
-        <Text style={styles.subtitleText}>Username</Text>
+        <Text style={styles.subtitleText}>{t("Username")}</Text>
         <Text style={styles.contentText}>{appUser}</Text>
-        <Text style={styles.subtitleText}>Name and Surname</Text>
+        <Text style={styles.subtitleText}>{t("Name")} {t("And")} {t("Surname")}</Text>
         <Text style={styles.contentText}>{nameUser} {surnameUser}</Text>
-        <Text style={styles.subtitleText}>Email</Text>
+        <Text style={styles.subtitleText}>{t("Email")}</Text>
         <Text style={styles.contentText}>{mailUser}</Text>
-        <Text style={styles.subtitleText}>Gender</Text>
+        <Text style={styles.subtitleText}>{t("Gender")}</Text>
         <Text style={styles.contentText}>{genderUser}</Text>
-        <Text style={styles.subtitleText}>Occupation</Text>
+        <Text style={styles.subtitleText}>{t("Occupation")}</Text>
         <Text style={styles.contentText}>{ocupationUser}</Text>
-        <Text style={styles.subtitleText}>Description</Text>
+        <Text style={styles.subtitleText}>{t("Description")}</Text>
         <Text style={styles.contentText}>{descriptionUser}</Text>
-        <Text style={styles.subtitleText}>Account Type / Role</Text>
+        <Text style={styles.subtitleText}>{t("Account Type / Role")}</Text>
         <Text style={styles.contentText}>{roleUser}</Text>
         <TouchableOpacity style={styles.button} onPress={handleRegister}> 
-            <Text style={styles.registerText}>Finish Register</Text> 
+            <Text style={styles.registerText}>{t("Finish")} {t("Register")}</Text> 
           </TouchableOpacity>
       </MainContainer>
     </ImageBackground>

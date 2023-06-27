@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
+import { useTranslation } from 'react-i18next';
 
 const ButtonGradientBirthdate = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
+  const {t} = useTranslation();
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient
@@ -12,7 +14,7 @@ const ButtonGradientBirthdate = ({ onPress, containerStyle, buttonStyle, textSty
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>Date</Text>
+        <Text style={[styles.text, textStyle]}>{t("Date")}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

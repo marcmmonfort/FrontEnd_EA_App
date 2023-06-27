@@ -8,6 +8,7 @@ import Color from '../constants/color/Color';
 import Video from 'react-native-video';
 import jwtDecode from 'jwt-decode';
 import { DecodedToken } from '../../../domain/decodedToken';
+import { useTranslation } from 'react-i18next';
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -18,6 +19,7 @@ async function loadFonts() {
 
 export default function SplashScreen() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const {t}=useTranslation();
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -135,7 +137,7 @@ export default function SplashScreen() {
             <Text style={styles.creditsText}>2023</Text>
         </View>
         <View style={styles.footerContainer}>
-            <Text style={styles.versionText}>Group 3</Text>
+            <Text style={styles.versionText}>{t("Group")} 3</Text>
             <Text style={styles.footerText}>Eloi, Genís, Óscar, Victor, Marc</Text>
         </View>
       </View>

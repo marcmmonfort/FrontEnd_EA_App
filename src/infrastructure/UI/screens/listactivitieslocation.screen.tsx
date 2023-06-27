@@ -18,6 +18,7 @@ import { LocationService } from "../../../infrastructure/services/location/locat
 import { ActivityService } from "../../../infrastructure/services/activity/activity.service";
 import { ActivityEntity } from "../../../domain/activity/activity.entity";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 interface RouteParams {
     uuid?: string;
@@ -38,7 +39,7 @@ export default function ActivitiesLocationList() {
         uuid
       }: RouteParams = route.params || {};
     const [activities, setActivities] = useState<ActivityEntity[]>([]);
-
+    const {t} = useTranslation()
     const obtainActivitiesLocation = async () => {
         if (uuid){
             try {
@@ -286,14 +287,14 @@ export default function ActivitiesLocationList() {
         ) : (
           <View style={styles.container_nothing}>
             <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }} />
-            <Text style={styles.text_activity_none}>What a boring place!</Text>
+            <Text style={styles.text_activity_none}>{t("What a boring place!")}</Text>
           </View>
         )}
         <View style={styles.add_activity_container}>
           <TouchableOpacity onPress={() => {navigation.navigate("CreateActivity" as never, {uuid} as never)}}>
             <View style={styles.plus_icon_activity}>
               <MaterialCommunityIcons color="yellow" name="flash" size={20} />
-              <Text style={styles.text_activity_none}>New Activity</Text>
+              <Text style={styles.text_activity_none}>{t("New Activity")}</Text>
               <MaterialCommunityIcons color="yellow" name="flash" size={20} />
             </View>
           </TouchableOpacity>

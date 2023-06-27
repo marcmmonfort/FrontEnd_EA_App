@@ -10,6 +10,7 @@ import StyledTextInputs from "../../components/inputs/StyledTextInputs";
 import { PublicationService } from "../../../services/publication/publication.service";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -26,6 +27,7 @@ export default function ScreenPublicationUpB() {
   const [currentUser, setCurrentUser] = useState<UserEntity | null>(null);
   const [textPublication, setTextPublication] = useState("");
   const [loading, setLoading] = useState(true);
+  const {t} = useTranslation();
 
   const [createdPublication, setCreatedPublication] = useState<PublicationEntity | null>(null);
 
@@ -165,11 +167,11 @@ export default function ScreenPublicationUpB() {
         {loading ? ( <ActivityIndicator size="large" color="blue" />
         ) : (
           <View>
-            <Text style={styles.titleText}>Description</Text>
+            <Text style={styles.titleText}>{t("Description")}</Text>
             <StyledTextInputs style={styles.input} placeholder="Write Here" value={textPublication} onChangeText={(value: React.SetStateAction<string>) => setTextPublication(value) }/>
-            <Text style={styles.titleText}>Image</Text>
+            <Text style={styles.titleText}>{t("Image")}</Text>
             <Image style={styles.postImage} source={{ uri: photoPublication }}/>
-            <Text style={styles.titleText}>Upload</Text>
+            <Text style={styles.titleText}>Upload{t("Upload")}</Text>
             <TouchableOpacity style={styles.buttonForPosting} onPress={handlePublication}>
               <MaterialCommunityIcons color="#3897f0" name="upload" size={24} />
             </TouchableOpacity>

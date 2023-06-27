@@ -16,6 +16,7 @@ import { Publication, PublicationEntity } from "../../../domain/publication/publ
 import { PublicationService } from "../../services/publication/publication.service";
 import ShareComponent from "../components/search/search";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -39,7 +40,7 @@ export default function ProfileScreen() {
   const [numOwnPublications, setNumOwnPublications] = useState<number>(0);
   const [recargar, setRecargar] = useState<string>('');
   const [currentPublicationIndex, setCurrentPublicationIndex] = useState(1);
-
+  const {t} = useTranslation();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -376,17 +377,17 @@ const styles = StyleSheet.create({
                   <View style={styles.profileStats}>
                     <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
                       <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
-                      <Text style={styles.textFoll}>Followers</Text>
+                      <Text style={styles.textFoll}>{t("Followers")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
                       <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
-                      <Text style={styles.textFoll}>Following</Text>
+                      <Text style={styles.textFoll}>{t("Following")}</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={styles.profileBio}>
-                    <Text style={styles.titleNameDescription}>Name</Text>
+                    <Text style={styles.titleNameDescription}>{t("Name")}</Text>
                     <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
-                    <Text style={styles.titleNameDescription}>Description</Text>
+                    <Text style={styles.titleNameDescription}>{t("Description")}</Text>
                     <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
                   </View>
                 </View>

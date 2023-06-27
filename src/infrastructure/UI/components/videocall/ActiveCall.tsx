@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {RtcSurfaceView} from 'react-native-agora';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -18,6 +19,7 @@ export default function ActiveCall({
   onSwitchCameraPress: () => void;
   onLeavePress: () => void;
 }) {
+  const {t}=useTranslation();
   const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
@@ -29,7 +31,7 @@ export default function ActiveCall({
         />
       ) : (
         <View>
-          <Text>Waiting for others to join</Text>
+          <Text>{t("WFOTJ")}</Text>
         </View>
       )}
 

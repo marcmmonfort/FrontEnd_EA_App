@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
 
 import * as Font from 'expo-font';
+import { useTranslation } from 'react-i18next';
 
 /*async function loadFonts() {
   await Font.loadAsync({
@@ -14,6 +15,7 @@ import * as Font from 'expo-font';
 loadFonts();*/
 
 const ButtonGradientRegister = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
+  const {t}= useTranslation();
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient
@@ -22,7 +24,7 @@ const ButtonGradientRegister = ({ onPress, containerStyle, buttonStyle, textStyl
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>SIGN UP</Text>
+        <Text style={[styles.text, textStyle]}>{t("Sign_Up")}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

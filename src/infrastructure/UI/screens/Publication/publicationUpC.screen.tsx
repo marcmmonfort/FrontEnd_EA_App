@@ -12,6 +12,8 @@ import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActivityService } from "../../../services/activity/activity.service";
 import { ActivityEntity } from "../../../../domain/activity/activity.entity";
+import { useTranslation } from "react-i18next";
+
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -30,6 +32,7 @@ export default function ScreenPublicationUpC() {
     const [loading, setLoading] = useState(true);
     const [newPublication, setNewPublication] = useState<string | null>(null);
     const [weekActivities, setWeekActivities] = useState<ActivityEntity[]>([]);
+    const {t} = useTranslation();
   
     const route = useRoute();
     const navigation = useNavigation();
@@ -237,10 +240,10 @@ export default function ScreenPublicationUpC() {
         ) : (
           <View style={styles.maincontainer}>
             <Image style={styles.shock_icon} source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/12_large.png?v=1571606116' }} />
-            <Text style={styles.text_activity_none}>What a boring place!</Text>
+            <Text style={styles.text_activity_none}>{t("What a boring place!")}</Text>
             <TouchableOpacity onPress={() => handleOmitAssignation()}>
               <View style={styles.activity_container}>
-                <Text style={styles.text_activity_name}>Exit Without Assigning</Text>
+                <Text style={styles.text_activity_name}>{t("Exit Without Assigning")}</Text>
               </View>
             </TouchableOpacity>
           </View>

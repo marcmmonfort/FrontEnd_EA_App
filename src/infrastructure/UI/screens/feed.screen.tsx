@@ -12,6 +12,7 @@ import { CommentEntity } from "../../../domain/comment/comment.entity";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -36,6 +37,7 @@ export default function FeedScreen() {
   const [hasLiked, setHasLiked] = useState<{[key: string]: boolean; }>({});
   const [reloadPublication, setReloadPublication] = useState<string>('');
   const isFocused = useIsFocused();
+  const {t} = useTranslation();
 
   // STORIES
   const [userList, setUserList] = useState<UserEntity[]>([]);
@@ -876,7 +878,7 @@ export default function FeedScreen() {
             <View>
               {numPublications > numPagePublication * 3 && (
                 <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                  <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  <Text style={styles.loadMoreButtonText}>{t("Load More")}</Text>
                 </TouchableOpacity>
               )}
             </View>

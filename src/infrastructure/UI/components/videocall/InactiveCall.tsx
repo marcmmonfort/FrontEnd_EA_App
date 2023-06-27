@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -7,10 +8,11 @@ export default function InactiveoCall({
 }: {
   onJoinChannelPress: () => void;
 }) {
+  const {t}=useTranslation();
   return (
     <SafeAreaView style={styles.container}>
       <Pressable style={styles.buttonContainer} onPress={onJoinChannelPress}>
-        <Text style={styles.buttonText}>Unirme al canal -&gt;</Text>
+        <Text style={styles.buttonText}>{t("JCanal")} -&gt;</Text>
       </Pressable>
     </SafeAreaView>
   );

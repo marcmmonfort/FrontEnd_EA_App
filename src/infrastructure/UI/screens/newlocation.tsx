@@ -11,6 +11,7 @@ import { LocationService } from "../../../infrastructure/services/location/locat
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import StyledTextInputs from "../components/inputs/StyledTextInputs";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -31,7 +32,7 @@ const NewLocationScreen = () => {
 
     const locationIcon = require('../../../../assets/location_apple.png');
     const fireIcon = require('../../../../assets/location_fire.png');
-
+    const {t} = useTranslation()
     const [activities, setActivities] = useState<LocationEntity[]>([]);
 
     const [selectedMarker, setSelectedMarker] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -203,8 +204,8 @@ const NewLocationScreen = () => {
         {selectedMarker && (
           <Marker coordinate={selectedMarker}>
             <Callout>
-              <Text>Latitude: {selectedMarker.latitude}</Text>
-              <Text>Longitude: {selectedMarker.longitude}</Text>
+              <Text>{t("Latitude")}: {selectedMarker.latitude}</Text>
+              <Text>{t("Longitude")}: {selectedMarker.longitude}</Text>
             </Callout>
           </Marker>
         )}

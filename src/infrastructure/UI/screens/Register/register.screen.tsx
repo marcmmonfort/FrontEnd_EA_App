@@ -9,6 +9,7 @@ import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import { StyleSheet } from "react-native";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -22,6 +23,7 @@ export default function ScreenRegisterA() {
   const [nameUser, setNameUser] = useState("");
   const [surnameUser, setSurnameUser] = useState("");
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -120,12 +122,12 @@ export default function ScreenRegisterA() {
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.registerTitle}>Register</Text>
-        <Text style={styles.stepTitle}>Step 1</Text>
+        <Text style={styles.registerTitle}>{t("Register")}</Text>
+        <Text style={styles.stepTitle}>{t("Step")} 1</Text>
         <StyledTextInputs style={styles.input} placeholder="Username *" value={appUser} onChangeText={(value: React.SetStateAction<string>) => setAppUser(value) } /*keyboardType="numeric"*//>
         <StyledTextInputs style={styles.input} placeholder="Name *" value={nameUser} onChangeText={(value: React.SetStateAction<string>) => setNameUser(value) }/>
         <StyledTextInputs style={styles.input} placeholder="Surname *" value={surnameUser} onChangeText={(value: React.SetStateAction<string>) => setSurnameUser(value) }/>
-        <Text style={styles.requiredText}>* Mandatory Fields</Text>
+        <Text style={styles.requiredText}>* {t("Mandatory fields")}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
             <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />

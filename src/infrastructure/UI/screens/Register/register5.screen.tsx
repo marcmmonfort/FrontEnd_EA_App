@@ -8,6 +8,7 @@ import ButtonGradientNext from "../../components/buttons/Button_Type_Next";
 import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -47,6 +48,7 @@ export default function ScreenRegisterE() {
   const [privacyUser, setPrivacyUser] = useState<boolean>(false);
 
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -199,8 +201,8 @@ export default function ScreenRegisterE() {
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.registerTitle}>Register</Text>
-        <Text style={styles.stepTitle}>Step 5</Text>
+        <Text style={styles.registerTitle}>{t("Register")}</Text>
+        <Text style={styles.stepTitle}>{t("Step")} 5</Text>
         <View style={styles.formContainer}>
           <Picker selectedValue={roleUser} style={styles.picker} itemStyle={styles.pickerItem}  onValueChange={setRoleUser}>
             <Picker.Item label="Common" value="common" />

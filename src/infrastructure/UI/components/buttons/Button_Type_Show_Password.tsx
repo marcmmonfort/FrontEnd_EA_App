@@ -4,8 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonGradientProps } from './Types';
 
 import * as Font from 'expo-font';
+import { useTranslation } from 'react-i18next';
 
 const ButtonGradientShowPassword = ({ onPress, containerStyle, buttonStyle, textStyle }: ButtonGradientProps) => {
+  const {t} =useTranslation();
   return (
     <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
       <LinearGradient
@@ -14,7 +16,7 @@ const ButtonGradientShowPassword = ({ onPress, containerStyle, buttonStyle, text
         end={{ x: 0, y: 1 }}
         style={[styles.button, buttonStyle]}
       >
-        <Text style={[styles.text, textStyle]}>Show password</Text>
+        <Text style={[styles.text, textStyle]}>{t("Show_Pass")}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );

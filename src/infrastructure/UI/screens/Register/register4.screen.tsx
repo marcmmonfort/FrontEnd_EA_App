@@ -11,6 +11,7 @@ import ButtonGradientBack from "../../components/buttons/Button_Type_2";
 import ButtonGradientBirthdate from "../../components/buttons/Button_Type_Birthdate";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -29,6 +30,7 @@ interface RouteParams {
 }
 
 export default function ScreenRegisterD() {
+  
   const route = useRoute();
   const {
     appUser,
@@ -46,6 +48,7 @@ export default function ScreenRegisterD() {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -255,10 +258,10 @@ export default function ScreenRegisterD() {
   return (
     <ImageBackground source={require('../../../../../assets/visualcontent/background_6.png')} style={styles.backgroundImage}>
       <MainContainer style={styles.mainContainer}>
-        <Text style={styles.registerTitle}>Register</Text>
-        <Text style={styles.stepTitle}>Step 4</Text>
+        <Text style={styles.registerTitle}>{t("Register")}</Text>
+        <Text style={styles.stepTitle}>{t("Step")} 4</Text>
         <View style={styles.formContainer}>
-          <Text style={styles.birthdate_text}>BirthDate</Text>
+          <Text style={styles.birthdate_text}>{t("Birthdate")}</Text>
           <View style={styles.buttonContainerB}>
             <ButtonGradientBirthdate onPress={handleShowDatePicker} />
           </View>
@@ -271,7 +274,7 @@ export default function ScreenRegisterD() {
             <Picker.Item label="Female" value="female" />
           </Picker>
         </View>
-        <Text style={styles.requiredText}>* Mandatory Fields</Text>
+        <Text style={styles.requiredText}>* {t("Mandatory fields")}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.nextBackButton} onPress={handleGoBack}>
             <MaterialCommunityIcons color="#000000" name="arrow-left" size={24} />

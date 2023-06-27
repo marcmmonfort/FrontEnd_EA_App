@@ -22,6 +22,7 @@ import StyledTextInputs from "../components/inputs/StyledTextInputs";
 import { Picker } from "@react-native-picker/picker";
 import ButtonGradientBirthdate from "../components/buttons/Button_Type_Birthdate";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 
 interface RouteParams {
     uuid?: string;
@@ -38,6 +39,7 @@ export default function CreateActivityScreen() {
     const navigation = useNavigation();
     const [fontsLoaded, setFontsLoaded] = useState(false);
     const route = useRoute();
+    const {t} = useTranslation()
     const {
         uuid
       }: RouteParams = route.params || {};
@@ -291,7 +293,7 @@ export default function CreateActivityScreen() {
         <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
         <ScrollView style={styles.scroll_style}>
             <View style={styles.container}>
-                <Text style={styles.title}>New Acitivity</Text>
+                <Text style={styles.title}>{t("New Activity")}</Text>
                 <StyledTextInputs style={styles.input} placeholder="Name of the Activity" value={nameActivity} onChangeText={setNameActivity}/>
                 <StyledTextInputs style={styles.input} placeholder="Description" value={descriptionActivity} onChangeText={setDescriptionActivity}/>
                 <View style={styles.buttonContainerB}>
@@ -301,8 +303,8 @@ export default function CreateActivityScreen() {
                     <DateTimePicker value={selectedDate} mode="date" display="default" style={styles.dateTimePicker} onChange={handleDateChange}/>
                 )}
                 <View style={styles.picker_row}>
-                    <Text style={styles.start_text}>Starting Time</Text>
-                    <Text style={styles.end_text}>Ending Time</Text>
+                    <Text style={styles.start_text}>{t("Starting time")}</Text>
+                    <Text style={styles.end_text}>{t("Ending time")}</Text>
                 </View>
                 <View style={styles.picker_row}>
                     <Picker selectedValue={startHour} style={styles.picker_left} itemStyle={styles.pickerItem} onValueChange={(startHour) => setStartHour(startHour)}>
@@ -434,7 +436,7 @@ export default function CreateActivityScreen() {
                 <TouchableOpacity onPress={() => createNewActivity()}>
                     <View style={styles.plus_icon_activity}>
                         <MaterialCommunityIcons color="yellow" name="flash" size={20} />
-                        <Text style={styles.text_activity_none}>Create Activity</Text>
+                        <Text style={styles.text_activity_none}>{t("Create Activity")}</Text>
                         <MaterialCommunityIcons color="yellow" name="flash" size={20} />
                     </View>
                 </TouchableOpacity>

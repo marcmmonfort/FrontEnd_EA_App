@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Font from 'expo-font';
 import { PublicationService } from "../../services/publication/publication.service";
 import { PublicationLikes } from "../../../domain/publication/publication.entity";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -29,6 +30,7 @@ export default function UsersList() {
   const [userList, setUserList] = useState([]);
   const [numPage, setNumPage] = useState(1);
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const isFollowersMode = mode === "followers";
   const isFollowingMode = mode === "following";
@@ -279,32 +281,32 @@ export default function UsersList() {
                   <View style={styles.userInfo}>
                     <Text style={styles.searchedUsername}>@{user.appUser}</Text>
                     <Text style={styles.searchedNameSurname}>{user.nameUser} {user.surnameUser}</Text>
-                    <Text style={styles.searchedDescription}>HOLAAAA{user.descriptionUser}</Text>
+                    <Text style={styles.searchedDescription}>{t("Hello")} {user.descriptionUser}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
           ) : (
-            <Text style={styles.notFoundText}>User Not Found</Text>
+            <Text style={styles.notFoundText}>{t("UNF")}</Text>
           )}
           {isFollowersMode ? (
             currentUser?.followersUser?.length !== undefined && currentUser.followersUser.length > numPage * 2 ? (
               <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                <Text style={styles.loadMoreButtonText}>Load More</Text>
+                <Text style={styles.loadMoreButtonText}>{t("Load More")}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
-                <Text style={styles.loadMoreButtonText}>Load More</Text>
+                <Text style={styles.loadMoreButtonText}>{t("Load More")}</Text>
               </TouchableOpacity>
             )
           ):(
             currentUser?.followedUser?.length !== undefined && currentUser.followedUser.length > numPage * 2 ? (
               <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                <Text style={styles.loadMoreButtonText}>Load More</Text>
+                <Text style={styles.loadMoreButtonText}>{t("Load More")}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
-                <Text style={styles.loadMoreButtonText}>Load More</Text>
+                <Text style={styles.loadMoreButtonText}>{t("Load More")}</Text>
               </TouchableOpacity>
             )
           )}

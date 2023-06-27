@@ -6,6 +6,7 @@ import { SessionService } from "../../services/user/session.service";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, FlatList, Platform, ImageBackground } from "react-native";
 import * as Font from 'expo-font';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -28,6 +29,7 @@ export default function UserScreen() {
   const uuid = routeParams?.uuid;
   const navigation = useNavigation();
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -286,17 +288,17 @@ export default function UserScreen() {
                 <View style={styles.profileStats}>
                   <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
                     <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
-                    <Text style={styles.textFoll}>Followers</Text>
+                    <Text style={styles.textFoll}>{t("Followers")}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
                     <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
-                    <Text style={styles.textFoll}>Following</Text>
+                    <Text style={styles.textFoll}>{t("Following")}</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.profileBio}>
-                  <Text style={styles.titleNameDescription}>Name</Text>
+                  <Text style={styles.titleNameDescription}>{t("Name")}</Text>
                   <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
-                  <Text style={styles.titleNameDescription}>Description</Text>
+                  <Text style={styles.titleNameDescription}>{t("Description")}</Text>
                   <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
                 </View>
               </View>

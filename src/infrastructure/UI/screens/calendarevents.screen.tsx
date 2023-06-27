@@ -10,6 +10,7 @@ import { CRUDService } from "../../services/user/CRUD.service";
 import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SearchBar from "../components/searchbar/searchbar";
+import { useTranslation } from "react-i18next";
 
 
 function CalendarEventsScreen() {
@@ -25,6 +26,7 @@ function CalendarEventsScreen() {
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
   const [isSearchVisible, setSearchVisible] = useState(false);
   const isFocused = useIsFocused();
+  const {t} = useTranslation();
 
   
 
@@ -193,7 +195,7 @@ function CalendarEventsScreen() {
                       keyExtractor={(item) => item.uuid.toString()}
                     />
                   ) : (
-                    <Text style={styles.notFound}>Usuario no encontrado</Text>
+                    <Text style={styles.notFound}>{t("UNF")}</Text>
                   )}
                 </View>
               </>
