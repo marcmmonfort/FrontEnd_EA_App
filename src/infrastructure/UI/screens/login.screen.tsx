@@ -14,6 +14,7 @@ import Register from "../components/texts/Register";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
 import '../../../../assets/fonts/Rafaella.ttf';
+import { useTranslation } from "react-i18next";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -24,7 +25,7 @@ async function loadFonts() {
 
 export default function LoginScreen() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
+  const {t}=useTranslation();
   useEffect(() => {
     loadFonts().then(() => {
       setFontsLoaded(true);
@@ -168,9 +169,9 @@ export default function LoginScreen() {
                   }
                 });
             }} />
-          <Text style={styles.bottomText}>Aren't you still an @lplan member?</Text>
+          <Text style={styles.bottomText}>{t("AlplanMember")}</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register" as never)}> 
-            <Text style={styles.signUpText}>Sign Up!</Text> 
+            <Text style={styles.signUpText}>{t("Sign_Up")}</Text> 
           </TouchableOpacity>
           <StatusBar/>
         </View>      

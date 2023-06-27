@@ -32,7 +32,7 @@ import SettingsPage from "./src/infrastructure/UI/screens/settings.screen";
 import CreateActivityScreen from "./src/infrastructure/UI/screens/createactivity.screen";
 import NewLocationScreen from "./src/infrastructure/UI/screens/newlocation";
 import VideocallAg from "./src/infrastructure/UI/screens/Videocall/videocallAg.screen";
-
+import './languages/i18n';
 
 const Stack = createStackNavigator();
 

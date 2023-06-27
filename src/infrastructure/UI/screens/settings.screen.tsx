@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Switch, TouchableOpacity } from "react-native";
+import { View, Text, Switch, TouchableOpacity, Pressable } from "react-native";
 import { ImageBackground } from "react-native";
 import { SessionService } from "../../services/user/session.service";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Button } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 
 const SettingsPage = () => {
@@ -35,6 +36,33 @@ const SettingsPage = () => {
     
   }, []);
 
+  const LanguageSelector = () => {
+    const {t, i18n } = useTranslation();
+    const [currentLanguage, setLanguage] = useState(i18n.language);
+
+    const changeLanguage = (language:string) => {
+      i18n.changeLanguage(language).then(() => setLanguage(language));
+    };
+
+    return (
+      <View>
+        <Pressable onPress={() => changeLanguage('en')}>
+          <Text>{t("English")}English</Text>
+        </Pressable>
+        <Pressable onPress={() => changeLanguage('es')}>
+          <Text>{t("Spanish")}Español</Text>
+        </Pressable>
+        <Pressable onPress={() => changeLanguage('de')}>
+          <Text>{t("German")}Deutsch</Text>
+        </Pressable>
+        <Pressable onPress={() => changeLanguage('pt')}>
+          <Text>{t("Portuguese")}Português</Text>
+        </Pressable>
+      </View>
+    );
+  };
+
+
   const handleToggleAudioDescription = () => {
     const newAudioDescriptionEnabled = !audioDescriptionEnabled;
     setAudioDescriptionEnabled(newAudioDescriptionEnabled);
@@ -58,6 +86,8 @@ const SettingsPage = () => {
   return (
     <View style={styles.container}>
         <View style={styles.settingsContainer}>
+          <Text style={styles.title}> Language detector</Text>
+          <LanguageSelector/>
           <Text style={styles.title}>Audio Description</Text>
           <Text>Enable audio description</Text>
           <Switch
