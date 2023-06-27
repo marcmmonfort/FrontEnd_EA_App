@@ -30,6 +30,7 @@ export default function UserScreen() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
 
+
   useEffect(() => {
     loadFonts().then(() => {
       setFontsLoaded(true);
@@ -54,6 +55,7 @@ export default function UserScreen() {
         setMyId(userId);
         if (userId) {
           try {
+            console.log(uuid);
             const response = await CRUDService.getUser(uuid??"");
             console.log("Punto 1:", response);
             console.log(response?.data);

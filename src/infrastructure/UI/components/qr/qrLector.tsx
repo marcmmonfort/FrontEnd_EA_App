@@ -22,11 +22,12 @@ export default function App() {
   const handleBarCodeScanned = (scanningResult: any) => {
     setScanned(true);
     const scannedData = scanningResult.data;
+    console.log(scanningResult.data);
     const attribute1 = scannedData.split('\n')[0].split(': ')[1];
-    const attribute2 = scannedData.split('\n')[1].split(': ')[1];
-    console.log('Valores escaneados:', attribute1, attribute2);
+    const uuid = scannedData.split('\n')[1].split(': ')[1];
+    console.log('Valores escaneados:', attribute1, uuid);
     if(attribute1 === "user"){
-      navigation.navigate("UserScreen" as never, {attribute2} as never);
+      navigation.navigate("UserScreen" as never, {uuid} as never);
     }
     
   };
