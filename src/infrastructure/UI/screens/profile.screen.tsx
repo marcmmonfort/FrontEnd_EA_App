@@ -365,7 +365,6 @@ const styles = StyleSheet.create({
     fontFamily: bodyFont,
     color: "white",
     marginTop: 4,
-
   },
   time_post: {
     fontSize: 12,
@@ -406,7 +405,6 @@ const styles = StyleSheet.create({
 
   const attribute1 = "user";
   const attribute2 = currentUser ? currentUser.uuid : 'valor predeterminado';
-
 
   
   return (

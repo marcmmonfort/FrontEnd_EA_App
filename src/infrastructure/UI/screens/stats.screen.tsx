@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, ImageBackground, Platform } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { SessionService } from '../../services/user/session.service'; 
 import { CRUDService } from '../../services/user/CRUD.service';
@@ -11,6 +11,14 @@ import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { BarChart } from 'react-native-chart-kit';
 import { Picker } from '@react-native-picker/picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import * as Font from 'expo-font';
+
+async function loadFonts() {
+  await Font.loadAsync({
+    'Rafaella': require('../../../../assets/fonts/Rafaella.ttf'),
+    'SFNS': require('../../../../assets/fonts/SFNS.otf'),
+  });
+}
 
 interface RouteParams {
   userId?: string;
@@ -34,6 +42,25 @@ const UserStats = () => {
   const [chartData2, setChartData2] = useState<number[]>([]);
   const [recargar, setRecargar] = useState<boolean>(false);
   const navigation = useNavigation();
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+
+  useEffect(() => {
+    loadFonts().then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const titleFont = Platform.select({
+    ios: 'Rafaella',
+    android: 'Rafaella',
+  });
+  const bodyFont = Platform.select({
+    ios: 'SFNS',
+    android: 'SFNS',
+  });
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,6 +110,12 @@ const UserStats = () => {
     fetchData();
 
   }, []);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: '#000000', borderBottomWidth: 0, shadowOpacity: 0 }, headerTitleStyle: { color: '#66fcf1', fontSize: 30 }, title: 'Statistics',
+    });
+  }, [navigation]);
 
   const getById = async (myUserId: string) => {
     if (myUserId) {
@@ -202,38 +235,137 @@ const UserStats = () => {
     setRecargar(prevState => !prevState);
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 32,
+    },
+    titleContainer: {
+      marginBottom: 20,
+    },
+    profileContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profile: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profileStats: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      marginBottom: 20,
+    },
+    profileTitle: {
+      fontSize: 12,
+      marginBottom: 0,
+    },
+    profileStatCountLeft: {
+      marginRight: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    profileStatCountRight: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    textContainer: {
+      marginTop: 0,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    statText: {
+      marginBottom: 10,
+    },
+    chartContainer: {
+      alignItems: 'center',
+      marginTop: 0,
+      marginBottom: 16,
+    },
+    selectMonthContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+      marginLeft: 22,
+    },
+    picker: {
+      width: 150,
+    },
+    chartTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    picker_left: {
+      color: "black",
+      fontWeight:'bold',
+      backgroundColor: "#66fcf1",
+      borderWidth: 1,
+      borderColor: "transparent",
+      borderRadius: 14,
+      marginTop: -4,
+      marginBottom: -14,
+      width: 140,
+      height: 62,
+      marginRight: 20,
+    },
+    pickerItem: {
+      fontSize: 14,
+      color: "black",
+      //fontFamily: bodyFont,
+      height: 60,
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    text_type_1: {
+      fontSize: 16,
+      fontFamily: bodyFont,
+      color: "white",
+      marginTop: 0,
+    },
+    text_type_2: {
+      fontSize: 22,
+      fontFamily: bodyFont,
+      color: "yellow",
+      marginTop: 0,
+    },
+    text_type_3: {
+      fontSize: 26,
+      fontFamily: bodyFont,
+      color: "#66fcf1",
+      marginTop: 0,
+      marginBottom: 4,
+    },
+  });
+
   return (
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
     <ScrollView>
     <View style={styles.container}>
       <View>
-        <Text>{currentUser ? currentUser.appUser : 'Loading'}</Text>
         <View style={styles.profileStats}>
-
-          {currentUser && (
-            <View>
-              <Text>Followers</Text>
-              <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => { navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers" } as never); }}>
-                <Text>{currentUser.followersUser?.length}</Text>
-              </TouchableOpacity>
-              <Text>Following</Text>
-              <TouchableOpacity style={styles.profileStatCountRight} onPress={() => { navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following" } as never); }}>
-                <Text>{currentUser.followedUser?.length}</Text>
-              </TouchableOpacity>
-            </View>
-
-          )
-          }
           <View style={styles.textContainer}>
-            <Text style={styles.statText}>Created Activities: {createdActivities}</Text>
-            <Text style={styles.statText}>Activities you participated: {participatedActivities}</Text>
-            <Text style={styles.statText}>Publications made: {publications}</Text>
-            <Text style={styles.statText}>Activities this week: {numActivitiesWeek}</Text>
-            <Text style={styles.statText}>Activities last month: {numActivitiesMonth}</Text>
+            <Text style={styles.text_type_1}>Created Activities</Text>
+            <Text style={styles.text_type_3}>{createdActivities}</Text>
+            <Text style={styles.text_type_1}>Activities You Participated</Text>
+            <Text style={styles.text_type_3}>{participatedActivities}</Text>
+            <Text style={styles.text_type_1}>Publications Made</Text>
+            <Text style={styles.text_type_3}>{publications}</Text>
+            <Text style={styles.text_type_1}>Activities This Week</Text>
+            <Text style={styles.text_type_3}>{numActivitiesWeek}</Text>
+            <Text style={styles.text_type_1}>Activities Last Month</Text>
+            <Text style={styles.text_type_3}>{numActivitiesMonth}</Text>
          </View>
         </View>
       </View>
       <View style={styles.chartContainer}>
-        <Text>Plans Last 6 weeks: </Text>
+        <Text style={styles.text_type_2}>Plans Last 6 Weeks</Text>
         <BarChart
             data={{
             labels: [chartLabels[0], chartLabels[1], chartLabels[2], chartLabels[3], chartLabels[4], chartLabels[5]],
@@ -297,11 +429,11 @@ const UserStats = () => {
           <Picker.Item label="2024" value="2024" />
           <Picker.Item label="2025" value="2025" />
         </Picker>
-        <Button title="Select" onPress={handleMonthSubmit} />
       </View>
+      <Button title="Select" onPress={handleMonthSubmit} />
       {chartData2 && (
         <View style={styles.chartContainer}>
-          <Text style={styles.chartTitle}>
+          <Text style={styles.text_type_2}>
             Activities Participated in {selectedMonth}/{selectedYear}
           </Text>
           <BarChart
@@ -337,93 +469,10 @@ const UserStats = () => {
         </View>
       )}
         </View>
-        
-      
     </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 32,
-    },
-    titleContainer: {
-      marginBottom: 20,
-    },
-    profileContainer: {
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    profile: {
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    profileStats: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      marginBottom: 20,
-    },
-    profileTitle: {
-      fontSize: 12,
-      marginBottom: -10,
-    },
-    profileStatCountLeft: {
-      marginRight: 20,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    profileStatCountRight: {
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    textContainer: {
-      marginTop: 40,
-    },
-    statText: {
-      marginBottom: 10,
-    },
-    chartContainer: {
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    selectMonthContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    picker: {
-      width: 150,
-    },
-    chartTitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 10,
-    },
-    picker_left: {
-      color: "black",
-      fontWeight:'bold',
-      backgroundColor: "#66fcf1",
-      borderWidth: 1,
-      borderColor: "transparent",
-      borderRadius: 14,
-      marginTop: 20,
-      marginBottom: 0,
-      width: 140,
-      height: 62,
-      marginRight: 20,
-    },
-    pickerItem: {
-      fontSize: 14,
-      color: "black",
-      //fontFamily: bodyFont,
-      height: 60,
-    },
-  });
    
 export default UserStats;
