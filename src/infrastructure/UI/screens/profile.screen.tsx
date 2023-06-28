@@ -343,12 +343,7 @@ const styles = StyleSheet.create({
 });
   
   return (
-      <LinearGradient
-        colors={['#000000', '#00ff00', '#000000']}
-        style={{ flex: 1 }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-      >
+    <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.profileContour}>
@@ -416,7 +411,7 @@ const styles = StyleSheet.create({
           </View>
         </View>
       </ScrollView>
-      </LinearGradient>
+    </ImageBackground>
   );
 }
 

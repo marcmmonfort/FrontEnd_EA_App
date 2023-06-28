@@ -1,9 +1,9 @@
 {
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "expoServerPort": null,
-  "packagerPort": null,
+  "expoServerNgrokUrl": "https://5za291i.anonymous.frontend-ea-app.exp.direct",
+  "packagerNgrokUrl": "https://5za291i.anonymous.frontend-ea-app.exp.direct",
+  "ngrokPid": 18372,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
   "packagerPid": null,
   "webpackServerPort": null
 }
