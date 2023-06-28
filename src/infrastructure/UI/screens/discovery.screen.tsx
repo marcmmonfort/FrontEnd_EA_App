@@ -9,6 +9,8 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import SearchBar from "../components/searchbar/searchbar";
 import * as Font from 'expo-font';
 import { useTranslation } from "react-i18next";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import QRCodeScanner from "../components/qr/qrLector";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -24,6 +26,7 @@ export default function DiscoveryScreen() {
   const [userList, setUserList] = useState<UserEntity[] | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const {t} = useTranslation();
+  const [qrVisible, setqrVisible] = useState<boolean>(false);
 
   useEffect(() => {
     loadFonts().then(() => {
@@ -101,6 +104,35 @@ export default function DiscoveryScreen() {
     navigation.navigate("UserScreen" as never, {uuid} as never);
   };
 
+  interface UserProfileProps {
+    user: {
+      appUser: string;
+      roleUser: string;
+    };
+  }  
+  
+  const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+    let icon = null;
+  
+    if (user.roleUser === "business") {
+      icon = <MaterialCommunityIcons name="store" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "admin") {
+      icon = <MaterialCommunityIcons name="cog" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "verified") {
+      icon = <MaterialCommunityIcons name="shield-check" size={18} color="#3897f0" />;
+    } else {
+      icon = <MaterialCommunityIcons name="account" size={18} color="#3897f0" />;
+    }
+  
+    return (
+      <Text style={styles.searchedUsername}>@{user.appUser} {icon}</Text>
+    );
+  };
+
+  const setQrVisible = () => {
+    setqrVisible(!qrVisible);
+  };
+
   const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
@@ -129,11 +161,11 @@ export default function DiscoveryScreen() {
     },
     searchedUserContainer: {
       marginBottom: 20,
-    },
+    },    
     searchedUsersContainer: {
       marginLeft: 20,
-      marginTop: -10,
-      height: '100%',
+      marginTop: 0,
+      height: 128,
     },
     postProfileImg: {
       width: 50,
@@ -149,17 +181,42 @@ export default function DiscoveryScreen() {
       color: 'white',
       fontFamily: bodyFont,
       fontSize: 16,
-      marginTop: -10,
+      marginTop: 20,
       marginBottom: 0,
       textAlign: "center",
-    }
+    },    
+    buttonQR: {
+      backgroundColor: "#66fcf1",
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 20,
+      marginTop: -10,
+      marginBottom: 10,
+      alignSelf: "center",
+    },
+    buttonTextQR: {
+      color: "#000",
+      fontSize: 16,
+      fontFamily: bodyFont,
+    },
+    qrcontainer: {
+      alignItems: 'center',
+      flex: 1,
+    },
+    searchresultscontainer: {
+      marginLeft: 0,
+      marginTop: 10,
+      alignItems: 'flex-start',
+    },
   });
-  
+
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
-      <View>
-        <SearchBar onSearch={handleSearchWrapper} />
-        <View>
+      <SearchBar onSearch={handleSearchWrapper} />
+      <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
+        <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
+      </TouchableOpacity>
+      <View style={styles.searchresultscontainer}>
           {userList && userList.length > 0 ? (
             <FlatList style={styles.searchedUsersContainer}
               data={userList}
@@ -172,7 +229,7 @@ export default function DiscoveryScreen() {
                         resizeMode="cover"
                       />
                     <View>
-                      <Text style={styles.searchedUsername}>@{item.appUser}</Text>
+                    <UserProfile user={item}></UserProfile>
                       <Text style={styles.searchedNameSurname}>{item.nameUser} {item.surnameUser}</Text>
                       <Text style={styles.searchedDescription}>{item.descriptionUser}</Text>
                     </View>
@@ -185,7 +242,10 @@ export default function DiscoveryScreen() {
             <Text style={styles.notFound}>{t("UNF")}</Text>
           )}
         </View>
-      </View>
+        {qrVisible&&(<View style={styles.qrcontainer}>
+          <QRCodeScanner></QRCodeScanner>
+        </View>)}
+
     </ImageBackground>
   );
 }

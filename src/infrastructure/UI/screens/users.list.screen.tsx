@@ -3,8 +3,12 @@ import { UserEntity } from "../../../domain/user/user.entity";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CRUDService } from "../../services/user/CRUD.service";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Platform, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform, ImageBackground, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { ScrollView } from 'react-native-gesture-handler';
+import { NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import * as Font from 'expo-font';
 import { PublicationService } from "../../services/publication/publication.service";
 import { PublicationLikes } from "../../../domain/publication/publication.entity";
@@ -29,6 +33,7 @@ export default function UsersList() {
   const [currentPublication, setcurrentPublication] = useState<PublicationLikes | null>(null);
   const [userList, setUserList] = useState([]);
   const [numPage, setNumPage] = useState(1);
+  const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -151,6 +156,44 @@ export default function UsersList() {
     navigation.navigate("UserScreen" as never, {uuid} as never);
   };
 
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  
+    console.log(layoutMeasurement.height, contentOffset.y, contentSize.height);
+    const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
+  
+    if (isEndReached) {
+      // Aquí puedes ejecutar la función que deseas cuando se alcance el final del scroll
+      console.log('¡Se ha alcanzado el final del scroll!');
+      handleLoadMore();
+    }
+  };
+
+  interface UserProfileProps {
+    user: {
+      appUser: string;
+      roleUser: string;
+    };
+  }  
+  
+  const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+    let icon = null;
+  
+    if (user.roleUser === "business") {
+      icon = <MaterialCommunityIcons name="store" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "admin") {
+      icon = <MaterialCommunityIcons name="cog" size={18} color="#3897f0" />;
+    } else if (user.roleUser === "verified") {
+      icon = <MaterialCommunityIcons name="shield-check" size={18} color="#3897f0" />;
+    } else {
+      icon = <MaterialCommunityIcons name="account" size={18} color="#3897f0" />;
+    }
+  
+    return (
+      <Text style={styles.searchedUsername}>@{user.appUser} {icon}</Text>
+    );
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -270,8 +313,73 @@ export default function UsersList() {
       </View>
       <View style={styles.container}>
         <View style={styles.userList}>
+        <FlatList
+          data={userList}
+          keyExtractor={(user:UserEntity) => user.uuid}
+          renderItem={({ item: user }) => (
+            <TouchableOpacity style={styles.userCard} onPress={() => handleGoToScreenUser(user.uuid)}>
+              {user.photoUser ? (
+                <Image source={{ uri: user.photoUser }} style={styles.profileImage} />
+              ) : (
+                <Image
+                  source={{ uri: "https://pbs.twimg.com/profile_images/1354463303486025733/Bn-iEeUO_400x400.jpg" }}
+                  style={styles.profileImage}
+                />
+              )}
+              <View style={styles.userInfo}>
+                <UserProfile user={user}></UserProfile>
+                <Text style={styles.searchedNameSurname}>
+                  {user.nameUser} {user.surnameUser}
+                </Text>
+                <Text style={styles.searchedDescription}>{user.descriptionUser}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={() => <Text style={styles.notFoundText}>User Not Found</Text>}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={() => (
+            <>
+              {isFollowersMode ? (
+                currentUser?.followersUser?.length !== undefined && currentUser.followersUser.length > numPage * 2 ? (
+                  <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                    <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
+                    <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  </TouchableOpacity>
+                )
+              ) : (
+                currentUser?.followedUser?.length !== undefined && currentUser.followedUser.length > numPage * 2 ? (
+                  <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                    <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.loadMoreButtonDisabled} disabled>
+                    <Text style={styles.loadMoreButtonText}>Load More</Text>
+                  </TouchableOpacity>
+                )
+              )}
+            </>
+          )}
+        />
+        </View>
+      </View>
+    </ImageBackground>
+
+  );
+};
+
+/*
+<ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+      <View style={styles.container}>
+        <View style={styles.userList}>
           {userList.length > 0 ? (
-            <ScrollView>
+            <ScrollView onScroll={handleScrollEnd}>
               {userList.map((user:UserEntity) => (
                 <TouchableOpacity key={user.uuid} style={styles.userCard} onPress={() => handleGoToScreenUser(user.uuid)}>
                   {user.photoUser ? (<Image source={{ uri: user.photoUser }} style={styles.profileImage}/>
@@ -313,6 +421,4 @@ export default function UsersList() {
         </View>
       </View>
     </ImageBackground>
-
-  );
-};
+*/

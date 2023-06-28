@@ -17,6 +17,7 @@ import { PublicationService } from "../../services/publication/publication.servi
 import ShareComponent from "../components/search/search";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTranslation } from "react-i18next";
+import QRCodeGenerator from "../components/qr/qrGenerator";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -31,6 +32,7 @@ export default function ProfileScreen() {
   const [auxPhotoUser, setAux] = useState("");
   const [loading, setLoading] = useState(false);
   const [cam, setCam] = useState(false);
+  const [icon, setIcon] = useState(<MaterialCommunityIcons name="store" size={24} color="black"/>);
   let CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/diuyzbt14/upload";
   const navigation = useNavigation();
 
@@ -41,6 +43,7 @@ export default function ProfileScreen() {
   const [recargar, setRecargar] = useState<string>('');
   const [currentPublicationIndex, setCurrentPublicationIndex] = useState(1);
   const {t} = useTranslation();
+  const [qrVisible, setqrVisible] = useState<boolean>(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -85,6 +88,43 @@ export default function ProfileScreen() {
               
                 response.data.descriptionUser = filteredDescription;
                 setCurrentUser(response.data);
+                if (response.data.roleUser === 'business') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="store"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else if (response.data.roleUser === 'admin') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="cog"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else if (response.data.roleUser === 'verified') {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="check-circle"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                } else {
+                  setIcon(
+                    <MaterialCommunityIcons
+                      style={styles.iconVerified}
+                      name="account"
+                      size={18}
+                      color="#3897f0"
+                    />
+                  );
+                }
               }
               try{
                 await SessionService.getAudioDescription()
@@ -154,6 +194,10 @@ export default function ProfileScreen() {
     }
   };
   
+  const setQrVisible = () => {
+    setqrVisible(!qrVisible);
+  };
+  
 
 const styles = StyleSheet.create({
   container: {
@@ -161,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 32,
+    marginTop: -50,
   },
   titleContainer: {
     marginBottom: 20,
@@ -174,6 +218,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+    marginTop: 20,
   },
   profile: {
     alignItems: "center",
@@ -340,78 +385,103 @@ const styles = StyleSheet.create({
   share_style: {
     marginTop: -60,
   },
+  buttonQR: {
+    backgroundColor: "#66fcf1",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    alignSelf: "center",
+  },
+  buttonTextQR: {
+    color: "#000",
+    fontSize: 16,
+    fontFamily: bodyFont,
+  },
+  belowMargin: {
+    marginBottom: 12,
+  }
 });
+
+  const attribute1 = "user";
+  const attribute2 = currentUser ? currentUser.uuid : 'valor predeterminado';
+
+
   
   return (
     <ImageBackground source={require('../../../../assets/visualcontent/background_8.png')} style={styles.backgroundImage}>
       <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.profileContour}>
-            {currentUser && (
-              <View style={styles.profileContainer}>
-                <View style={styles.profile}>
-                  <View style={styles.usernameAndVerified}>
-                    <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
-                    <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
-                  </View>
-                  <View style={styles.profileUserButtons}>
-                    <TouchableOpacity onPress={() => {navigation.navigate("Edit" as never);}} style={styles.buttonForChanges}>
-                      <View style={styles.insideButtonForChanges}>
-                        <MaterialCommunityIcons color="black" name="pencil" size={18} />
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {navigation.navigate("Settings" as never);}} style={styles.buttonForChanges}>
-                      <View style={styles.insideButtonForChanges}>
-                        <MaterialCommunityIcons color="black" name="cog" size={18} />
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {navigation.navigate("UserStats" as never);}} style={styles.buttonForChanges}>
-                      <View style={styles.insideButtonForChanges}>
-                        <MaterialCommunityIcons color="black" name="chart-line" size={18} />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.profileImage}>
-                    <Image source={{ uri: currentUser.photoUser }} style={styles.image}/>
-                  </View>
-                  <View style={styles.profileStats}>
-                    <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers"} as never);}}>
-                      <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
-                      <Text style={styles.textFoll}>{t("Followers")}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileStatCountRight} onPress={() => {navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following"} as never);}}>
-                      <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
-                      <Text style={styles.textFoll}>{t("Following")}</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.profileBio}>
-                    <Text style={styles.titleNameDescription}>{t("Name")}</Text>
-                    <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
-                    <Text style={styles.titleNameDescription}>{t("Description")}</Text>
-                    <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
-                  </View>
+        <View style={styles.profileContour}>
+          {currentUser && (
+            <View style={styles.profileContainer}>
+              <View style={styles.profile}>
+                <View style={styles.usernameAndVerified}>
+                  <Text style={styles.profileUserName}>{currentUser.appUser}</Text>
+                  <MaterialCommunityIcons style={styles.iconVerified} color="#3897f0" name="check-circle" size={18} />
                 </View>
-                <View style={styles.share_style}>
-                  <ShareComponent url={"http://147.83.7.158:5432/user/" + currentUser?.uuid} />
-                </View>
-                <TouchableOpacity style={styles.buttonLogOut} onPress={logOutButtonFunction}>
-                  <MaterialCommunityIcons color="#3897f0" name="logout" size={24} />
-                </TouchableOpacity>
-                <ScrollView style={styles.scrow_style} horizontal>
-                  {listOwnPublications.reverse().map((publication, index) => (
-                    <View key={index} style={styles.post_complete}>
-                      <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
-                      <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }}/>
-                      <Text style={styles.text_post}>{publication.textPublication}</Text>
+                <View style={styles.profileUserButtons}>
+                  <TouchableOpacity onPress={() => { navigation.navigate("Edit" as never); }} style={styles.buttonForChanges}>
+                    <View style={styles.insideButtonForChanges}>
+                      <MaterialCommunityIcons color="black" name="pencil" size={18} />
                     </View>
-                  ))}
-                </ScrollView>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { navigation.navigate("Settings" as never); }} style={styles.buttonForChanges}>
+                    <View style={styles.insideButtonForChanges}>
+                      <MaterialCommunityIcons color="black" name="cog" size={18} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { navigation.navigate("UserStats" as never); }} style={styles.buttonForChanges}>
+                    <View style={styles.insideButtonForChanges}>
+                      <MaterialCommunityIcons color="black" name="chart-line" size={18} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileImage}>
+                  <Image source={{ uri: currentUser.photoUser }} style={styles.image} />
+                </View>
+                <View style={styles.profileStats}>
+                  <TouchableOpacity style={styles.profileStatCountLeft} onPress={() => { navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "followers" } as never); }}>
+                    <Text style={styles.numFoll}>{currentUser.followersUser?.length}</Text>
+                    <Text style={styles.textFoll}>{t("Followers")}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.profileStatCountRight} onPress={() => { navigation.navigate("UsersList" as never, { userId: currentUser.uuid, mode: "following" } as never); }}>
+                    <Text style={styles.numFoll}>{currentUser.followedUser?.length}</Text>
+                    <Text style={styles.textFoll}>{t("Following")}</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileBio}>
+                  <Text style={styles.titleNameDescription}>{t("Name")}</Text>
+                  <Text style={styles.textNameDescription}>{currentUser.nameUser}</Text>
+                  <Text style={styles.titleNameDescription}>{t("Description")}</Text>
+                  <Text style={styles.textNameDescription}>{currentUser.descriptionUser}</Text>
+                </View>
               </View>
-            )}
-          </View>
+              <View style={styles.container}>
+                <ShareComponent url={"https://www.lplan.es:443/shared/profile/" + currentUser?.uuid} />
+              </View>
+              <TouchableOpacity style={styles.buttonLogOut} onPress={logOutButtonFunction}>
+                <MaterialCommunityIcons color="#3897f0" name="logout" size={24} />
+              </TouchableOpacity>
+              <ScrollView style={styles.scrow_style} horizontal>
+                {listOwnPublications.reverse().map((publication, index) => (
+                  <View key={index} style={styles.post_complete}>
+                    <Text style={styles.time_post}>{new Date(publication.createdAt).toLocaleString()}</Text>
+                    <Image style={styles.post_images} source={{ uri: publication.photoPublication[0] }} />
+                    <Text style={styles.text_post}>{publication.textPublication}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
         </View>
+        <TouchableOpacity style={styles.buttonQR} onPress={() => setQrVisible()}>
+          <Text style={styles.buttonTextQR}>{qrVisible ? "Ocultar QR" : "Mostrar QR"}</Text>
+        </TouchableOpacity>
+        {qrVisible && <QRCodeGenerator attribute1={attribute1} attribute2={attribute2} />}
+        <Text style={styles.belowMargin}></Text>
       </ScrollView>
     </ImageBackground>
-  );
+  );  
 }
 
